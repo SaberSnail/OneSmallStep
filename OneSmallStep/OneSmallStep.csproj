@@ -74,6 +74,7 @@
     </Compile>
     <Compile Include="Time\ICalendar.cs" />
     <Compile Include="Time\StandardCalendar.cs" />
+    <Compile Include="Time\TimeFormat.cs" />
     <Compile Include="Time\TimeOffset.cs" />
     <Compile Include="Time\TimePoint.cs" />
     <Compile Include="Utility\Constants.cs" />

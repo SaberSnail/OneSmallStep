@@ -74,6 +74,18 @@ namespace OneSmallStep.Tests
 			Assert.AreEqual(expectedOutput, calendar.FormatTime(new TimePoint(offset), format));
 		}
 
+		[TestCase(0, TimeFormat.Long, "0 days")]
+		[TestCase(1, TimeFormat.Long, "1 day")]
+		[TestCase(2, TimeFormat.Long, "2 days")]
+		[TestCase(0, TimeFormat.Short, "0d")]
+		[TestCase(1, TimeFormat.Short, "1d")]
+		[TestCase(2, TimeFormat.Short, "2d")]
+		public void TestOffsetFormat(long offset, TimeFormat format, string expectedOutput)
+		{
+			var calendar = StandardCalendar.Create(2000, 1, 1, 1);
+			Assert.AreEqual(expectedOutput, calendar.FormatOffset(new TimeOffset(offset), format));
+		}
+
 		[TestCase(2000, 1, 1, 1, TimeFormat.Long, "1 day")]
 		[TestCase(2000, 1, 31, 1, TimeFormat.Long, "1 day")]
 		[TestCase(2000, 2, 28, 1, TimeFormat.Long, "1 day")]
@@ -108,7 +120,7 @@ namespace OneSmallStep.Tests
 		[TestCase(2001, 2, 28, 27, TimeFormat.Long, "27 days")]
 		[TestCase(2001, 12, 31, 32, TimeFormat.Long, "1 month, 1 day")]
 		[TestCase(2001, 12, 31, 31, TimeFormat.Long, "1 month")]
-		public void TestOffsetFormat(int year, int month, int day, long offset, TimeFormat format, string expectedOutput)
+		public void TestOffsetFromFormat(int year, int month, int day, long offset, TimeFormat format, string expectedOutput)
 		{
 			var calendar = StandardCalendar.Create(year, month, day, 1);
 			Assert.AreEqual(expectedOutput, calendar.FormatOffsetFrom(new TimePoint(), new TimeOffset(offset), format));

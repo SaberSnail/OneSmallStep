@@ -39,6 +39,12 @@ namespace OneSmallStep.Time
 			return (format == TimeFormat.Long ? "{0:D}" : "{0:d}").FormatCurrentUiCulture(date);
 		}
 
+		public string FormatOffset(TimeOffset offset, TimeFormat format)
+		{
+			var days = (long) Math.Floor(offset.TickOffset / m_ticksPerDay);
+			return OurResources.ResourceManager.Pluralize(format == TimeFormat.Long ? "TimeOffsetDayLong" : "TimeOffsetDayShort", days).FormatCurrentUiCulture(days);
+		}
+
 		public string FormatOffsetFrom(TimePoint point, TimeOffset offset, TimeFormat format)
 		{
 			if (offset.TickOffset < 0)
