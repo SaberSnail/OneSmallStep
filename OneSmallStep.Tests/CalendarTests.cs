@@ -51,7 +51,9 @@ namespace OneSmallStep.Tests
 		[TestCase(2000, 12, 31, TimeFormat.Short, "12/31/2000")]
 		[TestCase(2001, 12, 31, TimeFormat.Short, "12/31/2001")]
 		[TestCase(2004, 12, 31, TimeFormat.Short, "12/31/2004")]
+		[TestCase(2100, 1, 1, TimeFormat.Short, "1/1/2100")]
 		[TestCase(2100, 12, 31, TimeFormat.Short, "12/31/2100")]
+		[TestCase(2101, 1, 1, TimeFormat.Short, "1/1/2101")]
 		[TestCase(2400, 12, 31, TimeFormat.Short, "12/31/2400")]
 		public void TestPointFormat(int year, int month, int day, TimeFormat format, string expectedOutput)
 		{
@@ -67,6 +69,12 @@ namespace OneSmallStep.Tests
 		[TestCase(2000, 2, 28, 1, TimeFormat.Short, "2/29/2000")]
 		[TestCase(2001, 2, 28, 1, TimeFormat.Short, "3/1/2001")]
 		[TestCase(2001, 3, 1, -1, TimeFormat.Short, "2/28/2001")]
+		[TestCase(2000, 1, 1, 365, TimeFormat.Short, "12/31/2000")]
+		[TestCase(2000, 1, 1, 366, TimeFormat.Short, "1/1/2001")]
+		[TestCase(2001, 1, 1, 364, TimeFormat.Short, "12/31/2001")]
+		[TestCase(2001, 1, 1, 365, TimeFormat.Short, "1/1/2002")]
+		[TestCase(2100, 1, 1, 364, TimeFormat.Short, "12/31/2100")]
+		[TestCase(2100, 1, 1, 365, TimeFormat.Short, "1/1/2101")]
 		public void TestPointFormatWithOffset(int year, int month, int day, long offset, TimeFormat format,
 			string expectedOutput)
 		{

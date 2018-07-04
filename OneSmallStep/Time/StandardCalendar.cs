@@ -18,9 +18,12 @@ namespace OneSmallStep.Time
 			remainingYears = remainingYears % 100;
 			totalDays += (remainingYears / 4) * c_daysIn4Years;
 			remainingYears = remainingYears % 4;
+			if (remainingYears != 0 && IsLeapYear(startYear - remainingYears))
+			{
+				totalDays += 366;
+				remainingYears--;
+			}
 			totalDays += remainingYears * 365;
-			if (remainingYears > 0)
-				totalDays++;
 
 			totalDays += s_daysToStartOfMonth[startMonth - 1];
 			if (IsLeapYear(startYear) && startMonth > 2)
@@ -102,10 +105,11 @@ namespace OneSmallStep.Time
 			localDays = localDays % c_daysIn100Years;
 			years += (int) ((localDays / c_daysIn4Years) * 4);
 			localDays = localDays % c_daysIn4Years;
-			if (localDays > 366)
+			var isLeapYear = IsLeapYear(years);
+			if (localDays > (isLeapYear ? 366 : 365))
 			{
 				years++;
-				localDays -= 366;
+				localDays -= isLeapYear ? 366 : 365;
 
 				years += (int) (localDays / 365);
 				localDays = localDays % 365;
@@ -116,7 +120,7 @@ namespace OneSmallStep.Time
 				years--;
 			}
 
-			var isLeapYear = IsLeapYear(years);
+			isLeapYear = IsLeapYear(years);
 			months = GetMonthFromDayOfYear((int) localDays, isLeapYear);
 			localDays -= s_daysToStartOfMonth[months - 1];
 			if (isLeapYear && months > 2)
