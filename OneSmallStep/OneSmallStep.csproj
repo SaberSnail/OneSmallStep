@@ -78,20 +78,14 @@
     <Compile Include="Time\TimeOffset.cs" />
     <Compile Include="Time\TimePoint.cs" />
     <Compile Include="Utility\Constants.cs" />
+    <Compile Include="Utility\EventLog.cs" />
+    <Compile Include="Utility\EventLogItem.cs" />
     <Compile Include="ViewModelBase.cs" />
-    <Page Include="MainWindow\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppModel.cs" />
-    <Compile Include="MainWindow\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Page Include="MainWindow\MainWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
