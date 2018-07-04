@@ -20,17 +20,10 @@ namespace OneSmallStep
 			get { return "One Small Step"; }
 		}
 
-		public static AppModel Current
-		{
-			get
-			{
-				return ((App) Application.Current).AppModel;
-			}
-		}
+		public static AppModel Current => ((App) Application.Current).AppModel;
 
 		public AppModel()
 		{
-
 			LogManager.Initialize(new ConsoleLogDestination(true));
 			m_rng = new Random();
 		}
@@ -52,8 +45,6 @@ namespace OneSmallStep
 			m_mainWindowViewModel = new MainWindowViewModel();
 			m_entityManager = CreateEntityManager();
 
-			m_entityManager.RegisterComponent<AgeComponent>();
-
 			StartupFinished.Raise(this);
 		}
 
@@ -64,6 +55,9 @@ namespace OneSmallStep
 		private static EntityManager CreateEntityManager()
 		{
 			EntityManager entityManager = new EntityManager();
+
+			entityManager.RegisterComponent<AgeComponent>();
+
 			entityManager.SetStartupFinished();
 			return entityManager;
 		}

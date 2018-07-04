@@ -4,14 +4,9 @@
 	{
 		public ComponentBase(Entity entity)
 		{
-			m_entity = entity;
+			Entity = entity;
 		}
 
-		protected Entity Entity
-		{
-			get { return m_entity; }
-		}
-
-		readonly Entity m_entity;
+		protected Entity Entity { get; }
 	}
 }

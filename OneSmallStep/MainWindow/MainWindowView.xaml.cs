@@ -7,6 +7,11 @@ namespace OneSmallStep.MainWindow
 	/// </summary>
 	public partial class MainWindowView : Window
 	{
+		public MainWindowView()
+		{
+			InitializeComponent();
+		}
+
 		public MainWindowView(MainWindowViewModel viewModel)
 		{
 			InitializeComponent();

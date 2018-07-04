@@ -11,8 +11,8 @@ namespace OneSmallStep.ECS.Components
 			MeanDaysBetweenFailures = 10000 * Constants.TicksPerYear;
 			AgeRiskDoublingDays = 8.0 * Constants.TicksPerYear;
 		}
-		public double MeanDaysBetweenFailures { get; set; }
-		public double AgeRiskDoublingDays { get; set; }
+		public double MeanDaysBetweenFailures { get; }
+		public double AgeRiskDoublingDays { get; }
 	}
 	public sealed class AgeComponent : ComponentBase
 	{
@@ -24,7 +24,7 @@ namespace OneSmallStep.ECS.Components
 
 		public TimePoint CreationDate { get; set; }
 
-		public AgeTemplate Template { get; set; }
+		public AgeTemplate Template { get; }
 
 		public TimeOffset GetAge(TimePoint currentDate)
 		{

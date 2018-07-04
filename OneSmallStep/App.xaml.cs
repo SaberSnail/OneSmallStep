@@ -11,34 +11,31 @@ namespace OneSmallStep
 	{
 		public App()
 		{
-			m_appModel = new AppModel();
-			m_appModel.StartupFinished += AppModel_StartupFinished;
+			AppModel = new AppModel();
+			AppModel.StartupFinished += AppModel_StartupFinished;
 		}
 
-		public AppModel AppModel
-		{
-			get { return m_appModel; }
-		}
+		public AppModel AppModel { get; }
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			base.OnStartup(e);
 
-			m_appModel.Startup();
+			AppModel.Startup();
 		}
 
 		protected override void OnExit(ExitEventArgs e)
 		{
-			m_appModel.Shutdown();
+			AppModel.Shutdown();
 
 			base.OnExit(e);
 		}
 
 		private void AppModel_StartupFinished(object sender, EventArgs eventArgs)
 		{
-			new MainWindowView(m_appModel.MainWindowViewModel).Show();
-		}
+			AppModel.StartupFinished -= AppModel_StartupFinished;
 
-		readonly AppModel m_appModel;
+			new MainWindowView(AppModel.MainWindowViewModel).Show();
+		}
 	}
 }
