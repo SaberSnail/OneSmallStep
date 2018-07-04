@@ -65,10 +65,14 @@
     <Compile Include="ECS\Components\PopulationComponent.cs" />
     <Compile Include="ECS\Entity.cs" />
     <Compile Include="ECS\EntityManager.cs" />
+    <Compile Include="ECS\EntityUtility.cs" />
     <Compile Include="ECS\GameData.cs" />
+    <Compile Include="ECS\GameServices.cs" />
     <Compile Include="ECS\SystemBase.cs" />
     <Compile Include="ECS\Systems\AgeSystem.cs" />
     <Compile Include="ECS\Systems\PopulationGrowthSystem.cs" />
+    <Compile Include="EntityViewModels\EntityViewModelBase.cs" />
+    <Compile Include="EntityViewModels\PlanetViewModel.cs" />
     <Compile Include="OurResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -88,6 +92,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppModel.cs" />
+    <Page Include="EntityViews\PlanetView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow\MainWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -138,5 +146,6 @@
       <Name>GoldenAnvil.Utility</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

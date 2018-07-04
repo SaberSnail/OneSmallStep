@@ -7,21 +7,21 @@ namespace OneSmallStep.ECS.Systems
 {
 	public sealed class PopulationGrowthSystem : SystemBase
 	{
-		public PopulationGrowthSystem(GameData gameData, EntityManager entityManager, Random rng) : base(gameData, entityManager)
+		public PopulationGrowthSystem(GameData gameData, Random rng) : base(gameData)
 		{
 			m_rng = rng;
 		}
 
 		protected override BitArray GetComponentKey()
 		{
-			return EntityManager.CreateComponentKey(typeof(PopulationComponent));
+			return GameData.EntityManager.CreateComponentKey(typeof(PopulationComponent));
 		}
 
 		protected override void ProcessTick(Entity entity)
 		{
 			PopulationComponent population = entity.GetComponent<PopulationComponent>();
 			var growthRate = population.GrowthRate;
-			growthRate = growthRate * m_rng.NextGauss() * 0.01;
+			growthRate = growthRate + growthRate * m_rng.NextGauss() * 0.5;
 			population.Population = population.Population + (long) (population.Population * growthRate);
 		}
 

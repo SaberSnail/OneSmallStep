@@ -7,15 +7,15 @@ namespace OneSmallStep.ECS.Systems
 {
 	public sealed class AgeSystem : SystemBase
 	{
-		public AgeSystem(GameData gameData, EntityManager entityManager, Random rng)
-			: base(gameData, entityManager)
+		public AgeSystem(GameData gameData, Random rng)
+			: base(gameData)
 		{
 			m_rng = rng;
 		}
 
 		protected override BitArray GetComponentKey()
 		{
-			return EntityManager.CreateComponentKey(typeof(AgeComponent));
+			return GameData.EntityManager.CreateComponentKey(typeof(AgeComponent));
 		}
 
 		protected override void ProcessTick(Entity entity)

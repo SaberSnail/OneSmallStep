@@ -6,31 +6,19 @@ namespace OneSmallStep.ECS
 	{
 		public void Process()
 		{
-			foreach (Entity entity in m_entityManager.GetEntitiesMatchingKey(GetComponentKey()))
+			foreach (Entity entity in GameData.EntityManager.GetEntitiesMatchingKey(GetComponentKey()))
 				ProcessTick(entity);
 		}
 
-		protected SystemBase(GameData gameData, EntityManager entityManager)
+		protected SystemBase(GameData gameData)
 		{
-			m_gameData = gameData;
-			m_entityManager = entityManager;
+			GameData = gameData;
 		}
 
-		protected GameData GameData
-		{
-			get { return m_gameData; }
-		}
-
-		protected EntityManager EntityManager
-		{
-			get { return m_entityManager; }
-		}
+		protected GameData GameData { get; }
 
 		protected abstract BitArray GetComponentKey();
 
 		protected abstract void ProcessTick(Entity entity);
-
-		readonly EntityManager m_entityManager;
-		readonly GameData m_gameData;
 	}
 }

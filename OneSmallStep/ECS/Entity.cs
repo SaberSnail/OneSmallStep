@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using GoldenAnvil.Utility;
 using JetBrains.Annotations;
 
@@ -9,23 +8,15 @@ namespace OneSmallStep.ECS
 {
 	public sealed class Entity
 	{
-		public Entity([NotNull] EntityManager entityManager, [NotNull] IEnumerable<ComponentBase> components)
+		public Entity([NotNull] EntityManager entityManager)
 		{
-			m_components = components.ToDictionary(x => x.GetType(), x => x);
-			m_componentKey = entityManager.CreateComponentKey(m_components.Values);
+			m_entityManager = entityManager;
+			m_components = new Dictionary<Type, ComponentBase>();
+			ComponentKey = entityManager.CreateComponentKey(m_components.Values);
 		}
 
 		[NotNull]
-		public IEnumerable<ComponentBase> Components
-		{
-			get { return m_components.Values; }
-		}
-
-		[NotNull]
-		public BitArray ComponentKey
-		{
-			get { return m_componentKey; }
-		}
+		public BitArray ComponentKey { get; private set; }
 
 		[CanBeNull]
 		public T GetComponent<T>()
@@ -34,8 +25,18 @@ namespace OneSmallStep.ECS
 			return (T) m_components.GetValueOrDefault(typeof(T));
 		}
 
-		readonly Dictionary<Type, ComponentBase> m_components;
+		public bool HasComponent(Type componentType)
+		{
+			return m_components.ContainsKey(componentType);
+		}
 
-		BitArray m_componentKey;
+		public void AddComponent(ComponentBase component)
+		{
+			m_components.Add(component.GetType(), component);
+			ComponentKey = m_entityManager.CreateComponentKey(m_components.Values);
+		}
+
+		readonly EntityManager m_entityManager;
+		readonly Dictionary<Type, ComponentBase> m_components;
 	}
 }

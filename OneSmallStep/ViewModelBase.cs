@@ -1,9 +1,11 @@
-﻿using GoldenAnvil.Utility;
+﻿using GoldenAnvil.Utility.Windows;
 
 namespace OneSmallStep
 {
-	public abstract class ViewModelBase : NotifyPropertyChangedBase
+	public abstract class ViewModelBase : NotifyPropertyChangedDispatcherBase
 	{
-		public AppModel AppModel => AppModel.Current;
+		protected ViewModelBase()
+		{
+		}
 	}
 }

@@ -32,13 +32,32 @@ namespace OneSmallStep.ECS
 		{
 			if (m_state != State.StartingUp)
 				throw new InvalidOperationException("This code may only be called during startup.");
+
 			m_state = State.Started;
 		}
 
 		[NotNull]
 		public IEnumerable<Entity> GetEntitiesMatchingKey(BitArray componentKey)
 		{
-			return m_entities.Where(x => x.ComponentKey.And(componentKey) == componentKey);
+			var componentList = new List<Type>();
+			var enumerator = componentKey.GetEnumerator();
+			int id = 0;
+			while (enumerator.MoveNext())
+			{
+				if ((bool) enumerator.Current)
+					componentList.Add(m_componentIdToType[id]);
+				id++;
+			}
+
+			return m_entities.Where(x => componentList.Any(x.HasComponent));
+		}
+
+		public void RegisterEntity([NotNull] Entity entity)
+		{
+			if (entity == null)
+				throw new ArgumentNullException(nameof(entity));
+
+			m_entities.Add(entity);
 		}
 
 		[NotNull]

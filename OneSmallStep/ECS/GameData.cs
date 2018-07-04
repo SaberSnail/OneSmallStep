@@ -1,22 +1,30 @@
 ﻿using System;
+using OneSmallStep.ECS.Components;
 using OneSmallStep.Time;
 
 namespace OneSmallStep.ECS
 {
 	public sealed class GameData
 	{
-		public GameData()
+		public GameData(ICalendar calendar)
 		{
-			m_rng = new Random();
+			EntityManager = CreateEntityManager();
+			Calendar = calendar;
 		}
 
-		public Random Random
-		{
-			get { return m_rng; }
-		}
-
+		public ICalendar Calendar { get; }
 		public TimePoint CurrentDate { get; set; }
+		public EntityManager EntityManager { get; }
 
-		Random m_rng;
+		private static EntityManager CreateEntityManager()
+		{
+			EntityManager entityManager = new EntityManager();
+
+			entityManager.RegisterComponent<AgeComponent>();
+			entityManager.RegisterComponent<PopulationComponent>();
+
+			entityManager.SetStartupFinished();
+			return entityManager;
+		}
 	}
 }
