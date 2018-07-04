@@ -7,9 +7,10 @@ namespace OneSmallStep.ECS.Systems
 {
 	public sealed class AgeSystem : SystemBase
 	{
-		public AgeSystem(GameData gameData, EntityManager entityManager)
+		public AgeSystem(GameData gameData, EntityManager entityManager, Random rng)
 			: base(gameData, entityManager)
 		{
+			m_rng = rng;
 		}
 
 		protected override BitArray GetComponentKey()
@@ -27,7 +28,7 @@ namespace OneSmallStep.ECS.Systems
 				ageComponent.Template.MeanDaysBetweenFailures,
 				ageComponent.Template.AgeRiskDoublingDays);
 				*/
-			if (GameData.Random.NextDouble() > survivalChance)
+			if (m_rng.NextDouble() > survivalChance)
 			{
 				// death
 			}
@@ -40,5 +41,7 @@ namespace OneSmallStep.ECS.Systems
 			double c = 1 + Constants.Ln2 / ageRiskDoublingYears;
 			return Math.Exp(-a - ((b / Math.Log(c)) * Math.Pow(c, ageInTicks) * (c - 1.0)));
 		}
+
+		readonly Random m_rng;
 	}
 }

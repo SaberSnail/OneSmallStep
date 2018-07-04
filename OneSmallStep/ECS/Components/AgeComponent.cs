@@ -8,8 +8,8 @@ namespace OneSmallStep.ECS.Components
 		public AgeTemplate()
 		{
 			// Humans
-			MeanDaysBetweenFailures = 10000 * Constants.TicksPerYear;
-			AgeRiskDoublingDays = 8.0 * Constants.TicksPerYear;
+			MeanDaysBetweenFailures = 10000 * 365 * Constants.TicksPerDay;
+			AgeRiskDoublingDays = 8.0 * 365 * Constants.TicksPerDay;
 		}
 		public double MeanDaysBetweenFailures { get; }
 		public double AgeRiskDoublingDays { get; }

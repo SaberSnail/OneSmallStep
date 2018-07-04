@@ -62,11 +62,13 @@
     </ApplicationDefinition>
     <Compile Include="ECS\ComponentBase.cs" />
     <Compile Include="ECS\Components\AgeComponent.cs" />
+    <Compile Include="ECS\Components\PopulationComponent.cs" />
     <Compile Include="ECS\Entity.cs" />
     <Compile Include="ECS\EntityManager.cs" />
     <Compile Include="ECS\GameData.cs" />
     <Compile Include="ECS\SystemBase.cs" />
     <Compile Include="ECS\Systems\AgeSystem.cs" />
+    <Compile Include="ECS\Systems\PopulationGrowthSystem.cs" />
     <Compile Include="OurResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
