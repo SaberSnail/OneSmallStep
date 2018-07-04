@@ -22,7 +22,7 @@ namespace OneSmallStep.ECS.Systems
 			PopulationComponent population = entity.GetComponent<PopulationComponent>();
 			var growthRate = population.GrowthRate;
 			growthRate = growthRate + growthRate * m_rng.NextGauss() * 0.5;
-			population.Population = population.Population + (long) (population.Population * growthRate);
+			population.Population = Math.Max(0, population.Population + (long) (population.Population * growthRate));
 		}
 
 		readonly Random m_rng;
