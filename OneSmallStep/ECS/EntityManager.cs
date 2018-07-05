@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using GoldenAnvil.Utility.Logging;
 using JetBrains.Annotations;
 
 namespace OneSmallStep.ECS
@@ -37,19 +37,9 @@ namespace OneSmallStep.ECS
 		}
 
 		[NotNull]
-		public IEnumerable<Entity> GetEntitiesMatchingKey(BitArray componentKey)
+		public IEnumerable<Entity> GetEntitiesMatchingKey(ComponentKey componentKey)
 		{
-			var componentList = new List<Type>();
-			var enumerator = componentKey.GetEnumerator();
-			int id = 0;
-			while (enumerator.MoveNext())
-			{
-				if ((bool) enumerator.Current)
-					componentList.Add(m_componentIdToType[id]);
-				id++;
-			}
-
-			return m_entities.Where(x => componentList.Any(x.HasComponent));
+			return m_entities.Where(x => (x.ComponentKey & componentKey) == componentKey);
 		}
 
 		public void RegisterEntity([NotNull] Entity entity)
@@ -61,27 +51,22 @@ namespace OneSmallStep.ECS
 		}
 
 		[NotNull]
-		public BitArray CreateComponentKey([NotNull] IEnumerable<ComponentBase> components)
+		public ComponentKey CreateComponentKey([NotNull] IEnumerable<ComponentBase> components)
 		{
 			return CreateComponentKey(components.Select(x => x.GetType()).ToArray());
 		}
 
-		[NotNull]
-		public BitArray CreateComponentKey(params Type[] componentTypes)
+		public ComponentKey CreateComponentKey(params Type[] componentTypes)
 		{
-			if (m_state != State.Started)
-				throw new InvalidOperationException("This code may only be called after startup.");
-
-			BitArray bits = new BitArray(m_componentIdToType.Count);
-			foreach (Type componentType in componentTypes)
+			var key = ComponentKey.Empty;
+			foreach (var type in componentTypes)
 			{
 				int id;
-				if (!m_componentTypeToId.TryGetValue(componentType, out id))
-					throw new InvalidOperationException(string.Format("Specified type has not been registered: {0}", componentType.Name));
-				bits.Set(id, true);
+				if (!m_componentTypeToId.TryGetValue(type, out id))
+					throw new InvalidOperationException($"Specified type has not been registered: {type.Name}");
+				key |= ComponentKey.CreateFromComponentId(id);
 			}
-
-			return bits;
+			return key;
 		}
 
 		private enum State

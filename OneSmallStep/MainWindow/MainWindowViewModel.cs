@@ -85,6 +85,9 @@ namespace OneSmallStep.MainWindow
 			UpdateCurrentDate();
 
 			IsGameStarted = true;
+
+			if (ShouldRunAtFullSpeed)
+				Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action) ProcessTick);
 		}
 
 		public void ProcessTick()
@@ -112,7 +115,8 @@ namespace OneSmallStep.MainWindow
 
 		static readonly ILogSource Log = LogManager.CreateLogSource(nameof(MainWindowViewModel));
 
-		GameServices m_gameServices;
+		readonly GameServices m_gameServices;
+
 		GameData m_gameData;
 		Entity m_planetEntity;
 		bool m_isGameStarted;

@@ -13,7 +13,7 @@ namespace OneSmallStep.ECS.Systems
 			m_rng = rng;
 		}
 
-		protected override BitArray GetComponentKey()
+		protected override ComponentKey GetComponentKey()
 		{
 			return GameData.EntityManager.CreateComponentKey(typeof(AgeComponent));
 		}

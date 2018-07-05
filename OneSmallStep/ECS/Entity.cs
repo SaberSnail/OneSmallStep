@@ -15,19 +15,13 @@ namespace OneSmallStep.ECS
 			ComponentKey = entityManager.CreateComponentKey(m_components.Values);
 		}
 
-		[NotNull]
-		public BitArray ComponentKey { get; private set; }
+		public ComponentKey ComponentKey { get; private set; }
 
 		[CanBeNull]
 		public T GetComponent<T>()
 			where T : ComponentBase
 		{
 			return (T) m_components.GetValueOrDefault(typeof(T));
-		}
-
-		public bool HasComponent(Type componentType)
-		{
-			return m_components.ContainsKey(componentType);
 		}
 
 		public void AddComponent(ComponentBase component)

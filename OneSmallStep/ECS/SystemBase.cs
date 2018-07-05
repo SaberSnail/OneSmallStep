@@ -17,7 +17,7 @@ namespace OneSmallStep.ECS
 
 		protected GameData GameData { get; }
 
-		protected abstract BitArray GetComponentKey();
+		protected abstract ComponentKey GetComponentKey();
 
 		protected abstract void ProcessTick(Entity entity);
 	}

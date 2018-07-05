@@ -32,7 +32,7 @@
 							Content="Next"
 							Command="{Binding Converter={x:Static utility:MethodToCommandConverter.Instance}, ConverterParameter=ProcessTick}"
 							/>
-						<ToggleButton
+						<CheckBox
 							IsChecked="{Binding ShouldRunAtFullSpeed}"
 							Content="Full speed" />
 					</StackPanel>
