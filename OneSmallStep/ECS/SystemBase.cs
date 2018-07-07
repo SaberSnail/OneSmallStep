@@ -6,7 +6,7 @@ namespace OneSmallStep.ECS
 	{
 		public void Process()
 		{
-			foreach (Entity entity in GameData.EntityManager.GetEntitiesMatchingKey(GetComponentKey()))
+			foreach (Entity entity in GameData.EntityManager.GetEntitiesMatchingKey(GetRequiredComponentsKey()))
 				ProcessTick(entity);
 		}
 
@@ -17,7 +17,7 @@ namespace OneSmallStep.ECS
 
 		protected GameData GameData { get; }
 
-		protected abstract ComponentKey GetComponentKey();
+		protected abstract ComponentKey GetRequiredComponentsKey();
 
 		protected abstract void ProcessTick(Entity entity);
 	}

@@ -1,4 +1,5 @@
-﻿using OneSmallStep.ECS;
+﻿using GoldenAnvil.Utility;
+using OneSmallStep.ECS;
 using OneSmallStep.ECS.Components;
 
 namespace OneSmallStep.EntityViewModels
@@ -28,12 +29,30 @@ namespace OneSmallStep.EntityViewModels
 			}
 		}
 
+		public string Position
+		{
+			get
+			{
+				VerifyAccess();
+				return m_position;
+			}
+			private set
+			{
+				SetPropertyField(nameof(Position), value, ref m_position);
+			}
+		}
+
 		public override void UpdateFromEntity()
 		{
-			var populationComponent = Entity.GetComponent<PopulationComponent>();
-			Population = populationComponent?.Population ?? 0;
+			var population = Entity.GetComponent<PopulationComponent>();
+			Population = population?.Population ?? 0;
+
+			var astronomicalBody = Entity.GetComponent<AstronomicalBodyComponent>();
+			var position = astronomicalBody?.GetAbsolutePosition();
+			Position = position.HasValue ? "{0}, {1}".FormatCurrentUiCulture(position.Value.X, position.Value.Y) : null;
 		}
 
 		long m_population;
+		string m_position;
 	}
 }

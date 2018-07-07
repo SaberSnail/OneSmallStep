@@ -64,6 +64,7 @@
     <Compile Include="ECS\ComponentBase.cs" />
     <Compile Include="ECS\ComponentKey.cs" />
     <Compile Include="ECS\Components\AgeComponent.cs" />
+    <Compile Include="ECS\Components\AstronomicalBodyComponent.cs" />
     <Compile Include="ECS\Components\PopulationComponent.cs" />
     <Compile Include="ECS\Entity.cs" />
     <Compile Include="ECS\EntityManager.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="ECS\GameServices.cs" />
     <Compile Include="ECS\SystemBase.cs" />
     <Compile Include="ECS\Systems\AgeSystem.cs" />
+    <Compile Include="ECS\Systems\OrbitalDynamicsSystem.cs" />
     <Compile Include="ECS\Systems\PopulationGrowthSystem.cs" />
     <Compile Include="EntityViewModels\EntityViewModelBase.cs" />
     <Compile Include="EntityViewModels\PlanetViewModel.cs" />

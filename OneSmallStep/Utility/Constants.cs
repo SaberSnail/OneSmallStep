@@ -11,6 +11,7 @@ namespace OneSmallStep.Utility
 	{
 		public const double Ln2 = 0.69314718055994530941723212145818;
 		public const double TicksPerDay = 1;
+		public const double SecondsPerTick = 24.0 * 60.0 * 60.0 / TicksPerDay;
 		public static readonly TimeOffset Tick = new TimeOffset(1);
 	}
 }

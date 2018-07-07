@@ -5,33 +5,40 @@ namespace OneSmallStep.Time
 {
 	public sealed class StandardCalendar : ICalendar
 	{
-		public static StandardCalendar Create(int startYear, int startMonth, int startDay, double ticksPerDay)
+		public static TimePoint CreateTimePoint(int years, int months, int days, double ticksPerDay)
 		{
-			if (startMonth < 1 || startMonth > 12)
-				throw new ArgumentException($"{nameof(startMonth)} must be between 1 and 12.");
-			if (startDay < 1 || startDay > 31)
-				throw new ArgumentException($"{nameof(startDay)} must be between 1 and 31.");
+			if (months < 1 || months > 12)
+				throw new ArgumentException($"{nameof(months)} must be between 1 and 12.");
+			if (days < 1 || days > 31)
+				throw new ArgumentException($"{nameof(days)} must be between 1 and 31.");
 
-			var totalDays = (startYear / 400) * c_daysIn400Years;
-			var remainingYears = startYear % 400;
+			var totalDays = (years / 400) * c_daysIn400Years;
+			var remainingYears = years % 400;
 			totalDays += (remainingYears / 100) * c_daysIn100Years;
 			remainingYears = remainingYears % 100;
 			totalDays += (remainingYears / 4) * c_daysIn4Years;
 			remainingYears = remainingYears % 4;
-			if (remainingYears != 0 && IsLeapYear(startYear - remainingYears))
+			if (remainingYears != 0 && IsLeapYear(years - remainingYears))
 			{
 				totalDays += 366;
 				remainingYears--;
 			}
 			totalDays += remainingYears * 365;
 
-			totalDays += s_daysToStartOfMonth[startMonth - 1];
-			if (IsLeapYear(startYear) && startMonth > 2)
+			totalDays += s_daysToStartOfMonth[months - 1];
+			if (IsLeapYear(years) && months > 2)
 				totalDays++;
 
-			totalDays += startDay;
+			totalDays += days;
 
-			return new StandardCalendar(totalDays, ticksPerDay);
+			return new TimePoint((long) (totalDays * ticksPerDay));
+		}
+
+		public static StandardCalendar Create(int startYear, int startMonth, int startDay, double ticksPerDay)
+		{
+			var startPoint = CreateTimePoint(startYear, startMonth, startDay, ticksPerDay);
+
+			return new StandardCalendar((long) (startPoint.Tick / ticksPerDay), ticksPerDay);
 		}
 
 		public string FormatTime(TimePoint point, TimeFormat format)

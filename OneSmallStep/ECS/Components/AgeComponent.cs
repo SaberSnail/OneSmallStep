@@ -16,8 +16,7 @@ namespace OneSmallStep.ECS.Components
 	}
 	public sealed class AgeComponent : ComponentBase
 	{
-		public AgeComponent(Entity entity, AgeTemplate template)
-			: base(entity)
+		public AgeComponent(AgeTemplate template)
 		{
 			Template = template;
 		}

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoldenAnvil.Utility.Logging;
 using JetBrains.Annotations;
 
 namespace OneSmallStep.ECS

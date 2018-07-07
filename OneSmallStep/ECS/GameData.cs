@@ -1,5 +1,4 @@
-﻿using System;
-using OneSmallStep.ECS.Components;
+﻿using OneSmallStep.ECS.Components;
 using OneSmallStep.Time;
 
 namespace OneSmallStep.ECS
@@ -22,6 +21,7 @@ namespace OneSmallStep.ECS
 
 			entityManager.RegisterComponent<AgeComponent>();
 			entityManager.RegisterComponent<PopulationComponent>();
+			entityManager.RegisterComponent<AstronomicalBodyComponent>();
 
 			entityManager.SetStartupFinished();
 			return entityManager;

@@ -4,6 +4,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using GoldenAnvil.Utility.Logging;
 using OneSmallStep.ECS;
+using OneSmallStep.ECS.Components;
 using OneSmallStep.ECS.Systems;
 using OneSmallStep.EntityViewModels;
 using OneSmallStep.Time;
@@ -73,14 +74,13 @@ namespace OneSmallStep.MainWindow
 				return;
 
 			m_gameData = new GameData(StandardCalendar.Create(2050, 1, 1, Constants.TicksPerDay));
-			m_systems = new[]
+			m_systems = new SystemBase[]
 			{
 				new PopulationGrowthSystem(m_gameData, m_gameServices.RandomNumberGenerator),
+				new OrbitalDynamicsSystem(m_gameData), 
 			};
 
-			m_planetEntity = m_gameData.EntityManager.CreatePlanet(m_gameServices.RandomNumberGenerator);
-			Planet = new PlanetViewModel(m_planetEntity);
-			Planet.UpdateFromEntity();
+			InitializeEntities();
 
 			UpdateCurrentDate();
 
@@ -113,12 +113,25 @@ namespace OneSmallStep.MainWindow
 			SetPropertyField(nameof(CurrentDate), date, ref m_currentDate);
 		}
 
+		private void InitializeEntities()
+		{
+			var sun = m_gameData.EntityManager.CreatePlanet(1.9885E30);
+
+			var earth = m_gameData.EntityManager.CreatePlanet(sun, 5.97237E24, 365.256363004, 358.617, m_gameData.Calendar);
+			var population = new PopulationComponent { Population = 1000000000 };
+			earth.AddComponent(population);
+
+			var moon = m_gameData.EntityManager.CreatePlanet(earth, 7.342E22, 27.321661, 134.96292, m_gameData.Calendar);
+
+			Planet = new PlanetViewModel(earth);
+			Planet.UpdateFromEntity();
+		}
+
 		static readonly ILogSource Log = LogManager.CreateLogSource(nameof(MainWindowViewModel));
 
 		readonly GameServices m_gameServices;
 
 		GameData m_gameData;
-		Entity m_planetEntity;
 		bool m_isGameStarted;
 		string m_currentDate;
 		PlanetViewModel m_planet;

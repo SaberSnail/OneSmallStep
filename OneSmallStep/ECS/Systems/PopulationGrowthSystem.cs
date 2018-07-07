@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using GoldenAnvil.Utility;
 using OneSmallStep.ECS.Components;
 
@@ -12,7 +11,7 @@ namespace OneSmallStep.ECS.Systems
 			m_rng = rng;
 		}
 
-		protected override ComponentKey GetComponentKey()
+		protected override ComponentKey GetRequiredComponentsKey()
 		{
 			return GameData.EntityManager.CreateComponentKey(typeof(PopulationComponent));
 		}

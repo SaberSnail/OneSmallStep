@@ -5,13 +5,20 @@
 
 	<DataTemplate DataType="{x:Type entityViewModels:PlanetViewModel}">
 		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="*" />
 			</Grid.ColumnDefinitions>
 			
-			<TextBlock Grid.Column="0" Text="Population:" />
-			<TextBlock Grid.Column="1" Text="{Binding Population}" />
+			<TextBlock Grid.Row="0" Grid.Column="0" Text="Population:" />
+			<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Population}" />
+
+			<TextBlock Grid.Row="1" Grid.Column="0" Text="Position:" />
+			<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Position}" />
 		</Grid>
 	</DataTemplate>
 

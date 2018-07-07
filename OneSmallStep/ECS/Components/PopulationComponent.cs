@@ -5,7 +5,7 @@ namespace OneSmallStep.ECS.Components
 {
 	public sealed class PopulationComponent : ComponentBase
 	{
-		public PopulationComponent(Entity entity, Random rng) : base(entity)
+		public PopulationComponent()
 		{
 			GrowthRate = Math.Pow(1 + c_averageGrowthRate, 1.0 / (Constants.TicksPerDay * 365)) - 1;
 		}
