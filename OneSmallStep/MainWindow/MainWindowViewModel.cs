@@ -117,11 +117,18 @@ namespace OneSmallStep.MainWindow
 		{
 			var sun = m_gameData.EntityManager.CreatePlanet(1.9885E30);
 
+			var mercury = m_gameData.EntityManager.CreatePlanet(sun, 3.3011E23, 87.9691, 174.796, m_gameData.Calendar);
+
+			var venus = m_gameData.EntityManager.CreatePlanet(sun, 4.8675E24, 224.701, 50.115, m_gameData.Calendar);
+
 			var earth = m_gameData.EntityManager.CreatePlanet(sun, 5.97237E24, 365.256363004, 358.617, m_gameData.Calendar);
 			var population = new PopulationComponent { Population = 1000000000 };
 			earth.AddComponent(population);
-
 			var moon = m_gameData.EntityManager.CreatePlanet(earth, 7.342E22, 27.321661, 134.96292, m_gameData.Calendar);
+
+			var mars = m_gameData.EntityManager.CreatePlanet(sun, 6.4171E23, 686.971, 320.45776, m_gameData.Calendar);
+			var phobos = m_gameData.EntityManager.CreatePlanet(mars, 4.0659E16, 0.31891023, 0, m_gameData.Calendar);
+			var deimos = m_gameData.EntityManager.CreatePlanet(mars, 1.4762E15, 1.263, 0, m_gameData.Calendar);
 
 			Planet = new PlanetViewModel(earth);
 			Planet.UpdateFromEntity();
