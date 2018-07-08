@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mainWindow="clr-namespace:OneSmallStep.MainWindow"
     xmlns:utility="clr-namespace:GoldenAnvil.Utility.Windows;assembly=GoldenAnvil.Utility.Windows"
+    xmlns:systemMap="clr-namespace:OneSmallStep.SystemMap"
     Height="350" Width="525">
 
 	<Window.Resources>
@@ -16,6 +17,7 @@
 			<DataTemplate DataType="{x:Type mainWindow:MainWindowViewModel}">
 				<Grid>
 					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
 						<RowDefinition Height="Auto" />
 						<RowDefinition Height="Auto" />
 						<RowDefinition Height="*" />
@@ -44,6 +46,8 @@
 						Focusable="False"
 						Content="{Binding Planet}"
 						/>
+
+					<systemMap:SystemMapControl Grid.Row="3" Entities="{Binding CurrentSystemBodies}" Date="{Binding CurrentDate}" />
 				</Grid>
 			</DataTemplate>
 		</ResourceDictionary>

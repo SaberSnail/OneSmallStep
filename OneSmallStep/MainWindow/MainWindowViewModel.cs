@@ -68,6 +68,19 @@ namespace OneSmallStep.MainWindow
 			}
 		}
 
+		public IReadOnlyList<Entity> CurrentSystemBodies
+		{
+			get
+			{
+				VerifyAccess();
+				return m_currentSystemBodies;
+			}
+			set
+			{
+				SetPropertyField(nameof(CurrentSystemBodies), value, ref m_currentSystemBodies);
+			}
+		}
+
 		public void StartGame()
 		{
 			if (IsGameStarted)
@@ -100,8 +113,11 @@ namespace OneSmallStep.MainWindow
 			foreach (var system in m_systems)
 				system.Process();
 
-			UpdateCurrentDate();
-			m_planet.UpdateFromEntity();
+			using (ScopedPropertyChange(nameof(CurrentSystemBodies)))
+			{
+				UpdateCurrentDate();
+				m_planet.UpdateFromEntity();
+			}
 
 			if (ShouldRunAtFullSpeed)
 				Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action) ProcessTick);
@@ -132,6 +148,8 @@ namespace OneSmallStep.MainWindow
 
 			Planet = new PlanetViewModel(earth);
 			Planet.UpdateFromEntity();
+
+			CurrentSystemBodies = new[] { sun, mercury, venus, earth, moon, mars, phobos, deimos };
 		}
 
 		static readonly ILogSource Log = LogManager.CreateLogSource(nameof(MainWindowViewModel));
@@ -144,5 +162,6 @@ namespace OneSmallStep.MainWindow
 		PlanetViewModel m_planet;
 		IReadOnlyList<SystemBase> m_systems;
 		bool m_shouldRunAtFullSpeed;
+		IReadOnlyList<Entity> m_currentSystemBodies;
 	}
 }

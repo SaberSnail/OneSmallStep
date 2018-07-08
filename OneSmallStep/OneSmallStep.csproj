@@ -82,6 +82,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>OurResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SystemMap\SystemMapControl.cs" />
+    <Compile Include="SystemMap\SystemMapViewModel.cs" />
     <Compile Include="Time\ICalendar.cs" />
     <Compile Include="Time\StandardCalendar.cs" />
     <Compile Include="Time\TimeFormat.cs" />
