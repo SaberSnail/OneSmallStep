@@ -47,7 +47,10 @@
 						Content="{Binding Planet}"
 						/>
 
-					<systemMap:SystemMapControl Grid.Row="3" Entities="{Binding CurrentSystemBodies}" Date="{Binding CurrentDate}" />
+					<ContentControl
+						Grid.Row="3"
+						Focusable="False"
+						Content="{Binding SystemMap}" />
 				</Grid>
 			</DataTemplate>
 		</ResourceDictionary>

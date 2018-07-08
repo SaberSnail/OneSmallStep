@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using System.Windows.Threading;
 using GoldenAnvil.Utility.Logging;
@@ -7,6 +8,7 @@ using OneSmallStep.ECS;
 using OneSmallStep.ECS.Components;
 using OneSmallStep.ECS.Systems;
 using OneSmallStep.EntityViewModels;
+using OneSmallStep.SystemMap;
 using OneSmallStep.Time;
 using OneSmallStep.Utility;
 
@@ -17,6 +19,7 @@ namespace OneSmallStep.MainWindow
 		public MainWindowViewModel(GameServices gameServices)
 		{
 			m_gameServices = gameServices;
+			m_systemMap = new SystemMapViewModel();
 		}
 
 		public bool IsGameStarted
@@ -68,16 +71,12 @@ namespace OneSmallStep.MainWindow
 			}
 		}
 
-		public IReadOnlyList<Entity> CurrentSystemBodies
+		public SystemMapViewModel SystemMap
 		{
 			get
 			{
 				VerifyAccess();
-				return m_currentSystemBodies;
-			}
-			set
-			{
-				SetPropertyField(nameof(CurrentSystemBodies), value, ref m_currentSystemBodies);
+				return m_systemMap;
 			}
 		}
 
@@ -113,11 +112,8 @@ namespace OneSmallStep.MainWindow
 			foreach (var system in m_systems)
 				system.Process();
 
-			using (ScopedPropertyChange(nameof(CurrentSystemBodies)))
-			{
-				UpdateCurrentDate();
-				m_planet.UpdateFromEntity();
-			}
+			UpdateCurrentDate();
+			m_planet.UpdateFromEntity();
 
 			if (ShouldRunAtFullSpeed)
 				Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action) ProcessTick);
@@ -127,6 +123,8 @@ namespace OneSmallStep.MainWindow
 		{
 			var date = m_gameData.Calendar.FormatTime(m_gameData.CurrentDate, TimeFormat.Long);
 			SetPropertyField(nameof(CurrentDate), date, ref m_currentDate);
+
+			m_systemMap.Update(date, m_gameData.EntityManager.GetEntitiesMatchingKey(m_gameData.EntityManager.CreateComponentKey(typeof(AstronomicalBodyComponent))).ToList());
 		}
 
 		private void InitializeEntities()
@@ -148,13 +146,12 @@ namespace OneSmallStep.MainWindow
 
 			Planet = new PlanetViewModel(earth);
 			Planet.UpdateFromEntity();
-
-			CurrentSystemBodies = new[] { sun, mercury, venus, earth, moon, mars, phobos, deimos };
 		}
 
 		static readonly ILogSource Log = LogManager.CreateLogSource(nameof(MainWindowViewModel));
 
 		readonly GameServices m_gameServices;
+		readonly SystemMapViewModel m_systemMap;
 
 		GameData m_gameData;
 		bool m_isGameStarted;
