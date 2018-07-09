@@ -1,18 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
+using GoldenAnvil.Utility.Logging;
 using OneSmallStep.ECS;
-using OneSmallStep.Time;
 
 namespace OneSmallStep.SystemMap
 {
+	public interface ISystemMapEntity
+	{ }
 	public sealed class SystemMapViewModel : ViewModelBase
 	{
 		public SystemMapViewModel()
 		{
 			m_entities = new List<Entity>();
+			Scale = 1.0 / 2.5E11;
+		}
+
+		public Point Center
+		{
+			get
+			{
+				VerifyAccess();
+				return m_center;
+			}
+			set
+			{
+				if (SetPropertyField(nameof(Center), value, ref m_center))
+					Log.Info($"Setting Center to ({Center.X}, {Center.Y})");
+			}
+		}
+
+		public double Scale
+		{
+			get
+			{
+				VerifyAccess();
+				return m_scale;
+			}
+			set
+			{
+				SetPropertyField(nameof(Scale), value, ref m_scale);
+			}
 		}
 
 		public string CurrentDate
@@ -47,7 +75,11 @@ namespace OneSmallStep.SystemMap
 			}
 		}
 
+		static readonly ILogSource Log = LogManager.CreateLogSource(nameof(SystemMapViewModel));
+
 		string m_currentDate;
 		IReadOnlyList<Entity> m_entities;
+		Point m_center;
+		double m_scale;
 	}
 }

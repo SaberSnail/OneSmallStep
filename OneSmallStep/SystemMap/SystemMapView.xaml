@@ -4,7 +4,7 @@
     xmlns:local="clr-namespace:OneSmallStep.SystemMap">
 
 	<DataTemplate DataType="{x:Type local:SystemMapViewModel}">
-		<local:SystemMapControl Date="{Binding CurrentDate}" Entities="{Binding Entities}" />
+		<local:SystemMapControl Date="{Binding CurrentDate}" Entities="{Binding Entities}" Scale="{Binding Scale}" Center="{Binding Center}" />
 	</DataTemplate>
 
 </ResourceDictionary>
