@@ -46,6 +46,26 @@ namespace OneSmallStep.Time
 			return Tick.CompareTo(that.Tick);
 		}
 
+		public static bool operator <(TimePoint left, TimePoint right)
+		{
+			return left.CompareTo(right) < 0;
+		}
+
+		public static bool operator <=(TimePoint left, TimePoint right)
+		{
+			return left.CompareTo(right) <= 0;
+		}
+
+		public static bool operator >(TimePoint left, TimePoint right)
+		{
+			return left.CompareTo(right) > 0;
+		}
+
+		public static bool operator >=(TimePoint left, TimePoint right)
+		{
+			return left.CompareTo(right) >= 0;
+		}
+
 		public static TimePoint operator -(TimePoint timePoint, TimeOffset timeOffset)
 		{
 			return new TimePoint(timePoint.Tick - timeOffset.TickOffset);
