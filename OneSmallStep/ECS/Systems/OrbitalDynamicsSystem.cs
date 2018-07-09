@@ -19,7 +19,7 @@ namespace OneSmallStep.ECS.Systems
 			var angularVelocity = 2.0 * Math.PI / (periodInDays * 24.0 * 3600.0);
 			var radius = Math.Pow(mu / (angularVelocity * angularVelocity), 1.0 / 3.0);
 
-			var secondsFromEpoch = StandardCalendar.CreateTimePoint(2000, 1, 1, Constants.TicksPerDay).Tick * Constants.SecondsPerTick;
+			var secondsFromEpoch = calendar.CreateTimePoint(2000, 1, 1).Tick * Constants.SecondsPerTick;
 			var initialAngle = (secondsFromEpoch * angularVelocity) + meanAnomalyInDegrees / (2.0 * Math.PI);
 			var relativePosition = new Point(radius * Math.Cos(initialAngle), radius * Math.Sin(initialAngle));
 

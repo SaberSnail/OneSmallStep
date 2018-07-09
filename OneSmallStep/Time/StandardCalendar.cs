@@ -5,33 +5,9 @@ namespace OneSmallStep.Time
 {
 	public sealed class StandardCalendar : ICalendar
 	{
-		public static TimePoint CreateTimePoint(int years, int months, int days, double ticksPerDay)
+		public TimePoint CreateTimePoint(int year, int month, int day)
 		{
-			if (months < 1 || months > 12)
-				throw new ArgumentException($"{nameof(months)} must be between 1 and 12.");
-			if (days < 1 || days > 31)
-				throw new ArgumentException($"{nameof(days)} must be between 1 and 31.");
-
-			var totalDays = (years / 400) * c_daysIn400Years;
-			var remainingYears = years % 400;
-			totalDays += (remainingYears / 100) * c_daysIn100Years;
-			remainingYears = remainingYears % 100;
-			totalDays += (remainingYears / 4) * c_daysIn4Years;
-			remainingYears = remainingYears % 4;
-			if (remainingYears != 0 && IsLeapYear(years - remainingYears))
-			{
-				totalDays += 366;
-				remainingYears--;
-			}
-			totalDays += remainingYears * 365;
-
-			totalDays += s_daysToStartOfMonth[months - 1];
-			if (IsLeapYear(years) && months > 2)
-				totalDays++;
-
-			totalDays += days;
-
-			return new TimePoint((long) (totalDays * ticksPerDay));
+			return new TimePoint(CreateTimePoint(year, month, day, m_ticksPerDay).Tick - m_startDay);
 		}
 
 		public static StandardCalendar Create(int startYear, int startMonth, int startDay, double ticksPerDay)
@@ -101,6 +77,35 @@ namespace OneSmallStep.Time
 		{
 			m_startDay = startDay;
 			m_ticksPerDay = ticksPerDay;
+		}
+
+		private static TimePoint CreateTimePoint(int years, int months, int days, double ticksPerDay)
+		{
+			if (months < 1 || months > 12)
+				throw new ArgumentException($"{nameof(months)} must be between 1 and 12.");
+			if (days < 1 || days > 31)
+				throw new ArgumentException($"{nameof(days)} must be between 1 and 31.");
+
+			var totalDays = (years / 400) * c_daysIn400Years;
+			var remainingYears = years % 400;
+			totalDays += (remainingYears / 100) * c_daysIn100Years;
+			remainingYears = remainingYears % 100;
+			totalDays += (remainingYears / 4) * c_daysIn4Years;
+			remainingYears = remainingYears % 4;
+			if (remainingYears != 0 && IsLeapYear(years - remainingYears))
+			{
+				totalDays += 366;
+				remainingYears--;
+			}
+			totalDays += remainingYears * 365;
+
+			totalDays += s_daysToStartOfMonth[months - 1];
+			if (IsLeapYear(years) && months > 2)
+				totalDays++;
+
+			totalDays += days;
+
+			return new TimePoint((long) (totalDays * ticksPerDay));
 		}
 
 		private static void DaysToDaysMonthsYears(long totalDays, out int years, out int months, out int days)
