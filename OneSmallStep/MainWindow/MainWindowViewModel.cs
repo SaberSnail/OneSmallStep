@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -98,6 +99,9 @@ namespace OneSmallStep.MainWindow
 
 			IsGameStarted = true;
 
+			m_stopwatchMilestone = m_gameData.Calendar.CreateTimePoint(2100, 1, 1);
+			m_stopwatch = Stopwatch.StartNew();
+
 			if (ShouldRunAtFullSpeed)
 				Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action) ProcessTick);
 		}
@@ -114,6 +118,9 @@ namespace OneSmallStep.MainWindow
 
 			UpdateCurrentDate();
 			m_planet.UpdateFromEntity();
+
+			if (m_gameData.CurrentDate == m_stopwatchMilestone)
+				Log.Info($"Got to {m_gameData.Calendar.FormatTime(m_stopwatchMilestone, TimeFormat.Short)} in {m_stopwatch.Elapsed.TotalSeconds}");
 
 			if (ShouldRunAtFullSpeed)
 				Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action) ProcessTick);
@@ -159,6 +166,7 @@ namespace OneSmallStep.MainWindow
 		PlanetViewModel m_planet;
 		IReadOnlyList<SystemBase> m_systems;
 		bool m_shouldRunAtFullSpeed;
-		IReadOnlyList<Entity> m_currentSystemBodies;
+		Stopwatch m_stopwatch;
+		TimePoint m_stopwatchMilestone;
 	}
 }
