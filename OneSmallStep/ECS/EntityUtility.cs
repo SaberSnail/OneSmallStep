@@ -1,4 +1,5 @@
-﻿using OneSmallStep.ECS.Components;
+﻿using System.Windows;
+using OneSmallStep.ECS.Components;
 using OneSmallStep.ECS.Systems;
 using OneSmallStep.Time;
 
@@ -9,7 +10,7 @@ namespace OneSmallStep.ECS
 		public static Entity CreatePlanet(this EntityManager entityManager, double mass)
 		{
 			var planet = new Entity(entityManager);
-			var body = new AstronomicalBodyComponent
+			var body = new UnpoweredAstronomicalBodyComponent
 			{
 				Mass = mass,
 			};
@@ -27,6 +28,21 @@ namespace OneSmallStep.ECS
 
 			entityManager.RegisterEntity(planet);
 			return planet;
+		}
+
+		public static Entity CreateShip(this EntityManager entityManager, Point startingPoint, Entity target)
+		{
+			var ship = new Entity(entityManager);
+			var body = new PoweredAstronomicalBodyComponent()
+			{
+				AbsolutePosition = startingPoint,
+				Speed = 5E10,
+				TargetEntity = target,
+			};
+			ship.AddComponent(body);
+
+			entityManager.RegisterEntity(ship);
+			return ship;
 		}
 	}
 }

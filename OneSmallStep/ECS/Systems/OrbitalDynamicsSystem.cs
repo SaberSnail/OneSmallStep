@@ -9,11 +9,11 @@ namespace OneSmallStep.ECS.Systems
 {
 	public sealed class OrbitalDynamicsSystem : SystemBase
 	{
-		public static AstronomicalBodyComponent CreateComponent(Entity parentEntity, double mass, double periodInDays, double meanAnomalyInDegrees, ICalendar calendar)
+		public static UnpoweredAstronomicalBodyComponent CreateComponent(Entity parentEntity, double mass, double periodInDays, double meanAnomalyInDegrees, ICalendar calendar)
 		{
-			var parentBody = parentEntity?.GetComponent<AstronomicalBodyComponent>();
+			var parentBody = parentEntity?.GetComponent<UnpoweredAstronomicalBodyComponent>();
 			if (parentBody == null)
-				return new AstronomicalBodyComponent { Mass = mass };
+				return new UnpoweredAstronomicalBodyComponent { Mass = mass };
 
 			var mu = c_gravitationalConstant * (mass + parentBody.Mass);
 			var angularVelocity = 2.0 * Math.PI / (periodInDays * 24.0 * 3600.0);
@@ -23,7 +23,7 @@ namespace OneSmallStep.ECS.Systems
 			var initialAngle = (secondsFromEpoch * angularVelocity) + meanAnomalyInDegrees / (2.0 * Math.PI);
 			var relativePosition = new Point(radius * Math.Cos(initialAngle), radius * Math.Sin(initialAngle));
 
-			return new AstronomicalBodyComponent
+			return new UnpoweredAstronomicalBodyComponent
 			{
 				Mass = mass,
 				Parent = parentEntity,
@@ -40,13 +40,13 @@ namespace OneSmallStep.ECS.Systems
 
 		protected override ComponentKey GetRequiredComponentsKey()
 		{
-			return GameData.EntityManager.CreateComponentKey(typeof(AstronomicalBodyComponent));
+			return GameData.EntityManager.CreateComponentKey(typeof(UnpoweredAstronomicalBodyComponent));
 		}
 
 		protected override void ProcessTick(Entity entity)
 		{
-			var body = entity.GetComponent<AstronomicalBodyComponent>();
-			var parentBody = body.Parent?.GetComponent<AstronomicalBodyComponent>();
+			var body = entity.GetComponent<UnpoweredAstronomicalBodyComponent>();
+			var parentBody = body.Parent?.GetComponent<UnpoweredAstronomicalBodyComponent>();
 
 			if (parentBody != null)
 			{

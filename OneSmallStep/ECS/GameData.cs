@@ -21,7 +21,8 @@ namespace OneSmallStep.ECS
 
 			entityManager.RegisterComponent<AgeComponent>();
 			entityManager.RegisterComponent<PopulationComponent>();
-			entityManager.RegisterComponent<AstronomicalBodyComponent>();
+			entityManager.RegisterComponent<UnpoweredAstronomicalBodyComponent>();
+			entityManager.RegisterComponent<PoweredAstronomicalBodyComponent>();
 
 			entityManager.SetStartupFinished();
 			return entityManager;

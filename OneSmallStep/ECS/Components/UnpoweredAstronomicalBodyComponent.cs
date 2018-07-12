@@ -2,7 +2,7 @@ using System.Windows;
 
 namespace OneSmallStep.ECS.Components
 {
-	public sealed class AstronomicalBodyComponent : ComponentBase
+	public sealed class UnpoweredAstronomicalBodyComponent : ComponentBase
 	{
 		public double Mass { get; set; }
 		public Entity Parent { get; set; }
@@ -16,15 +16,20 @@ namespace OneSmallStep.ECS.Components
 		public Point GetAbsolutePosition()
 		{
 			var position = RelativePosition;
-			AstronomicalBodyComponent currentBody = this;
+			UnpoweredAstronomicalBodyComponent currentBody = this;
 			while (true)
 			{
-				currentBody = currentBody.Parent?.GetComponent<AstronomicalBodyComponent>();
+				currentBody = currentBody.Parent?.GetComponent<UnpoweredAstronomicalBodyComponent>();
 				if (currentBody == null)
 					break;
 				position.Offset(currentBody.RelativePosition.X, currentBody.RelativePosition.Y);
 			}
 			return position;
+		}
+
+		public Point GetAbsoluteOrbitCenterPosition()
+		{
+			return Parent?.GetComponent<UnpoweredAstronomicalBodyComponent>()?.GetAbsolutePosition() ?? RelativePosition;
 		}
 	}
 }

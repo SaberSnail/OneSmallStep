@@ -64,7 +64,8 @@
     <Compile Include="ECS\ComponentBase.cs" />
     <Compile Include="ECS\ComponentKey.cs" />
     <Compile Include="ECS\Components\AgeComponent.cs" />
-    <Compile Include="ECS\Components\AstronomicalBodyComponent.cs" />
+    <Compile Include="ECS\Components\PoweredAstronomicalBodyComponent.cs" />
+    <Compile Include="ECS\Components\UnpoweredAstronomicalBodyComponent.cs" />
     <Compile Include="ECS\Components\PopulationComponent.cs" />
     <Compile Include="ECS\Entity.cs" />
     <Compile Include="ECS\EntityManager.cs" />
@@ -75,8 +76,10 @@
     <Compile Include="ECS\Systems\AgeSystem.cs" />
     <Compile Include="ECS\Systems\OrbitalDynamicsSystem.cs" />
     <Compile Include="ECS\Systems\PopulationGrowthSystem.cs" />
+    <Compile Include="ECS\Systems\PoweredFlightSystem.cs" />
     <Compile Include="EntityViewModels\EntityViewModelBase.cs" />
     <Compile Include="EntityViewModels\PlanetViewModel.cs" />
+    <Compile Include="EntityViewModels\ShipViewModel.cs" />
     <Compile Include="OurResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -92,6 +95,7 @@
     <Compile Include="Utility\Constants.cs" />
     <Compile Include="Utility\EventLog.cs" />
     <Compile Include="Utility\EventLogItem.cs" />
+    <Compile Include="Utility\OrbitalDynamicsUtility.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

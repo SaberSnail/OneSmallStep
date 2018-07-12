@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using GoldenAnvil.Utility.Logging;
@@ -72,6 +73,19 @@ namespace OneSmallStep.MainWindow
 			}
 		}
 
+		public ShipViewModel Ship
+		{
+			get
+			{
+				VerifyAccess();
+				return m_ship;
+			}
+			private set
+			{
+				SetPropertyField(nameof(Ship), value, ref m_ship);
+			}
+		}
+
 		public SystemMapViewModel SystemMap
 		{
 			get
@@ -90,7 +104,8 @@ namespace OneSmallStep.MainWindow
 			m_systems = new SystemBase[]
 			{
 				new PopulationGrowthSystem(m_gameData, m_gameServices.RandomNumberGenerator),
-				new OrbitalDynamicsSystem(m_gameData), 
+				new PoweredFlightSystem(m_gameData),
+				new OrbitalDynamicsSystem(m_gameData),
 			};
 
 			InitializeEntities();
@@ -131,7 +146,11 @@ namespace OneSmallStep.MainWindow
 			var date = m_gameData.Calendar.FormatTime(m_gameData.CurrentDate, TimeFormat.Long);
 			SetPropertyField(nameof(CurrentDate), date, ref m_currentDate);
 
-			m_systemMap.Update(date, m_gameData.EntityManager.GetEntitiesMatchingKey(m_gameData.EntityManager.CreateComponentKey(typeof(AstronomicalBodyComponent))).ToList());
+			var entities = m_gameData.EntityManager.GetEntitiesMatchingKeys(
+				m_gameData.EntityManager.CreateComponentKey(typeof(UnpoweredAstronomicalBodyComponent)),
+				m_gameData.EntityManager.CreateComponentKey(typeof(PoweredAstronomicalBodyComponent))
+			);
+			m_systemMap.Update(date, entities.ToList());
 		}
 
 		private void InitializeEntities()
@@ -153,6 +172,10 @@ namespace OneSmallStep.MainWindow
 
 			Planet = new PlanetViewModel(earth);
 			Planet.UpdateFromEntity();
+
+			var ship = m_gameData.EntityManager.CreateShip(new Point(1E12, 1E12), mars);
+			Ship = new ShipViewModel(ship);
+			Ship.UpdateFromEntity();
 		}
 
 		static readonly ILogSource Log = LogManager.CreateLogSource(nameof(MainWindowViewModel));
@@ -168,5 +191,6 @@ namespace OneSmallStep.MainWindow
 		bool m_shouldRunAtFullSpeed;
 		Stopwatch m_stopwatch;
 		TimePoint m_stopwatchMilestone;
+		ShipViewModel m_ship;
 	}
 }

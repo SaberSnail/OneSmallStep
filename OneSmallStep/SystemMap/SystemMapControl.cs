@@ -117,10 +117,29 @@ namespace OneSmallStep.SystemMap
 			{
 				foreach (var entity in Entities.EmptyIfNull())
 				{
-					var body = entity.GetComponent<AstronomicalBodyComponent>();
-					var position = body.GetAbsolutePosition();
-					var renderAt = new Point(position.X * scale, position.Y * scale);
-					context.DrawEllipse(s_bodyBrush, s_bodyPen, renderAt, 4, 4);
+					var unpoweredBody = entity.GetComponent<UnpoweredAstronomicalBodyComponent>();
+					if (unpoweredBody != null)
+					{
+						var position = unpoweredBody.GetAbsolutePosition();
+						var renderAt = new Point(position.X * scale, position.Y * scale);
+						context.DrawEllipse(s_bodyBrush, s_bodyPen, renderAt, 4, 4);
+						continue;
+					}
+
+					var poweredBody = entity.GetComponent<PoweredAstronomicalBodyComponent>();
+					if (poweredBody != null)
+					{
+						var position = poweredBody.AbsolutePosition;
+						var renderAt = new Point(position.X * scale, position.Y * scale);
+						context.DrawLine(s_bodyPen, new Point(renderAt.X - 4, renderAt.Y), new Point(renderAt.X + 4, renderAt.Y));
+						context.DrawLine(s_bodyPen, new Point(renderAt.X, renderAt.Y - 4), new Point(renderAt.X, renderAt.Y + 4));
+						if (poweredBody.TargetPoint.HasValue)
+						{
+							var renderTo = new Point(poweredBody.TargetPoint.Value.X * scale, poweredBody.TargetPoint.Value.Y * scale);
+							context.DrawLine(s_pathPen, renderAt, renderTo);
+						}
+						continue;
+					}
 				}
 			}
 		}
@@ -133,6 +152,7 @@ namespace OneSmallStep.SystemMap
 		static readonly Brush s_background = new SolidColorBrush(Colors.Black).Frozen();
 		static readonly Brush s_bodyBrush = new SolidColorBrush(Color.FromRgb(0x20, 0x20, 0x20)).Frozen();
 		static readonly Pen s_bodyPen = new Pen(new SolidColorBrush(Colors.White).Frozen(), 1.0).Frozen();
+		static readonly Pen s_pathPen = new Pen(new SolidColorBrush(Colors.Gray).Frozen(), 1.0).Frozen();
 		Point m_mouseDownPosition;
 		bool m_isDragging;
 		Point m_mouseDownCenter;

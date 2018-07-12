@@ -41,6 +41,12 @@ namespace OneSmallStep.ECS
 			return m_entities.Where(x => (x.ComponentKey & componentKey) == componentKey);
 		}
 
+		[NotNull]
+		public IEnumerable<Entity> GetEntitiesMatchingKeys(params ComponentKey[] componentKey)
+		{
+			return m_entities.Where(x => componentKey.Any(key => (x.ComponentKey & key) == key));
+		}
+
 		public void RegisterEntity([NotNull] Entity entity)
 		{
 			if (entity == null)
