@@ -47,7 +47,7 @@ namespace OneSmallStep.EntityViewModels
 			var population = Entity.GetComponent<PopulationComponent>();
 			Population = population?.Population ?? 0;
 
-			var astronomicalBody = Entity.GetComponent<UnpoweredAstronomicalBodyComponent>();
+			var astronomicalBody = Entity.GetComponent<OrbitalPositionComponent>();
 			var position = astronomicalBody?.GetAbsolutePosition();
 			Position = position.HasValue ? "{0}, {1}".FormatCurrentUiCulture(position.Value.X, position.Value.Y) : null;
 		}

@@ -104,8 +104,7 @@ namespace OneSmallStep.MainWindow
 			m_systems = new SystemBase[]
 			{
 				new PopulationGrowthSystem(m_gameData, m_gameServices.RandomNumberGenerator),
-				new PoweredFlightSystem(m_gameData),
-				new OrbitalDynamicsSystem(m_gameData),
+				new StarSystemMovementSystem(m_gameData),
 			};
 
 			InitializeEntities();
@@ -146,10 +145,7 @@ namespace OneSmallStep.MainWindow
 			var date = m_gameData.Calendar.FormatTime(m_gameData.CurrentDate, TimeFormat.Long);
 			SetPropertyField(nameof(CurrentDate), date, ref m_currentDate);
 
-			var entities = m_gameData.EntityManager.GetEntitiesMatchingKeys(
-				m_gameData.EntityManager.CreateComponentKey(typeof(UnpoweredAstronomicalBodyComponent)),
-				m_gameData.EntityManager.CreateComponentKey(typeof(PoweredAstronomicalBodyComponent))
-			);
+			var entities = m_gameData.EntityManager.GetEntitiesMatchingKey(m_gameData.EntityManager.CreateComponentKey<OrbitalPositionComponent>());
 			m_systemMap.Update(date, entities.ToList());
 		}
 

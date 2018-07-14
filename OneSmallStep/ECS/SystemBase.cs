@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 
 namespace OneSmallStep.ECS
 {
@@ -6,8 +6,7 @@ namespace OneSmallStep.ECS
 	{
 		public void Process()
 		{
-			foreach (Entity entity in GameData.EntityManager.GetEntitiesMatchingKey(GetRequiredComponentsKey()))
-				ProcessTick(entity);
+			ProcessTick(GameData.EntityManager.GetEntitiesMatchingKey(GetRequiredComponentsKey()));
 		}
 
 		protected SystemBase(GameData gameData)
@@ -19,6 +18,6 @@ namespace OneSmallStep.ECS
 
 		protected abstract ComponentKey GetRequiredComponentsKey();
 
-		protected abstract void ProcessTick(Entity entity);
+		protected abstract void ProcessTick(IEnumerable<Entity> entities);
 	}
 }

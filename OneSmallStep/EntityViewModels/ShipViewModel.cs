@@ -26,9 +26,9 @@ namespace OneSmallStep.EntityViewModels
 
 		public override void UpdateFromEntity()
 		{
-			var body = Entity.GetComponent<PoweredAstronomicalBodyComponent>();
-			var position = body?.AbsolutePosition;
-			Position = position.HasValue ? "{0}, {1}".FormatCurrentUiCulture(position.Value.X, position.Value.Y) : null;
+			var body = Entity.GetComponent<OrbitalPositionComponent>();
+			var position = body.GetAbsolutePosition();
+			Position = "{0}, {1}".FormatCurrentUiCulture(position.X, position.Y);
 		}
 
 		string m_position;

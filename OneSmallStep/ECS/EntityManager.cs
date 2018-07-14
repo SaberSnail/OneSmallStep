@@ -55,10 +55,14 @@ namespace OneSmallStep.ECS
 			m_entities.Add(entity);
 		}
 
-		[NotNull]
 		public ComponentKey CreateComponentKey([NotNull] IEnumerable<ComponentBase> components)
 		{
 			return CreateComponentKey(components.Select(x => x.GetType()).ToArray());
+		}
+
+		public ComponentKey CreateComponentKey<T>()
+		{
+			return CreateComponentKey(typeof(T));
 		}
 
 		public ComponentKey CreateComponentKey(params Type[] componentTypes)

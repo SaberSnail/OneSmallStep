@@ -117,7 +117,7 @@ namespace OneSmallStep.SystemMap
 			{
 				foreach (var entity in Entities.EmptyIfNull())
 				{
-					var unpoweredBody = entity.GetComponent<UnpoweredAstronomicalBodyComponent>();
+					var unpoweredBody = entity.GetComponent<OrbitalPositionComponent>();
 					if (unpoweredBody != null)
 					{
 						var position = unpoweredBody.GetAbsolutePosition();
@@ -125,8 +125,8 @@ namespace OneSmallStep.SystemMap
 						context.DrawEllipse(s_bodyBrush, s_bodyPen, renderAt, 4, 4);
 						continue;
 					}
-
-					var poweredBody = entity.GetComponent<PoweredAstronomicalBodyComponent>();
+					/*
+					var poweredBody = entity.GetComponent<OrbitalPositionComponent>();
 					if (poweredBody != null)
 					{
 						var position = poweredBody.AbsolutePosition;
@@ -140,6 +140,7 @@ namespace OneSmallStep.SystemMap
 						}
 						continue;
 					}
+					*/
 				}
 			}
 		}
