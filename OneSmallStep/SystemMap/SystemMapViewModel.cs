@@ -9,7 +9,7 @@ namespace OneSmallStep.SystemMap
 		public SystemMapViewModel()
 		{
 			m_bodies = new List<ISystemBodyRenderer>();
-			Scale = 1.0 / 2.5E11;
+			Scale = 1.0 / 1.2E12;
 		}
 
 		public Point Center

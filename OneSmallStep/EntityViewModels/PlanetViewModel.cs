@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Windows;
@@ -59,6 +60,19 @@ namespace OneSmallStep.EntityViewModels
 			}
 		}
 
+		public double Radius
+		{
+			get
+			{
+				VerifyAccess();
+				return m_radius;
+			}
+			set
+			{
+				SetPropertyField(nameof(Radius), value, ref m_radius);
+			}
+		}
+
 		public Point OrbitCenterPosition
 		{
 			get
@@ -92,6 +106,7 @@ namespace OneSmallStep.EntityViewModels
 
 			var body = Entity.GetComponent<OrbitalPositionComponent>();
 			Position = body?.GetAbsolutePosition() ?? new Point();
+			Radius = body?.Radius ?? 0.0;
 			PositionString = "{0}, {1}".FormatCurrentCulture(Position.X, Position.Y);
 			OrbitCenterPosition = body?.Parent?.GetComponent<OrbitalPositionComponent>()?.GetAbsolutePosition() ?? new Point();
 			OrbitalRadius = Position.DistanceTo(OrbitCenterPosition);
@@ -102,22 +117,25 @@ namespace OneSmallStep.EntityViewModels
 			if (m_position != m_orbitCenterPosition)
 			{
 				var renderOrbitAt = new Point((OrbitCenterPosition.X * scale) + offset.X, (OrbitCenterPosition.Y * scale) + offset.Y);
-				var radius = OrbitalRadius * scale;
-				context.DrawEllipse(null, s_orbitPen, renderOrbitAt, radius, radius);
+				var orbitRadius = OrbitalRadius * scale;
+				context.DrawEllipse(null, s_orbitPen, renderOrbitAt, orbitRadius, orbitRadius);
 			}
 
+			var radius = Math.Max(c_minRadius, Radius * scale);
 			var renderAt = new Point((Position.X * scale) + offset.X, (Position.Y * scale) + offset.Y);
-			context.DrawEllipse(s_bodyBrush, s_bodyPen, renderAt, 4, 4);
+			context.DrawEllipse(s_bodyBrush, s_bodyPen, renderAt, radius, radius);
 		}
 
 		static readonly Brush s_bodyBrush = new SolidColorBrush(Color.FromRgb(0x20, 0x20, 0x20)).Frozen();
 		static readonly Pen s_bodyPen = new Pen(new SolidColorBrush(Colors.White).Frozen(), 1.0).Frozen();
 		static readonly Pen s_orbitPen = new Pen(new SolidColorBrush(Color.FromRgb(0x30, 0x30, 0x30)), 1.0).Frozen();
+		const double c_minRadius = 4.0;
 
 		long m_population;
 		string m_positionString;
 		Point m_position;
 		Point m_orbitCenterPosition;
 		double m_orbitalRadius;
+		double m_radius;
 	}
 }
