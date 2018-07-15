@@ -7,12 +7,11 @@ namespace OneSmallStep.ECS.Components
 {
 	public sealed class OrbitalPositionComponent : ComponentBase
 	{
-		public static OrbitalPositionComponent CreatePoweredBody(double maxSpeed, double mass, Point startingPoint, Entity target)
+		public static OrbitalPositionComponent CreatePoweredBody(double maxSpeed, double mass, Point startingPoint)
 		{
 			var data = new PoweredStarSystemPositionData
 			{
 				MaxSpeed = maxSpeed,
-				TargetEntity = target,
 			};
 			return new OrbitalPositionComponent(data)
 			{
@@ -60,35 +59,21 @@ namespace OneSmallStep.ECS.Components
 		public Point RelativePosition { get; set; }
 		public double Mass { get; set; }
 
-		public Point GetAbsolutePosition()
-		{
-			return m_positionData.GetAbsolutePosition(this);
-		}
+		public Point GetAbsolutePosition() => m_positionData.GetAbsolutePosition(this);
 
-		public Point GetAbsolutePositionAtTime(double ticks)
-		{
-			return m_positionData.GetAbsolutePositionAtTime(this, ticks);
-		}
+		public Point GetAbsolutePositionAtTime(double ticks) => m_positionData.GetAbsolutePositionAtTime(this, ticks);
 
-		public Point? GetInterceptPoint(Point interceptorPosition, double interceptorMaxSpeed)
-		{
-			return m_positionData.GetInterceptPoint(this, interceptorPosition, interceptorMaxSpeed);
-		}
+		public Point? GetInterceptPoint(Point interceptorPosition, double interceptorMaxSpeed) => m_positionData.GetInterceptPoint(this, interceptorPosition, interceptorMaxSpeed);
 
-		public void EnsureValidity()
-		{
-			m_positionData.EnsureValidity(this);
-		}
+		public void EnsureValidity() => m_positionData.EnsureValidity(this);
 
-		public void MoveOneTick()
-		{
-			m_positionData.MoveOneTick(this);
-		}
+		public void MoveOneTick() => m_positionData.MoveOneTick(this);
 
-		private OrbitalPositionComponent(StarSystemPositionDataBase positionData)
-		{
-			m_positionData = positionData;
-		}
+		public void TrySetTarget(Entity target) => m_positionData.TrySetTarget(target);
+
+		public Point? TryGetTargetPoint() => m_positionData.TryGetTargetPoint();
+
+		private OrbitalPositionComponent(StarSystemPositionDataBase positionData) => m_positionData = positionData;
 
 		StarSystemPositionDataBase m_positionData;
 	}

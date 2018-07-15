@@ -61,6 +61,69 @@ namespace OneSmallStep {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0:G4} Em.
+        /// </summary>
+        internal static string DistanceInExameters {
+            get {
+                return ResourceManager.GetString("DistanceInExameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:G4} Gm.
+        /// </summary>
+        internal static string DistanceInGigameters {
+            get {
+                return ResourceManager.GetString("DistanceInGigameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:G4} km.
+        /// </summary>
+        internal static string DistanceInKilometers {
+            get {
+                return ResourceManager.GetString("DistanceInKilometers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:G4} Mm.
+        /// </summary>
+        internal static string DistanceInMegameters {
+            get {
+                return ResourceManager.GetString("DistanceInMegameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:G4} m.
+        /// </summary>
+        internal static string DIstanceInMeters {
+            get {
+                return ResourceManager.GetString("DIstanceInMeters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:G4} Pm.
+        /// </summary>
+        internal static string DistanceInPetameters {
+            get {
+                return ResourceManager.GetString("DistanceInPetameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:G4} Tm.
+        /// </summary>
+        internal static string DistanceInTerameters {
+            get {
+                return ResourceManager.GetString("DistanceInTerameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0:N0} day.
         /// </summary>
         internal static string TimeOffsetDayLong_One {

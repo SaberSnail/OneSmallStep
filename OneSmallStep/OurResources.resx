@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DistanceInGigameters" xml:space="preserve">
+    <value>{0:G4} Gm</value>
+  </data>
+  <data name="DistanceInKilometers" xml:space="preserve">
+    <value>{0:G4} km</value>
+  </data>
+  <data name="DistanceInMegameters" xml:space="preserve">
+    <value>{0:G4} Mm</value>
+  </data>
+  <data name="DIstanceInMeters" xml:space="preserve">
+    <value>{0:G4} m</value>
+  </data>
   <data name="TimeOffsetDayLong_One" xml:space="preserve">
     <value>{0:N0} day</value>
   </data>
@@ -155,5 +167,14 @@
   </data>
   <data name="TimeOffsetYearShort_Other" xml:space="preserve">
     <value>{0:N0}y</value>
+  </data>
+  <data name="DistanceInExameters" xml:space="preserve">
+    <value>{0:G4} Em</value>
+  </data>
+  <data name="DistanceInPetameters" xml:space="preserve">
+    <value>{0:G4} Pm</value>
+  </data>
+  <data name="DistanceInTerameters" xml:space="preserve">
+    <value>{0:G4} Tm</value>
   </data>
 </root>

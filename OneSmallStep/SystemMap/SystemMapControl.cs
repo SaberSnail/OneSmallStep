@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Windows;
-using OneSmallStep.ECS;
-using OneSmallStep.ECS.Components;
+using OneSmallStep.Utility;
 
 namespace OneSmallStep.SystemMap
 {
@@ -21,7 +21,7 @@ namespace OneSmallStep.SystemMap
 			set { SetValue(CenterProperty, value); }
 		}
 
-		public static readonly DependencyProperty ScaleProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Scale, OnInvalidatingPropertyChanged, 1.0);
+		public static readonly DependencyProperty ScaleProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Scale, OnScaleChanged, 1.0);
 
 		public double Scale
 		{
@@ -37,12 +37,12 @@ namespace OneSmallStep.SystemMap
 			set { SetValue(DateProperty, value); }
 		}
 
-		public static readonly DependencyProperty EntitiesProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Entities, OnInvalidatingPropertyChanged, new List<Entity>());
+		public static readonly DependencyProperty BodiesProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Bodies, OnInvalidatingPropertyChanged, new List<ISystemBodyRenderer>());
 
-		public IReadOnlyList<Entity> Entities
+		public IReadOnlyList<ISystemBodyRenderer> Bodies
 		{
-			get { return (IReadOnlyList<Entity>) GetValue(EntitiesProperty); }
-			set { SetValue(EntitiesProperty, value); }
+			get { return (IReadOnlyList<ISystemBodyRenderer>) GetValue(BodiesProperty); }
+			set { SetValue(BodiesProperty, value); }
 		}
 
 		protected override void OnMouseWheel(MouseWheelEventArgs e)
@@ -103,46 +103,33 @@ namespace OneSmallStep.SystemMap
 		{
 			base.OnRender(context);
 
-			var actualRect = new Rect(0, 0, ActualWidth, ActualHeight);
-			context.DrawRectangle(s_background, null, actualRect);
+			var viewRect = new Rect(0, 0, ActualWidth, ActualHeight);
+			context.DrawRectangle(s_background, null, viewRect);
 
-			var centerPoint = new Point(actualRect.Width / 2.0, actualRect.Height / 2.0);
+			var centerPoint = new Point(viewRect.Width / 2.0, viewRect.Height / 2.0);
 			var scale = Scale * Math.Min(centerPoint.X, centerPoint.Y);
-			var translate = new TranslateTransform(
-				centerPoint.X + (Center.X * scale),
-				centerPoint.Y + (Center.Y * scale)
-				);
-			using (context.ScopedClip(new RectangleGeometry(actualRect)))
-			using (context.ScopedTransform(translate))
+			var offset = new Point(centerPoint.X + (Center.X * scale), centerPoint.Y + (Center.Y * scale));
+			using (context.ScopedClip(new RectangleGeometry(viewRect)))
 			{
-				foreach (var entity in Entities.EmptyIfNull())
-				{
-					var unpoweredBody = entity.GetComponent<OrbitalPositionComponent>();
-					if (unpoweredBody != null)
-					{
-						var position = unpoweredBody.GetAbsolutePosition();
-						var renderAt = new Point(position.X * scale, position.Y * scale);
-						context.DrawEllipse(s_bodyBrush, s_bodyPen, renderAt, 4, 4);
-						continue;
-					}
-					/*
-					var poweredBody = entity.GetComponent<OrbitalPositionComponent>();
-					if (poweredBody != null)
-					{
-						var position = poweredBody.AbsolutePosition;
-						var renderAt = new Point(position.X * scale, position.Y * scale);
-						context.DrawLine(s_bodyPen, new Point(renderAt.X - 4, renderAt.Y), new Point(renderAt.X + 4, renderAt.Y));
-						context.DrawLine(s_bodyPen, new Point(renderAt.X, renderAt.Y - 4), new Point(renderAt.X, renderAt.Y + 4));
-						if (poweredBody.TargetPoint.HasValue)
-						{
-							var renderTo = new Point(poweredBody.TargetPoint.Value.X * scale, poweredBody.TargetPoint.Value.Y * scale);
-							context.DrawLine(s_pathPen, renderAt, renderTo);
-						}
-						continue;
-					}
-					*/
-				}
+				foreach (var body in Bodies.EmptyIfNull())
+					body.Render(context, offset, scale);
+
+				DrawScale(context, viewRect);
 			}
+		}
+
+		private void DrawScale(DrawingContext context, Rect viewRect)
+		{
+			context.DrawLine(s_scalePen, new Point(viewRect.Right - 8, viewRect.Bottom - 8), new Point(viewRect.Right - c_scaleWidth - 8, viewRect.Bottom - 8));
+			if (m_scaleText != null)
+			context.DrawText(m_scaleText, new Point(viewRect.Right - 58 - (m_scaleText.Width / 2.0), viewRect.Bottom - 8 - m_scaleText.Height));
+		}
+
+		protected override Size ArrangeOverride(Size arrangeSize)
+		{
+			var actualSize = base.ArrangeOverride(arrangeSize);
+			RefreshScaleText(actualSize);
+			return actualSize;
 		}
 
 		private static void OnInvalidatingPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -150,10 +137,28 @@ namespace OneSmallStep.SystemMap
 			((SystemMapControl) d).InvalidateVisual();
 		}
 
+		private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var control = (SystemMapControl) d;
+			control.RefreshScaleText(new Size(control.ActualWidth, control.ActualHeight));
+			control.InvalidateVisual();
+		}
+
+		private void RefreshScaleText(Size actualSize)
+		{
+			var viewRect = new Rect(new Point(), actualSize);
+			var centerPoint = new Point(viewRect.Width / 2.0, viewRect.Height / 2.0);
+			var scale = Scale * Math.Min(centerPoint.X, centerPoint.Y);
+
+			m_scaleText = new FormattedText(FormatUtility.RenderDistance(c_scaleWidth / scale), CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface("Verdana"), 12, s_scaleTextBrush, 1.0);
+		}
+
 		static readonly Brush s_background = new SolidColorBrush(Colors.Black).Frozen();
-		static readonly Brush s_bodyBrush = new SolidColorBrush(Color.FromRgb(0x20, 0x20, 0x20)).Frozen();
-		static readonly Pen s_bodyPen = new Pen(new SolidColorBrush(Colors.White).Frozen(), 1.0).Frozen();
-		static readonly Pen s_pathPen = new Pen(new SolidColorBrush(Colors.Gray).Frozen(), 1.0).Frozen();
+		static readonly Pen s_scalePen = new Pen(new SolidColorBrush(Colors.LightGray).Frozen(), 1.0).Frozen();
+		static readonly Brush s_scaleTextBrush = new SolidColorBrush(Colors.DarkGray).Frozen();
+		const double c_scaleWidth = 100.0;
+
+		FormattedText m_scaleText;
 		Point m_mouseDownPosition;
 		bool m_isDragging;
 		Point m_mouseDownCenter;

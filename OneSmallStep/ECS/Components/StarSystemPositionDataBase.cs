@@ -14,5 +14,9 @@ namespace OneSmallStep.ECS.Components
 		public abstract void EnsureValidity(OrbitalPositionComponent body);
 
 		public abstract void MoveOneTick(OrbitalPositionComponent body);
+
+		public virtual void TrySetTarget(Entity target) { }
+
+		public virtual Point? TryGetTargetPoint() => null;
 	}
 }

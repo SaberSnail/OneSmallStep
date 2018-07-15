@@ -1,18 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using GoldenAnvil.Utility.Logging;
-using OneSmallStep.ECS;
 
 namespace OneSmallStep.SystemMap
 {
-	public interface ISystemMapEntity
-	{ }
 	public sealed class SystemMapViewModel : ViewModelBase
 	{
 		public SystemMapViewModel()
 		{
-			m_entities = new List<Entity>();
+			m_bodies = new List<ISystemBodyRenderer>();
 			Scale = 1.0 / 2.5E11;
 		}
 
@@ -52,33 +48,32 @@ namespace OneSmallStep.SystemMap
 			}
 		}
 
-		public IReadOnlyList<Entity> Entities
+		public IReadOnlyList<ISystemBodyRenderer> Bodies
 		{
 			get
 			{
 				VerifyAccess();
-				return m_entities;
+				return m_bodies;
 			}
 		}
 
-		public void Update(string date, IReadOnlyList<Entity> entities)
+		public void Update(string date, IReadOnlyList<ISystemBodyRenderer> entities)
 		{
 			var propertyNames = new List<string>();
 			if (date != m_currentDate)
 				propertyNames.Add(nameof(CurrentDate));
-			if (!entities.SequenceEqual(m_entities))
-				propertyNames.Add(nameof(Entities));
+			propertyNames.Add(nameof(Bodies));
 			using (ScopedPropertyChange(propertyNames.ToArray()))
 			{
 				m_currentDate = date;
-				m_entities = entities;
+				m_bodies = entities;
 			}
 		}
 
 		static readonly ILogSource Log = LogManager.CreateLogSource(nameof(SystemMapViewModel));
 
 		string m_currentDate;
-		IReadOnlyList<Entity> m_entities;
+		IReadOnlyList<ISystemBodyRenderer> m_bodies;
 		Point m_center;
 		double m_scale;
 	}

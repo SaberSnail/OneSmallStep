@@ -22,13 +22,13 @@ namespace OneSmallStep.Time
 			DaysToDaysMonthsYears((long) Math.Floor(point.Tick / m_ticksPerDay) + m_startDay, out var years, out var months,
 				out var days);
 			var date = new DateTime(years, months, days);
-			return (format == TimeFormat.Long ? "{0:D}" : "{0:d}").FormatCurrentUiCulture(date);
+			return (format == TimeFormat.Long ? "{0:D}" : "{0:d}").FormatCurrentCulture(date);
 		}
 
 		public string FormatOffset(TimeOffset offset, TimeFormat format)
 		{
 			var days = (long) Math.Floor(offset.TickOffset / m_ticksPerDay);
-			return OurResources.ResourceManager.Pluralize(format == TimeFormat.Long ? "TimeOffsetDayLong" : "TimeOffsetDayShort", days).FormatCurrentUiCulture(days);
+			return OurResources.ResourceManager.Pluralize(format == TimeFormat.Long ? "TimeOffsetDayLong" : "TimeOffsetDayShort", days).FormatCurrentCulture(days);
 		}
 
 		public string FormatOffsetFrom(TimePoint point, TimeOffset offset, TimeFormat format)
@@ -52,20 +52,20 @@ namespace OneSmallStep.Time
 			if (endMonths < startMonths)
 				years--;
 
-			var output = years != 0 ? OurResources.ResourceManager.Pluralize(format == TimeFormat.Long ? "TimeOffsetYearLong" : "TimeOffsetYearShort", years).FormatCurrentUiCulture(years) : "";
-			var monthsOutput = months != 0 ? OurResources.ResourceManager.Pluralize(format == TimeFormat.Long ? "TimeOffsetMonthLong" : "TimeOffsetMonthShort", months).FormatCurrentUiCulture(months) : null;
+			var output = years != 0 ? OurResources.ResourceManager.Pluralize(format == TimeFormat.Long ? "TimeOffsetYearLong" : "TimeOffsetYearShort", years).FormatCurrentCulture(years) : "";
+			var monthsOutput = months != 0 ? OurResources.ResourceManager.Pluralize(format == TimeFormat.Long ? "TimeOffsetMonthLong" : "TimeOffsetMonthShort", months).FormatCurrentCulture(months) : null;
 			if (monthsOutput != null)
 			{
 				if (output.Length != 0)
-					output = OurResources.TimeOffsetTermJoin.FormatCurrentUiCulture(output, monthsOutput);
+					output = OurResources.TimeOffsetTermJoin.FormatCurrentCulture(output, monthsOutput);
 				else
 					output = monthsOutput;
 			}
-			var daysOutput = days != 0 ? OurResources.ResourceManager.Pluralize(format == TimeFormat.Long ? "TimeOffsetDayLong" : "TimeOffsetDayShort", days).FormatCurrentUiCulture(days) : null;
+			var daysOutput = days != 0 ? OurResources.ResourceManager.Pluralize(format == TimeFormat.Long ? "TimeOffsetDayLong" : "TimeOffsetDayShort", days).FormatCurrentCulture(days) : null;
 			if (daysOutput != null)
 			{
 				if (output.Length != 0)
-					output = OurResources.TimeOffsetTermJoin.FormatCurrentUiCulture(output, daysOutput);
+					output = OurResources.TimeOffsetTermJoin.FormatCurrentCulture(output, daysOutput);
 				else
 					output = daysOutput;
 			}

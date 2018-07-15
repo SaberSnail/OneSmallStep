@@ -86,6 +86,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>OurResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SystemMap\ISystemBodyRenderer.cs" />
     <Compile Include="SystemMap\SystemMapControl.cs" />
     <Compile Include="SystemMap\SystemMapViewModel.cs" />
     <Compile Include="Time\ICalendar.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Utility\Constants.cs" />
     <Compile Include="Utility\EventLog.cs" />
     <Compile Include="Utility\EventLogItem.cs" />
+    <Compile Include="Utility\FormatUtility.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

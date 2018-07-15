@@ -22,6 +22,8 @@ namespace OneSmallStep.MainWindow
 		{
 			m_gameServices = gameServices;
 			m_systemMap = new SystemMapViewModel();
+			m_planets = new List<PlanetViewModel>();
+			m_ships = new List<ShipViewModel>();
 		}
 
 		public bool IsGameStarted
@@ -130,8 +132,18 @@ namespace OneSmallStep.MainWindow
 			foreach (var system in m_systems)
 				system.Process();
 
+			foreach (var planet in m_planets)
+				planet.UpdateFromEntity();
+			foreach (var ship in m_ships)
+				ship.UpdateFromEntity();
+
+			foreach (var ship in m_ships)
+			{
+				if (ship.TargetPosition == null)
+					ship.Entity.GetComponent<OrbitalPositionComponent>().TrySetTarget(m_planets[m_gameServices.RandomNumberGenerator.Next(0, m_planets.Count - 1)].Entity);
+			}
+
 			UpdateCurrentDate();
-			m_planet.UpdateFromEntity();
 
 			if (m_gameData.CurrentDate == m_stopwatchMilestone)
 				Log.Info($"Got to {m_gameData.Calendar.FormatTime(m_stopwatchMilestone, TimeFormat.Short)} in {m_stopwatch.Elapsed.TotalSeconds}");
@@ -145,39 +157,52 @@ namespace OneSmallStep.MainWindow
 			var date = m_gameData.Calendar.FormatTime(m_gameData.CurrentDate, TimeFormat.Long);
 			SetPropertyField(nameof(CurrentDate), date, ref m_currentDate);
 
-			var entities = m_gameData.EntityManager.GetEntitiesMatchingKey(m_gameData.EntityManager.CreateComponentKey<OrbitalPositionComponent>());
-			m_systemMap.Update(date, entities.ToList());
+			m_systemMap.Update(date, m_planets.Cast<ISystemBodyRenderer>().Concat(m_ships).ToList());
 		}
 
 		private void InitializeEntities()
 		{
 			var sun = m_gameData.EntityManager.CreatePlanet(1.9885E30);
+			m_planets.Add(new PlanetViewModel(sun));
 
 			var mercury = m_gameData.EntityManager.CreatePlanet(sun, 3.3011E23, 87.9691, 174.796, m_gameData.Calendar);
+			m_planets.Add(new PlanetViewModel(mercury));
 
 			var venus = m_gameData.EntityManager.CreatePlanet(sun, 4.8675E24, 224.701, 50.115, m_gameData.Calendar);
+			m_planets.Add(new PlanetViewModel(venus));
 
 			var earth = m_gameData.EntityManager.CreatePlanet(sun, 5.97237E24, 365.256363004, 358.617, m_gameData.Calendar);
 			var population = new PopulationComponent { Population = 1000000000 };
 			earth.AddComponent(population);
+			Planet = new PlanetViewModel(earth);
+			m_planets.Add(Planet);
 			var moon = m_gameData.EntityManager.CreatePlanet(earth, 7.342E22, 27.321661, 134.96292, m_gameData.Calendar);
+			m_planets.Add(new PlanetViewModel(moon));
 
 			var mars = m_gameData.EntityManager.CreatePlanet(sun, 6.4171E23, 686.971, 320.45776, m_gameData.Calendar);
+			m_planets.Add(new PlanetViewModel(mars));
 			var phobos = m_gameData.EntityManager.CreatePlanet(mars, 4.0659E16, 0.31891023, 0, m_gameData.Calendar);
+			m_planets.Add(new PlanetViewModel(phobos));
 			var deimos = m_gameData.EntityManager.CreatePlanet(mars, 1.4762E15, 1.263, 0, m_gameData.Calendar);
+			m_planets.Add(new PlanetViewModel(deimos));
 
-			Planet = new PlanetViewModel(earth);
-			Planet.UpdateFromEntity();
+			foreach (var planet in m_planets)
+				planet.UpdateFromEntity();
 
-			var ship = m_gameData.EntityManager.CreateShip(new Point(1E12, 1E12), mars);
-			Ship = new ShipViewModel(ship);
-			Ship.UpdateFromEntity();
+			var ship1 = m_gameData.EntityManager.CreateShip(new Point(1E12, 1E12));
+			Ship = new ShipViewModel(ship1);
+			m_ships.Add(Ship);
+
+			foreach (var ship in m_ships)
+				ship.UpdateFromEntity();
 		}
 
 		static readonly ILogSource Log = LogManager.CreateLogSource(nameof(MainWindowViewModel));
 
 		readonly GameServices m_gameServices;
 		readonly SystemMapViewModel m_systemMap;
+		readonly List<PlanetViewModel> m_planets;
+		readonly List<ShipViewModel> m_ships;
 
 		GameData m_gameData;
 		bool m_isGameStarted;

@@ -18,7 +18,7 @@
 			<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Population}" />
 
 			<TextBlock Grid.Row="1" Grid.Column="0" Text="Position:" />
-			<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Position}" />
+			<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PositionString}" />
 		</Grid>
 	</DataTemplate>
 

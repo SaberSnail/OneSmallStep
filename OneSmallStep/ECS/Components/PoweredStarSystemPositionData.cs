@@ -9,6 +9,14 @@ namespace OneSmallStep.ECS.Components
 		public Point? TargetPoint { get; set; }
 		public double MaxSpeed { get; set; }
 
+		public override void TrySetTarget(Entity target)
+		{
+			TargetEntity = target;
+			TargetPoint = null;
+		}
+
+		public override Point? TryGetTargetPoint() => TargetPoint;
+
 		public override Point GetAbsolutePosition(OrbitalPositionComponent body)
 		{
 			return body.RelativePosition;

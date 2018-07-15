@@ -1,10 +1,14 @@
-﻿using GoldenAnvil.Utility;
+﻿using System.Windows;
+using System.Windows.Media;
+using GoldenAnvil.Utility;
+using GoldenAnvil.Utility.Windows;
 using OneSmallStep.ECS;
 using OneSmallStep.ECS.Components;
+using OneSmallStep.SystemMap;
 
 namespace OneSmallStep.EntityViewModels
 {
-	public sealed class PlanetViewModel : EntityViewModelBase
+	public sealed class PlanetViewModel : EntityViewModelBase, ISystemBodyRenderer
 	{
 		public PlanetViewModel(Entity entity)
 			: base(entity)
@@ -29,7 +33,20 @@ namespace OneSmallStep.EntityViewModels
 			}
 		}
 
-		public string Position
+		public string PositionString
+		{
+			get
+			{
+				VerifyAccess();
+				return m_positionString;
+			}
+			private set
+			{
+				SetPropertyField(nameof(PositionString), value, ref m_positionString);
+			}
+		}
+
+		public Point Position
 		{
 			get
 			{
@@ -42,17 +59,65 @@ namespace OneSmallStep.EntityViewModels
 			}
 		}
 
+		public Point OrbitCenterPosition
+		{
+			get
+			{
+				VerifyAccess();
+				return m_orbitCenterPosition;
+			}
+			private set
+			{
+				SetPropertyField(nameof(OrbitCenterPosition), value, ref m_orbitCenterPosition);
+			}
+		}
+
+		public double OrbitalRadius
+		{
+			get
+			{
+				VerifyAccess();
+				return m_orbitalRadius;
+			}
+			private set
+			{
+				SetPropertyField(nameof(OrbitalRadius), value, ref m_orbitalRadius);
+			}
+		}
+
 		public override void UpdateFromEntity()
 		{
 			var population = Entity.GetComponent<PopulationComponent>();
 			Population = population?.Population ?? 0;
 
-			var astronomicalBody = Entity.GetComponent<OrbitalPositionComponent>();
-			var position = astronomicalBody?.GetAbsolutePosition();
-			Position = position.HasValue ? "{0}, {1}".FormatCurrentUiCulture(position.Value.X, position.Value.Y) : null;
+			var body = Entity.GetComponent<OrbitalPositionComponent>();
+			Position = body?.GetAbsolutePosition() ?? new Point();
+			PositionString = "{0}, {1}".FormatCurrentCulture(Position.X, Position.Y);
+			OrbitCenterPosition = body?.Parent?.GetComponent<OrbitalPositionComponent>()?.GetAbsolutePosition() ?? new Point();
+			OrbitalRadius = Position.DistanceTo(OrbitCenterPosition);
 		}
 
+		public void Render(DrawingContext context, Point offset, double scale)
+		{
+			if (m_position != m_orbitCenterPosition)
+			{
+				var renderOrbitAt = new Point((OrbitCenterPosition.X * scale) + offset.X, (OrbitCenterPosition.Y * scale) + offset.Y);
+				var radius = OrbitalRadius * scale;
+				context.DrawEllipse(null, s_orbitPen, renderOrbitAt, radius, radius);
+			}
+
+			var renderAt = new Point((Position.X * scale) + offset.X, (Position.Y * scale) + offset.Y);
+			context.DrawEllipse(s_bodyBrush, s_bodyPen, renderAt, 4, 4);
+		}
+
+		static readonly Brush s_bodyBrush = new SolidColorBrush(Color.FromRgb(0x20, 0x20, 0x20)).Frozen();
+		static readonly Pen s_bodyPen = new Pen(new SolidColorBrush(Colors.White).Frozen(), 1.0).Frozen();
+		static readonly Pen s_orbitPen = new Pen(new SolidColorBrush(Color.FromRgb(0x30, 0x30, 0x30)), 1.0).Frozen();
+
 		long m_population;
-		string m_position;
+		string m_positionString;
+		Point m_position;
+		Point m_orbitCenterPosition;
+		double m_orbitalRadius;
 	}
 }

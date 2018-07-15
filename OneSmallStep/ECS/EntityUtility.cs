@@ -27,10 +27,10 @@ namespace OneSmallStep.ECS
 			return planet;
 		}
 
-		public static Entity CreateShip(this EntityManager entityManager, Point startingPoint, Entity target)
+		public static Entity CreateShip(this EntityManager entityManager, Point startingPoint)
 		{
 			var ship = new Entity(entityManager);
-			var body = OrbitalPositionComponent.CreatePoweredBody(5E10, 5E7, startingPoint, target);
+			var body = OrbitalPositionComponent.CreatePoweredBody(5E10, 5E7, startingPoint);
 			ship.AddComponent(body);
 
 			entityManager.RegisterEntity(ship);
