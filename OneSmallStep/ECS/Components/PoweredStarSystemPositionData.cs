@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using GoldenAnvil.Utility.Logging;
 
@@ -11,8 +12,11 @@ namespace OneSmallStep.ECS.Components
 
 		public override void TrySetTarget(Entity target)
 		{
-			TargetEntity = target;
-			TargetPoint = null;
+			if (TargetEntity == null)
+			{
+				TargetEntity = target;
+				TargetPoint = null;
+			}
 		}
 
 		public override Point? TryGetTargetPoint() => TargetPoint;
@@ -38,13 +42,28 @@ namespace OneSmallStep.ECS.Components
 			return absolutePosition;
 		}
 
-		public override void EnsureValidity(OrbitalPositionComponent body)
+		public override void EnsureStartValidity(OrbitalPositionComponent body)
 		{
 			if (TargetEntity != null && TargetPoint == null)
 			{
 				var targetBody = TargetEntity.GetComponent<OrbitalPositionComponent>();
 				if (targetBody != null)
 					TargetPoint = targetBody.GetInterceptPoint(GetAbsolutePosition(body), MaxSpeed);
+			}
+		}
+
+		public override void EnsureEndValidity(OrbitalPositionComponent body)
+		{
+			if (TargetEntity != null && TargetPoint == null)
+			{
+				var targetBody = TargetEntity.GetComponent<OrbitalPositionComponent>();
+				var targetPosition = targetBody.GetAbsolutePosition();
+				Log.Info($"Target body is at ({targetPosition.X}, {targetPosition.Y}).");
+				var currentPosition = GetAbsolutePosition(body);
+				if (Math.Abs(currentPosition.X - targetPosition.X) > 1 || Math.Abs(currentPosition.Y - targetPosition.Y) > 1)
+					Log.Info("Current position does not match target position.");
+				else
+					TargetEntity = null;
 			}
 		}
 
@@ -58,10 +77,9 @@ namespace OneSmallStep.ECS.Components
 				vector = targetVector - vector;
 				if ((MaxSpeed * MaxSpeed) > vector.LengthSquared)
 				{
-					Log.Info($"Reached target point ({TargetPoint.Value.X}, {TargetPoint.Value.Y})");
 					body.RelativePosition = TargetPoint.Value;
+					Log.Info($"Reached target point ({TargetPoint.Value.X}, {TargetPoint.Value.Y})");
 					TargetPoint = null;
-					TargetEntity = null;
 				}
 				else
 				{

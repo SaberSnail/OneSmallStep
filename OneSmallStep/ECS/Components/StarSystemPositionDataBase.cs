@@ -1,5 +1,4 @@
 using System.Windows;
-using OneSmallStep.Time;
 
 namespace OneSmallStep.ECS.Components
 {
@@ -11,7 +10,9 @@ namespace OneSmallStep.ECS.Components
 
 		public abstract Point? GetInterceptPoint(OrbitalPositionComponent body, Point interceptorPosition, double interceptorMaxSpeed);
 
-		public abstract void EnsureValidity(OrbitalPositionComponent body);
+		public abstract void EnsureStartValidity(OrbitalPositionComponent body);
+
+		public abstract void EnsureEndValidity(OrbitalPositionComponent body);
 
 		public abstract void MoveOneTick(OrbitalPositionComponent body);
 

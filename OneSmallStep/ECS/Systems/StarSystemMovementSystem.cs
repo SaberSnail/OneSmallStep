@@ -23,13 +23,19 @@ namespace OneSmallStep.ECS.Systems
 			foreach (var entity in entitiesList)
 			{
 				var body = entity.GetComponent<OrbitalPositionComponent>();
-				body.EnsureValidity();
+				body.EnsureStartValidity();
 			}
 
 			foreach (var entity in entitiesList)
 			{
 				var body = entity.GetComponent<OrbitalPositionComponent>();
 				body.MoveOneTick();
+			}
+
+			foreach (var entity in entitiesList)
+			{
+				var body = entity.GetComponent<OrbitalPositionComponent>();
+				body.EnsureEndValidity();
 			}
 		}
 	}

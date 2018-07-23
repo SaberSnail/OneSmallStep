@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using OneSmallStep.Time;
 using OneSmallStep.Utility;
@@ -69,13 +72,23 @@ namespace OneSmallStep.ECS.Components
 
 		public Point? GetInterceptPoint(Point interceptorPosition, double interceptorMaxSpeed) => m_positionData.GetInterceptPoint(this, interceptorPosition, interceptorMaxSpeed);
 
-		public void EnsureValidity() => m_positionData.EnsureValidity(this);
+		public void EnsureStartValidity() => m_positionData.EnsureStartValidity(this);
+
+		public void EnsureEndValidity() => m_positionData.EnsureEndValidity(this);
 
 		public void MoveOneTick() => m_positionData.MoveOneTick(this);
 
 		public void TrySetTarget(Entity target) => m_positionData.TrySetTarget(target);
 
 		public Point? TryGetTargetPoint() => m_positionData.TryGetTargetPoint();
+
+		public IEnumerable<OrbitalPositionComponent> EnumerateThisAndParents()
+		{
+			var parent = Parent?.GetComponent<OrbitalPositionComponent>();
+			if (parent == null)
+				return Enumerable.Repeat(this, 1);
+			return parent.EnumerateThisAndParents().Prepend(this);
+		}
 
 		private OrbitalPositionComponent(StarSystemPositionDataBase positionData) => m_positionData = positionData;
 

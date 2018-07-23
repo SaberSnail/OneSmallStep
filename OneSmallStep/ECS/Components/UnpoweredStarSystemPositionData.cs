@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Logging;
@@ -24,20 +26,18 @@ namespace OneSmallStep.ECS.Components
 
 		public override Point GetAbsolutePositionAtTime(OrbitalPositionComponent body, double ticks)
 		{
-			var absolutePosition = body.RelativePosition;
 			var parentPosition = body.Parent?.GetComponent<OrbitalPositionComponent>()?.GetAbsolutePositionAtTime(ticks);
 			if (parentPosition != null)
 			{
-				var currentAngle = MathUtility.DegreesToRadians(Vector.AngleBetween(new Vector(1, 0), new Vector(absolutePosition.X, absolutePosition.Y)));
+				var currentAngle = Math.Atan2(body.RelativePosition.Y, body.RelativePosition.X);
 				var angle = currentAngle + (AngularVelocity.Value * ticks * Constants.SecondsPerTick);
-				//var angle = Math.Atan2(initialPosition.X - orbitCenter.X, initialPosition.Y - orbitCenter.Y) + (tick * angularVelocityPerTick * Constants.SecondsPerTick);
 				return new Point(Math.Cos(angle) * OrbitalRadius.Value + parentPosition.Value.X, Math.Sin(angle) * OrbitalRadius.Value + parentPosition.Value.Y);
 			}
 
-			return absolutePosition;
+			return body.RelativePosition;
 		}
 
-		public override void EnsureValidity(OrbitalPositionComponent body)
+		public override void EnsureStartValidity(OrbitalPositionComponent body)
 		{
 			var parentBody = body.Parent?.GetComponent<OrbitalPositionComponent>();
 
@@ -52,13 +52,17 @@ namespace OneSmallStep.ECS.Components
 			}
 		}
 
+		public override void EnsureEndValidity(OrbitalPositionComponent body)
+		{
+		}
+
 		public override void MoveOneTick(OrbitalPositionComponent body)
 		{
 			var parentBody = body.Parent?.GetComponent<OrbitalPositionComponent>();
 
 			if (parentBody != null)
 			{
-				var currentAngle = MathUtility.DegreesToRadians(Vector.AngleBetween(new Vector(1, 0), new Vector(body.RelativePosition.X, body.RelativePosition.Y)));
+				var currentAngle = Math.Atan2(body.RelativePosition.Y, body.RelativePosition.X);
 				var newAngle = currentAngle + AngularVelocity.Value * Constants.SecondsPerTick;
 				body.RelativePosition = new Point(OrbitalRadius.Value * Math.Cos(newAngle), OrbitalRadius.Value * Math.Sin(newAngle));
 			}
@@ -69,34 +73,100 @@ namespace OneSmallStep.ECS.Components
 			if (body.Parent == null)
 				return GetAbsolutePosition(body);
 
-			var targetOribitCenter = body.Parent.GetComponent<OrbitalPositionComponent>().GetAbsolutePosition();
-			var targetAbsolutePosition = targetOribitCenter;
-			targetAbsolutePosition.Offset(body.RelativePosition.X, body.RelativePosition.Y);
-
-			var shipOrbitalRadius = interceptorPosition.DistanceTo(targetAbsolutePosition);
-			var shortestDistance = Math.Abs(shipOrbitalRadius - OrbitalRadius.Value);
-			var minTimeInTicks = shortestDistance / interceptorMaxSpeed;
-			var maxTimeInTicks = (OrbitalRadius.Value * 2.0 / interceptorMaxSpeed) + (shipOrbitalRadius > OrbitalRadius.Value ? minTimeInTicks : -minTimeInTicks);
-			// TODO: use time for first time planet is closest to ship starting position after minTimeInTicks if it results in a smaller maxTimeInTicks
-
-			var maxError = 0.25;
-			var timeInTicks = minTimeInTicks;
-			while (maxTimeInTicks - minTimeInTicks >= maxError)
+			double? interceptorDistanceToCenter = null;
+			double longestDistance = 0.0;
+			double? minDistanceToCenter = null;
+			double? maxDistanceToCenter = null;
+			foreach (var parentBody in body.EnumerateThisAndParents().Reverse())
 			{
-				timeInTicks = (minTimeInTicks + maxTimeInTicks) / 2.0;
-				var error = GetError(body, interceptorPosition, interceptorMaxSpeed, timeInTicks);
-				if (Math.Abs(error) < maxError)
+				if (interceptorDistanceToCenter == null)
+				{
+					interceptorDistanceToCenter = interceptorPosition.DistanceTo(parentBody.RelativePosition);
+					longestDistance = interceptorDistanceToCenter.Value;
+				}
+				else
+				{
+					var orbitaRadius = parentBody.RelativePosition.DistanceTo(new Point());
+					longestDistance += orbitaRadius;
+					minDistanceToCenter = minDistanceToCenter.HasValue ? minDistanceToCenter - orbitaRadius : orbitaRadius;
+					maxDistanceToCenter = maxDistanceToCenter.HasValue ? maxDistanceToCenter + orbitaRadius : orbitaRadius;
+				}
+			}
+			double shortestDistance;
+			if (maxDistanceToCenter.HasValue)
+			{
+				if (interceptorDistanceToCenter.Value > maxDistanceToCenter.Value)
+					shortestDistance = interceptorDistanceToCenter.Value - maxDistanceToCenter.Value;
+				else if (interceptorDistanceToCenter.Value < minDistanceToCenter.Value)
+					shortestDistance = minDistanceToCenter.Value - interceptorDistanceToCenter.Value;
+				else
+					shortestDistance = 0.0;
+			}
+			else
+			{
+				shortestDistance = interceptorDistanceToCenter.Value;
+			}
+
+			int minTimeInTicks = (int) Math.Floor(shortestDistance / interceptorMaxSpeed);
+			int maxTimeInTicks = (int) Math.Ceiling(longestDistance / interceptorMaxSpeed);
+
+			bool failedIntercept = false;
+			var timeInTicks = minTimeInTicks;
+			Dictionary<int, double> tickToPosition = new Dictionary<int, double>();
+			while (minTimeInTicks != maxTimeInTicks)
+			{
+				var newTimeInTicks = (minTimeInTicks + maxTimeInTicks) / 2;
+				if (tickToPosition.ContainsKey(newTimeInTicks))
+				{
+					timeInTicks = Math.Max(timeInTicks, newTimeInTicks);
+					failedIntercept = true;
+					break;
+				}
+
+				timeInTicks = newTimeInTicks;
+				var positionDifference = GetPositionDifference(body, interceptorPosition, interceptorMaxSpeed, timeInTicks);
+				if (positionDifference >= 0.0 && positionDifference < interceptorMaxSpeed)
 					break;
 
-				if (error * GetError(body, interceptorPosition, interceptorMaxSpeed, minTimeInTicks) < 0)
+				tickToPosition[timeInTicks] = positionDifference;
+
+				if (positionDifference > 0)
 					maxTimeInTicks = timeInTicks;
+				else if (minTimeInTicks == timeInTicks)
+					minTimeInTicks++;
 				else
 					minTimeInTicks = timeInTicks;
 			}
 
-			var targetPoint = GetAbsolutePositionAtTime(body, Math.Ceiling(timeInTicks));
-			Log.Info($"Targeting point ({targetPoint.X}, {targetPoint.Y}), will reach in {timeInTicks} ticks.");
+			if (!failedIntercept)
+			{
+				if (minTimeInTicks == maxTimeInTicks)
+					timeInTicks = minTimeInTicks;
+			}
+
+			var targetPoint = GetAbsolutePositionAtTime(body, timeInTicks);
+			if (failedIntercept)
+			{
+				var vector = interceptorPosition.VectorTo(targetPoint);
+				targetPoint = interceptorPosition + (vector * 0.5);
+				Log.Info($"Failed intercept.");
+			}
+
+			Log.Info($"Targeting point ({targetPoint.X}, {targetPoint.Y}), will reach in {timeInTicks} ticks from ({interceptorPosition.X}, {interceptorPosition.Y}).");
+
 			return targetPoint;
+		}
+
+		private double GetPositionDifference(OrbitalPositionComponent body, Point interceptorPosition, double interceptorSpeed, int tick)
+		{
+			var targetPosition = GetAbsolutePositionAtTime(body, tick);
+			var v1 = new Vector(interceptorPosition.X, interceptorPosition.Y);
+			var v2 = new Vector(targetPosition.X, targetPosition.Y);
+			var v = v2 - v1;
+			var distanceToTarget = v.Length;
+			v.Normalize();
+			v = v * interceptorSpeed * tick;
+			return v.Length - distanceToTarget;
 		}
 
 		private double GetError(OrbitalPositionComponent body, Point interceptorPosition, double interceptorSpeed, double tick)

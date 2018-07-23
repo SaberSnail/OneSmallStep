@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Logging;
 using OneSmallStep.ECS;
 using OneSmallStep.ECS.Components;
@@ -24,6 +25,8 @@ namespace OneSmallStep.MainWindow
 			m_systemMap = new SystemMapViewModel();
 			m_planets = new List<PlanetViewModel>();
 			m_ships = new List<ShipViewModel>();
+
+			ShouldRunAtFullSpeed = true;
 		}
 
 		public bool IsGameStarted
@@ -139,8 +142,8 @@ namespace OneSmallStep.MainWindow
 
 			foreach (var ship in m_ships)
 			{
-				if (ship.TargetPosition == null)
-					ship.Entity.GetComponent<OrbitalPositionComponent>().TrySetTarget(m_planets[m_gameServices.RandomNumberGenerator.Next(0, m_planets.Count - 1)].Entity);
+				var shipEntity = ship.Entity.GetComponent<OrbitalPositionComponent>();
+				shipEntity.TrySetTarget(m_planets[m_gameServices.RandomNumberGenerator.Next(0, m_planets.Count - 1)].Entity);
 			}
 
 			UpdateCurrentDate();
@@ -251,7 +254,7 @@ namespace OneSmallStep.MainWindow
 			foreach (var planet in m_planets)
 				planet.UpdateFromEntity();
 
-			var ship1 = m_gameData.EntityManager.CreateShip(new Point(1E12, 1E12));
+			var ship1 = m_gameData.EntityManager.CreateShip(new Point(m_gameServices.RandomNumberGenerator.NextDouble(-1E12, 1E12), m_gameServices.RandomNumberGenerator.NextDouble(-1E12, 1E12)));
 			Ship = new ShipViewModel(ship1);
 			m_ships.Add(Ship);
 

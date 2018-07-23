@@ -6,7 +6,7 @@ namespace OneSmallStep.ECS
 	{
 		public GameServices()
 		{
-			RandomNumberGenerator = new Random();
+			RandomNumberGenerator = new Random(0);
 		}
 
 		public Random RandomNumberGenerator { get; }
