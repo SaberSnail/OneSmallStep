@@ -64,11 +64,14 @@
     <Compile Include="ECS\ComponentBase.cs" />
     <Compile Include="ECS\ComponentKey.cs" />
     <Compile Include="ECS\Components\AgeComponent.cs" />
+    <Compile Include="ECS\Components\MovementOrderBase.cs" />
+    <Compile Include="ECS\Components\MovementOrdersComponent.cs" />
+    <Compile Include="ECS\Components\MovementOrderUtility.cs" />
+    <Compile Include="ECS\Components\MoveToOrbitalBodyOrder.cs" />
+    <Compile Include="ECS\Components\OrbitalBodyCharacteristicsComponent.cs" />
     <Compile Include="ECS\Components\OrbitalPositionComponent.cs" />
-    <Compile Include="ECS\Components\PoweredStarSystemPositionData.cs" />
-    <Compile Include="ECS\Components\StarSystemPositionDataBase.cs" />
+    <Compile Include="ECS\Components\OrbitalUnitDesignComponent.cs" />
     <Compile Include="ECS\Components\PopulationComponent.cs" />
-    <Compile Include="ECS\Components\UnpoweredStarSystemPositionData.cs" />
     <Compile Include="ECS\Entity.cs" />
     <Compile Include="ECS\EntityManager.cs" />
     <Compile Include="ECS\EntityUtility.cs" />
@@ -98,6 +101,7 @@
     <Compile Include="Utility\EventLog.cs" />
     <Compile Include="Utility\EventLogItem.cs" />
     <Compile Include="Utility\FormatUtility.cs" />
+    <Compile Include="Utility\PositionUtility.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

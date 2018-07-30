@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Windows;
@@ -56,10 +57,12 @@ namespace OneSmallStep.EntityViewModels
 
 		public override void UpdateFromEntity()
 		{
-			var body = Entity.GetComponent<OrbitalPositionComponent>();
-			Position = body.GetAbsolutePosition();
+			var body = Entity.GetRequiredComponent<OrbitalPositionComponent>();
+			Position = body.GetCurrentAbsolutePosition();
 			PositionString = "{0}, {1}".FormatCurrentCulture(Position.X, Position.Y);
-			TargetPosition = body.TryGetTargetPoint();
+
+			var order = Entity.GetRequiredComponent<MovementOrdersComponent>().Orders.FirstOrDefault() as MoveToOrbitalBodyOrder;
+			TargetPosition = order?.InterceptPoint ?? new Point();
 		}
 
 		public void Render(DrawingContext context, Point offset, double scale)

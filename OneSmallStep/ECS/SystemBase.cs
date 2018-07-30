@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using OneSmallStep.Time;
 
 namespace OneSmallStep.ECS
 {
 	public abstract class SystemBase
 	{
-		public void Process()
+		public void ProcessTick(TimePoint newTime)
 		{
-			ProcessTick(GameData.EntityManager.GetEntitiesMatchingKey(GetRequiredComponentsKey()));
+			ProcessTickCore(newTime, GameData.EntityManager.GetEntitiesMatchingKey(GetRequiredComponentsKey()));
 		}
 
 		protected SystemBase(GameData gameData)
@@ -18,6 +19,6 @@ namespace OneSmallStep.ECS
 
 		protected abstract ComponentKey GetRequiredComponentsKey();
 
-		protected abstract void ProcessTick(IEnumerable<Entity> entities);
+		protected abstract void ProcessTickCore(TimePoint newTime, IEnumerable<Entity> entities);
 	}
 }

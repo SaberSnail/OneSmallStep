@@ -133,7 +133,7 @@ namespace OneSmallStep.MainWindow
 			m_gameData.CurrentDate = m_gameData.CurrentDate + Constants.Tick;
 
 			foreach (var system in m_systems)
-				system.Process();
+				system.ProcessTick(m_gameData.CurrentDate);
 
 			foreach (var planet in m_planets)
 				planet.UpdateFromEntity();
@@ -142,8 +142,12 @@ namespace OneSmallStep.MainWindow
 
 			foreach (var ship in m_ships)
 			{
-				var shipEntity = ship.Entity.GetComponent<OrbitalPositionComponent>();
-				shipEntity.TrySetTarget(m_planets[m_gameServices.RandomNumberGenerator.Next(0, m_planets.Count - 1)].Entity);
+				var orders = ship.Entity.GetRequiredComponent<MovementOrdersComponent>();
+				if (orders.Orders.Count == 0)
+				{
+					var design = ship.Entity.GetRequiredComponent<OrbitalUnitDesignComponent>();
+					orders.Orders.Add(new MoveToOrbitalBodyOrder(m_planets[m_gameServices.RandomNumberGenerator.Next(0, m_planets.Count - 1)].Entity, design.MaxSpeedPerTick));
+				}
 			}
 
 			UpdateCurrentDate();
@@ -262,7 +266,7 @@ namespace OneSmallStep.MainWindow
 				ship.UpdateFromEntity();
 		}
 
-		static readonly ILogSource Log = LogManager.CreateLogSource(nameof(MainWindowViewModel));
+		private static ILogSource Log => LogManager.CreateLogSource(nameof(MainWindowViewModel));
 
 		readonly GameServices m_gameServices;
 		readonly SystemMapViewModel m_systemMap;

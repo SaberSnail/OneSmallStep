@@ -27,7 +27,7 @@ namespace OneSmallStep.EntityViewModels
 			{
 				if (SetPropertyField(nameof(Population), value, ref m_population))
 				{
-					var populationComponent = Entity.GetComponent<PopulationComponent>();
+					var populationComponent = Entity.GetOptionalComponent<PopulationComponent>();
 					if (populationComponent != null)
 						populationComponent.Population = m_population;
 				}
@@ -101,14 +101,15 @@ namespace OneSmallStep.EntityViewModels
 
 		public override void UpdateFromEntity()
 		{
-			var population = Entity.GetComponent<PopulationComponent>();
+			var population = Entity.GetOptionalComponent<PopulationComponent>();
 			Population = population?.Population ?? 0;
 
-			var body = Entity.GetComponent<OrbitalPositionComponent>();
-			Position = body?.GetAbsolutePosition() ?? new Point();
+			var position = Entity.GetOptionalComponent<OrbitalPositionComponent>();
+			Position = position?.GetCurrentAbsolutePosition() ?? new Point();
+			var body = Entity.GetOptionalComponent<OrbitalBodyCharacteristicsComponent>();
 			Radius = body?.Radius ?? 0.0;
 			PositionString = "{0}, {1}".FormatCurrentCulture(Position.X, Position.Y);
-			OrbitCenterPosition = body?.Parent?.GetComponent<OrbitalPositionComponent>()?.GetAbsolutePosition() ?? new Point();
+			OrbitCenterPosition = position?.Parent?.GetOptionalComponent<OrbitalPositionComponent>()?.GetCurrentAbsolutePosition() ?? new Point();
 			OrbitalRadius = Position.DistanceTo(OrbitCenterPosition);
 		}
 

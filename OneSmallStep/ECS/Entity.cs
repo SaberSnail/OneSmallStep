@@ -17,10 +17,17 @@ namespace OneSmallStep.ECS
 		public ComponentKey ComponentKey { get; private set; }
 
 		[CanBeNull]
-		public T GetComponent<T>()
+		public T GetOptionalComponent<T>()
 			where T : ComponentBase
 		{
 			return (T) m_components.GetValueOrDefault(typeof(T));
+		}
+
+		[NotNull]
+		public T GetRequiredComponent<T>()
+			where T : ComponentBase
+		{
+			return (T) m_components[typeof(T)];
 		}
 
 		public void AddComponent(ComponentBase component)

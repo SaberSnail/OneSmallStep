@@ -9,8 +9,12 @@ namespace OneSmallStep.ECS
 		public static Entity CreatePlanet(this EntityManager entityManager, double mass, double radius)
 		{
 			var planet = new Entity(entityManager);
-			var body = OrbitalPositionComponent.CreateUnpoweredBody(mass, radius);
-			planet.AddComponent(body);
+			planet.AddComponent(OrbitalPositionComponent.CreateUnpoweredBody());
+			planet.AddComponent(new OrbitalBodyCharacteristicsComponent
+			{
+				Mass = mass,
+				Radius = radius,
+			});
 
 			entityManager.RegisterEntity(planet);
 			return planet;
@@ -19,8 +23,12 @@ namespace OneSmallStep.ECS
 		public static Entity CreatePlanet(this EntityManager entityManager, Entity parent, double mass, double radius, double periodInDays, double meanAnomalyInDegrees, bool isPrograde, ICalendar calendar)
 		{
 			var planet = new Entity(entityManager);
-			var body = OrbitalPositionComponent.CreateUnpoweredBody(parent, mass, radius, periodInDays, meanAnomalyInDegrees, isPrograde, calendar);
-			planet.AddComponent(body);
+			planet.AddComponent(OrbitalPositionComponent.CreateUnpoweredBody(parent, mass, periodInDays, meanAnomalyInDegrees, isPrograde, calendar));
+			planet.AddComponent(new OrbitalBodyCharacteristicsComponent
+			{
+				Mass = mass,
+				Radius = radius,
+			});
 
 			entityManager.RegisterEntity(planet);
 			return planet;
@@ -29,8 +37,17 @@ namespace OneSmallStep.ECS
 		public static Entity CreateShip(this EntityManager entityManager, Point startingPoint)
 		{
 			var ship = new Entity(entityManager);
-			var body = OrbitalPositionComponent.CreatePoweredBody(5E10, 5E7, 200, startingPoint);
-			ship.AddComponent(body);
+			ship.AddComponent(OrbitalPositionComponent.CreatePoweredBody(startingPoint));
+			ship.AddComponent(new OrbitalBodyCharacteristicsComponent
+			{
+				Mass = 5E7,
+				Radius = 200,
+			});
+			ship.AddComponent(new OrbitalUnitDesignComponent
+			{
+				MaxSpeedPerTick = 5E10,
+			});
+			ship.AddComponent(new MovementOrdersComponent());
 
 			entityManager.RegisterEntity(ship);
 			return ship;

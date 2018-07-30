@@ -70,7 +70,7 @@ namespace OneSmallStep.SystemMap
 			}
 		}
 
-		static readonly ILogSource Log = LogManager.CreateLogSource(nameof(SystemMapViewModel));
+		private static ILogSource Log => LogManager.CreateLogSource(nameof(SystemMapViewModel));
 
 		string m_currentDate;
 		IReadOnlyList<ISystemBodyRenderer> m_bodies;

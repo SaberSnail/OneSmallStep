@@ -1,8 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using GoldenAnvil.Utility.Windows;
+using JetBrains.Annotations;
 using OneSmallStep.Time;
 using OneSmallStep.Utility;
 
@@ -10,88 +11,105 @@ namespace OneSmallStep.ECS.Components
 {
 	public sealed class OrbitalPositionComponent : ComponentBase
 	{
-		public static OrbitalPositionComponent CreatePoweredBody(double maxSpeed, double mass, double radius, Point startingPoint)
+		public static OrbitalPositionComponent CreatePoweredBody(Point startingPoint)
 		{
-			var data = new PoweredStarSystemPositionData
-			{
-				MaxSpeed = maxSpeed,
-			};
-			return new OrbitalPositionComponent(data)
-			{
-				Mass = mass,
-				Radius = radius,
-				RelativePosition = startingPoint,
-			};
+			return new OrbitalPositionComponent(null, startingPoint, null, null);
 		}
 
-		public static OrbitalPositionComponent CreateUnpoweredBody(double mass, double radius)
+		public static OrbitalPositionComponent CreateUnpoweredBody()
 		{
-			return new OrbitalPositionComponent(new UnpoweredStarSystemPositionData())
-			{
-				Mass = mass,
-				Radius = radius,
-				RelativePosition = new Point(0, 0),
-			};
+			return new OrbitalPositionComponent(null, new Point(), null, null);
 		}
 
-		public static OrbitalPositionComponent CreateUnpoweredBody(Entity parentEntity, double mass, double radius, double periodInDays, double meanAnomalyInDegrees, bool isPrograde, ICalendar calendar)
+		public static OrbitalPositionComponent CreateUnpoweredBody([NotNull] Entity parent, double mass, double periodInDays, double meanAnomalyInDegrees, bool isPrograde, ICalendar calendar)
 		{
-			var parentBody = parentEntity.GetComponent<OrbitalPositionComponent>();
-			var mu = Constants.GravitationalConstant * (mass + parentBody.Mass);
+			if (parent == null)
+				throw new ArgumentNullException(nameof(parent));
+
+			var parentMass = parent.GetRequiredComponent<OrbitalBodyCharacteristicsComponent>().Mass;
+			var mu = Constants.GravitationalConstant * (mass + parentMass);
 			var angularVelocity = (isPrograde ? 1 : -1) * 2.0 * Math.PI / (periodInDays * 24.0 * 3600.0);
 			var orbitalRadius = Math.Pow(mu / (angularVelocity * angularVelocity), 1.0 / 3.0);
 
 			var secondsFromEpoch = calendar.CreateTimePoint(2000, 1, 1).Tick * Constants.SecondsPerTick;
 			var initialAngle = (secondsFromEpoch * angularVelocity) + meanAnomalyInDegrees / (2.0 * Math.PI);
 			var relativePosition = new Point(orbitalRadius * Math.Cos(initialAngle), orbitalRadius * Math.Sin(initialAngle));
+			var angularVelocityPerTick = angularVelocity * Constants.SecondsPerTick;
 
-			var data = new UnpoweredStarSystemPositionData
-			{
-				AngularVelocity = angularVelocity,
-				Mu = mu,
-				OrbitalRadius = orbitalRadius,
-			};
-
-			return new OrbitalPositionComponent(data)
-			{
-				Mass = mass,
-				Radius = radius,
-				RelativePosition = relativePosition,
-				Parent = parentEntity,
-			};
+			return new OrbitalPositionComponent(parent, relativePosition, angularVelocityPerTick, orbitalRadius);
 		}
 
 		public Entity Parent { get; set; }
 		public Point RelativePosition { get; set; }
-		public double Mass { get; set; }
-		public double Radius { get; set; }
+		public double? AngularVelocityPerTick { get; set; }
+		public double? OrbitalRadius { get; set; }
 
-		public Point GetAbsolutePosition() => m_positionData.GetAbsolutePosition(this);
+		public Point GetCurrentAbsolutePosition()
+		{
+			var position = RelativePosition;
+			var parentAbsolutePosition = Parent?.GetOptionalComponent<OrbitalPositionComponent>()?.GetCurrentAbsolutePosition();
+			if (parentAbsolutePosition != null)
+				position = position.WithOffset(parentAbsolutePosition.Value);
+			return position;
+		}
 
-		public Point GetAbsolutePositionAtTime(double ticks) => m_positionData.GetAbsolutePositionAtTime(this, ticks);
+		public void SetCurrentAbsolutePosition(Point absolutePosition)
+		{
+			AngularVelocityPerTick = null;
+			OrbitalRadius = null;
+			RelativePosition = absolutePosition;
+		}
 
-		public Point? GetInterceptPoint(Point interceptorPosition, double interceptorMaxSpeed) => m_positionData.GetInterceptPoint(this, interceptorPosition, interceptorMaxSpeed);
+		public void InitializeOrbitalValuesIfNeeded(double mass)
+		{
+			if (AngularVelocityPerTick.HasValue)
+				return;
 
-		public void EnsureStartValidity() => m_positionData.EnsureStartValidity(this);
+			OrbitalRadius = RelativePosition.DistanceTo(new Point());
 
-		public void EnsureEndValidity() => m_positionData.EnsureEndValidity(this);
+			var parentPosition = Parent?.GetOptionalComponent<OrbitalPositionComponent>();
+			if (parentPosition != null)
+			{
+				var parentBody = Parent.GetRequiredComponent<OrbitalBodyCharacteristicsComponent>();
+				var mu = Constants.GravitationalConstant * (mass + parentBody.Mass);
+				AngularVelocityPerTick = Math.Sqrt(mu / (OrbitalRadius.Value * OrbitalRadius.Value * OrbitalRadius.Value)) * Constants.SecondsPerTick;
+			}
+			else
+			{
+				AngularVelocityPerTick = 0;
+			}
+		}
 
-		public void MoveOneTick() => m_positionData.MoveOneTick(this);
+		public Point GetRelativeOrbitalPositionAtTime(TimeOffset timeOffset, double mass)
+		{
+			var currentAngle = Math.Atan2(RelativePosition.Y, RelativePosition.X);
+			var angle = currentAngle + (AngularVelocityPerTick.Value * timeOffset.TickOffset);
+			return new Point(Math.Cos(angle) * OrbitalRadius.Value, Math.Sin(angle) * OrbitalRadius.Value);
+		}
 
-		public void TrySetTarget(Entity target) => m_positionData.TrySetTarget(target);
-
-		public Point? TryGetTargetPoint() => m_positionData.TryGetTargetPoint();
+		public Point GetAbsoluteOrbitalPositionAtTime(TimeOffset timeOffset, double mass)
+		{
+			var parentMass = Parent?.GetOptionalComponent<OrbitalBodyCharacteristicsComponent>()?.Mass ?? 0.0;
+			var parentPosition = Parent?.GetOptionalComponent<OrbitalPositionComponent>()?.GetAbsoluteOrbitalPositionAtTime(timeOffset, parentMass);
+			if (parentPosition == null)
+				return RelativePosition;
+			return GetRelativeOrbitalPositionAtTime(timeOffset, mass).WithOffset(parentPosition.Value);
+		}
 
 		public IEnumerable<OrbitalPositionComponent> EnumerateThisAndParents()
 		{
-			var parent = Parent?.GetComponent<OrbitalPositionComponent>();
+			var parent = Parent?.GetOptionalComponent<OrbitalPositionComponent>();
 			if (parent == null)
 				return Enumerable.Repeat(this, 1);
 			return parent.EnumerateThisAndParents().Prepend(this);
 		}
 
-		private OrbitalPositionComponent(StarSystemPositionDataBase positionData) => m_positionData = positionData;
-
-		StarSystemPositionDataBase m_positionData;
+		private OrbitalPositionComponent(Entity parent, Point relativePosition, double? angularVelocityPerTick, double? orbitalRadius)
+		{
+			Parent = parent;
+			RelativePosition = relativePosition;
+			AngularVelocityPerTick = angularVelocityPerTick;
+			OrbitalRadius = orbitalRadius;
+		}
 	}
 }

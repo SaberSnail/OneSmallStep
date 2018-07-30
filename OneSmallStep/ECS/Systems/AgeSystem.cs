@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using OneSmallStep.ECS.Components;
+using OneSmallStep.Time;
 using OneSmallStep.Utility;
 
 namespace OneSmallStep.ECS.Systems
@@ -20,13 +21,13 @@ namespace OneSmallStep.ECS.Systems
 			return GameData.EntityManager.CreateComponentKey(typeof(AgeComponent));
 		}
 
-		protected override void ProcessTick(IEnumerable<Entity> entities)
+		protected override void ProcessTickCore(TimePoint newTime, IEnumerable<Entity> entities)
 		{
 			var entitiesList = entities.ToList().AsReadOnly();
 
 			foreach (var entity in entitiesList)
 			{
-				AgeComponent ageComponent = entity.GetComponent<AgeComponent>();
+				AgeComponent ageComponent = entity.GetRequiredComponent<AgeComponent>();
 				double survivalChance = 0.998;
 				/*
 				GetSurvivalChance(
