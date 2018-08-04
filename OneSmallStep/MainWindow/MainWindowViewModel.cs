@@ -266,7 +266,7 @@ namespace OneSmallStep.MainWindow
 				ship.UpdateFromEntity();
 		}
 
-		private static ILogSource Log => LogManager.CreateLogSource(nameof(MainWindowViewModel));
+		private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(MainWindowViewModel));
 
 		readonly GameServices m_gameServices;
 		readonly SystemMapViewModel m_systemMap;

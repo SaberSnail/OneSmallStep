@@ -67,6 +67,6 @@ namespace OneSmallStep.ECS.Components
 			return currentAbsolutePosition + (vector * SpeedPerTick);
 		}
 
-		private static ILogSource Log => LogManager.CreateLogSource(nameof(MoveToOrbitalBodyOrder));
+		private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(MoveToOrbitalBodyOrder));
 	}
 }

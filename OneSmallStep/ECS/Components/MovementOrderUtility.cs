@@ -120,6 +120,6 @@ namespace OneSmallStep.ECS.Components
 			return v.Length - distanceToTarget;
 		}
 
-		private static ILogSource Log => LogManager.CreateLogSource(nameof(MovementOrderUtility));
+		private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(MovementOrderUtility));
 	}
 }
