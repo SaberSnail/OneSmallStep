@@ -73,9 +73,11 @@
     <Compile Include="ECS\Components\OrbitalUnitDesignComponent.cs" />
     <Compile Include="ECS\Components\PopulationComponent.cs" />
     <Compile Include="ECS\Entity.cs" />
+    <Compile Include="ECS\EntityId.cs" />
     <Compile Include="ECS\EntityManager.cs" />
     <Compile Include="ECS\EntityUtility.cs" />
     <Compile Include="ECS\GameData.cs" />
+    <Compile Include="ECS\GameProcessor.cs" />
     <Compile Include="ECS\GameServices.cs" />
     <Compile Include="ECS\SystemBase.cs" />
     <Compile Include="ECS\Systems\AgeSystem.cs" />

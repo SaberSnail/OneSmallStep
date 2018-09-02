@@ -39,7 +39,7 @@ namespace OneSmallStep.ECS
 
 		public override bool Equals(object that)
 		{
-			if (ReferenceEquals(null, that))
+			if (that is null)
 				return false;
 			return that is ComponentKey key && Equals(key);
 		}

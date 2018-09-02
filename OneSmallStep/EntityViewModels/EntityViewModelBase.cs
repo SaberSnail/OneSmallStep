@@ -4,13 +4,13 @@ namespace OneSmallStep.EntityViewModels
 {
 	public abstract class EntityViewModelBase : ViewModelBase
 	{
-		public Entity Entity { get; }
+		public EntityId EntityId { get; }
 
-		public abstract void UpdateFromEntity();
+		public abstract void UpdateFromEntity(IEntityLookup entityLookup);
 
-		protected EntityViewModelBase(Entity entity)
+		protected EntityViewModelBase(EntityId entityId)
 		{
-			Entity = entity;
+			EntityId = entityId;
 		}
 	}
 }

@@ -12,8 +12,25 @@ namespace OneSmallStep.ECS.Components
 
 		public double GrowthRate { get; }
 
-		public long Population { get; set; }
+		public long Population
+		{
+			get => m_population;
+			set => SetPropertyField(value, ref m_population);
+		}
+
+		public override ComponentBase Clone()
+		{
+			return new PopulationComponent(this);
+		}
+
+		private PopulationComponent(PopulationComponent that)
+			: base(that)
+		{
+			m_population = that.m_population;
+		}
 
 		const double c_averageGrowthRate = 0.01;
+
+		long m_population;
 	}
 }

@@ -6,9 +6,9 @@ namespace OneSmallStep.ECS
 {
 	public static class EntityUtility
 	{
-		public static Entity CreatePlanet(this EntityManager entityManager, double mass, double radius)
+		public static Entity CreatePlanet(IEntityLookup entityLookup, double mass, double radius)
 		{
-			var planet = new Entity(entityManager);
+			var planet = new Entity(entityLookup);
 			planet.AddComponent(OrbitalPositionComponent.CreateUnpoweredBody());
 			planet.AddComponent(new OrbitalBodyCharacteristicsComponent
 			{
@@ -16,13 +16,13 @@ namespace OneSmallStep.ECS
 				Radius = radius,
 			});
 
-			entityManager.RegisterEntity(planet);
+			entityLookup.RegisterEntity(planet);
 			return planet;
 		}
 
-		public static Entity CreatePlanet(this EntityManager entityManager, Entity parent, double mass, double radius, double periodInDays, double meanAnomalyInDegrees, bool isPrograde, ICalendar calendar)
+		public static Entity CreatePlanet(IEntityLookup entityLookup, Entity parent, double mass, double radius, double periodInDays, double meanAnomalyInDegrees, bool isPrograde, ICalendar calendar)
 		{
-			var planet = new Entity(entityManager);
+			var planet = new Entity(entityLookup);
 			planet.AddComponent(OrbitalPositionComponent.CreateUnpoweredBody(parent, mass, periodInDays, meanAnomalyInDegrees, isPrograde, calendar));
 			planet.AddComponent(new OrbitalBodyCharacteristicsComponent
 			{
@@ -30,13 +30,13 @@ namespace OneSmallStep.ECS
 				Radius = radius,
 			});
 
-			entityManager.RegisterEntity(planet);
+			entityLookup.RegisterEntity(planet);
 			return planet;
 		}
 
-		public static Entity CreateShip(this EntityManager entityManager, Point startingPoint)
+		public static Entity CreateShip(IEntityLookup entityLookup, Point startingPoint)
 		{
-			var ship = new Entity(entityManager);
+			var ship = new Entity(entityLookup);
 			ship.AddComponent(OrbitalPositionComponent.CreatePoweredBody(startingPoint));
 			ship.AddComponent(new OrbitalBodyCharacteristicsComponent
 			{
@@ -49,7 +49,7 @@ namespace OneSmallStep.ECS
 			});
 			ship.AddComponent(new MovementOrdersComponent());
 
-			entityManager.RegisterEntity(ship);
+			entityLookup.RegisterEntity(ship);
 			return ship;
 		}
 	}

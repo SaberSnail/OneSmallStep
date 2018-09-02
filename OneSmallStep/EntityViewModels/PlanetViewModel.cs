@@ -12,7 +12,7 @@ namespace OneSmallStep.EntityViewModels
 	public sealed class PlanetViewModel : EntityViewModelBase, ISystemBodyRenderer
 	{
 		public PlanetViewModel(Entity entity)
-			: base(entity)
+			: base(entity.Id)
 		{
 		}
 
@@ -23,14 +23,9 @@ namespace OneSmallStep.EntityViewModels
 				VerifyAccess();
 				return m_population;
 			}
-			set
+			private set
 			{
-				if (SetPropertyField(nameof(Population), value, ref m_population))
-				{
-					var populationComponent = Entity.GetOptionalComponent<PopulationComponent>();
-					if (populationComponent != null)
-						populationComponent.Population = m_population;
-				}
+				SetPropertyField(value, ref m_population);
 			}
 		}
 
@@ -43,7 +38,7 @@ namespace OneSmallStep.EntityViewModels
 			}
 			private set
 			{
-				SetPropertyField(nameof(PositionString), value, ref m_positionString);
+				SetPropertyField(value, ref m_positionString);
 			}
 		}
 
@@ -56,7 +51,7 @@ namespace OneSmallStep.EntityViewModels
 			}
 			private set
 			{
-				SetPropertyField(nameof(Position), value, ref m_position);
+				SetPropertyField(value, ref m_position);
 			}
 		}
 
@@ -67,9 +62,9 @@ namespace OneSmallStep.EntityViewModels
 				VerifyAccess();
 				return m_radius;
 			}
-			set
+			private set
 			{
-				SetPropertyField(nameof(Radius), value, ref m_radius);
+				SetPropertyField(value, ref m_radius);
 			}
 		}
 
@@ -82,7 +77,7 @@ namespace OneSmallStep.EntityViewModels
 			}
 			private set
 			{
-				SetPropertyField(nameof(OrbitCenterPosition), value, ref m_orbitCenterPosition);
+				SetPropertyField(value, ref m_orbitCenterPosition);
 			}
 		}
 
@@ -95,20 +90,23 @@ namespace OneSmallStep.EntityViewModels
 			}
 			private set
 			{
-				SetPropertyField(nameof(OrbitalRadius), value, ref m_orbitalRadius);
+				SetPropertyField(value, ref m_orbitalRadius);
 			}
 		}
 
-		public override void UpdateFromEntity()
+		public override void UpdateFromEntity(IEntityLookup entityLookup)
 		{
-			var population = Entity.GetOptionalComponent<PopulationComponent>();
+			var entity = entityLookup.GetEntity(EntityId);
+
+			var population = entity.GetOptionalComponent<PopulationComponent>();
 			Population = population?.Population ?? 0;
 
-			var position = Entity.GetRequiredComponent<OrbitalPositionComponent>();
-			var body = Entity.GetRequiredComponent<OrbitalBodyCharacteristicsComponent>();
+			var position = entity.GetRequiredComponent<OrbitalPositionComponent>();
+			var body = entity.GetRequiredComponent<OrbitalBodyCharacteristicsComponent>();
 			Radius = body.Radius;
 			PositionString = "{0}, {1}".FormatCurrentCulture(Position.X, Position.Y);
-			OrbitCenterPosition = position.Parent?.GetOptionalComponent<OrbitalPositionComponent>()?.GetCurrentAbsolutePosition() ?? new Point();
+			var parentEntity = position.ParentId.HasValue ? entityLookup.GetEntity(position.ParentId.Value) : null;
+			OrbitCenterPosition = parentEntity?.GetOptionalComponent<OrbitalPositionComponent>()?.GetCurrentAbsolutePosition(entityLookup) ?? new Point();
 			Position = position.RelativePosition.WithOffset(OrbitCenterPosition);
 			OrbitalRadius = position.OrbitalRadius ?? 0.0;
 		}

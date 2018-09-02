@@ -1,25 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using OneSmallStep.ECS.Components;
+﻿using OneSmallStep.ECS.Components;
 using OneSmallStep.Time;
 
 namespace OneSmallStep.ECS.Systems
 {
 	public sealed class StarSystemMovementSystem : SystemBase
 	{
-		public StarSystemMovementSystem(GameData gameData)
-			: base(gameData)
+		public override void ProcessTick(IEntityLookup entityLookup, TimePoint newTime)
 		{
-		}
-
-		protected override ComponentKey GetRequiredComponentsKey()
-		{
-			return GameData.EntityManager.CreateComponentKey<OrbitalPositionComponent>();
-		}
-
-		protected override void ProcessTickCore(TimePoint newTime, IEnumerable<Entity> entities)
-		{
-			var entitiesList = entities.ToList().AsReadOnly();
+			var entitiesList = entityLookup.GetEntitiesMatchingKey(GetRequiredComponentsKey(entityLookup));
 
 			foreach (var entity in entitiesList)
 			{
@@ -30,7 +18,7 @@ namespace OneSmallStep.ECS.Systems
 				if (!MovementOrderUtility.CanExecuteOrders(orders, unitDesign))
 				{
 					var body = entity.GetRequiredComponent<OrbitalBodyCharacteristicsComponent>();
-					position.InitializeOrbitalValuesIfNeeded(body.Mass);
+					position.InitializeOrbitalValuesIfNeeded(entityLookup, body.Mass);
 				}
 			}
 
@@ -41,7 +29,7 @@ namespace OneSmallStep.ECS.Systems
 				var unitDesign = entity.GetOptionalComponent<OrbitalUnitDesignComponent>();
 
 				if (MovementOrderUtility.CanExecuteOrders(orders, unitDesign))
-					orders.PrepareIntercept(position.GetCurrentAbsolutePosition(), unitDesign.MaxSpeedPerTick);
+					orders.PrepareIntercept(entityLookup, position.GetCurrentAbsolutePosition(entityLookup), unitDesign.MaxSpeedPerTick);
 			}
 
 			foreach (var entity in entitiesList)
@@ -52,13 +40,12 @@ namespace OneSmallStep.ECS.Systems
 
 				if (MovementOrderUtility.CanExecuteOrders(orders, unitDesign))
 				{
-					var absolutePosition = position.GetCurrentAbsolutePosition();
+					var absolutePosition = position.GetCurrentAbsolutePosition(entityLookup);
 					position.SetCurrentAbsolutePosition(orders.MoveOneTick(absolutePosition));
 				}
 				else
 				{
-					var body = entity.GetRequiredComponent<OrbitalBodyCharacteristicsComponent>();
-					position.RelativePosition = position.GetRelativeOrbitalPositionAtTime(new TimeOffset(1), body.Mass);
+					position.RelativePosition = position.GetRelativeOrbitalPositionAtTime(new TimeOffset(1));
 				}
 			}
 
@@ -69,8 +56,13 @@ namespace OneSmallStep.ECS.Systems
 				var unitDesign = entity.GetOptionalComponent<OrbitalUnitDesignComponent>();
 
 				if (MovementOrderUtility.CanExecuteOrders(orders, unitDesign))
-					orders.ResolveOrderIfNeeded(position.GetCurrentAbsolutePosition());
+					orders.ResolveOrderIfNeeded(entityLookup, position.GetCurrentAbsolutePosition(entityLookup));
 			}
+		}
+
+		protected override ComponentKey GetRequiredComponentsKey(IEntityLookup entityLookup)
+		{
+			return entityLookup.CreateComponentKey<OrbitalPositionComponent>();
 		}
 	}
 }

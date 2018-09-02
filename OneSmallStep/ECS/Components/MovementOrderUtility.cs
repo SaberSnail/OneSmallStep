@@ -13,22 +13,21 @@ namespace OneSmallStep.ECS.Components
 	{
 		public static bool CanExecuteOrders([CanBeNull] MovementOrdersComponent orders, [CanBeNull] OrbitalUnitDesignComponent unitDesign)
 		{
-			return ((orders?.Orders.Count ?? 0) != 0) &&
+			return (orders?.HasActiveOrder() ?? false) &&
 				((unitDesign?.MaxSpeedPerTick ?? 0) > 0);
 		}
 
-		public static Point GetInterceptPoint(Point interceptorPosition, double interceptorMaxSpeedPerTick, [NotNull] Entity targetEntity)
+		public static Point GetInterceptPoint(IEntityLookup entityLookup, Point interceptorPosition, double interceptorMaxSpeedPerTick, [NotNull] Entity targetEntity)
 		{
 			var targetPosition = targetEntity.GetRequiredComponent<OrbitalPositionComponent>();
-			if (targetPosition.Parent == null)
-				return targetPosition.GetCurrentAbsolutePosition();
+			if (!targetPosition.ParentId.HasValue)
+				return targetPosition.GetCurrentAbsolutePosition(entityLookup);
 
-			var targetMass = targetEntity.GetRequiredComponent<OrbitalBodyCharacteristicsComponent>().Mass;
 			double? interceptorDistanceToCenter = null;
 			double longestDistance = 0.0;
 			double? minDistanceToCenter = null;
 			double? maxDistanceToCenter = null;
-			foreach (var parentBody in targetPosition.EnumerateThisAndParents().Reverse())
+			foreach (var parentBody in targetPosition.EnumerateThisAndParents(entityLookup).Reverse())
 			{
 				if (interceptorDistanceToCenter == null)
 				{
@@ -75,7 +74,7 @@ namespace OneSmallStep.ECS.Components
 				}
 
 				timeInTicks = newTimeInTicks;
-				var positionDifference = GetPositionDifference(targetPosition, targetMass, interceptorPosition, interceptorMaxSpeedPerTick, timeInTicks);
+				var positionDifference = GetPositionDifference(entityLookup, targetPosition, interceptorPosition, interceptorMaxSpeedPerTick, timeInTicks);
 				if (positionDifference >= 0.0 && positionDifference < interceptorMaxSpeedPerTick)
 					break;
 
@@ -95,7 +94,7 @@ namespace OneSmallStep.ECS.Components
 					timeInTicks = minTimeInTicks;
 			}
 
-			var targetPoint = targetPosition.GetAbsoluteOrbitalPositionAtTime(new TimeOffset(timeInTicks), targetMass);
+			var targetPoint = targetPosition.GetAbsoluteOrbitalPositionAtTime(entityLookup, new TimeOffset(timeInTicks));
 			if (failedIntercept)
 			{
 				var vector = interceptorPosition.VectorTo(targetPoint);
@@ -108,9 +107,9 @@ namespace OneSmallStep.ECS.Components
 			return targetPoint;
 		}
 
-		private static double GetPositionDifference(OrbitalPositionComponent targetPosition, double targetMass, Point interceptorPosition, double interceptorSpeedPerTick, int tick)
+		private static double GetPositionDifference(IEntityLookup entityLookup, OrbitalPositionComponent targetPosition, Point interceptorPosition, double interceptorSpeedPerTick, int tick)
 		{
-			var targetAbsolutePosition = targetPosition.GetAbsoluteOrbitalPositionAtTime(new TimeOffset(tick), targetMass);
+			var targetAbsolutePosition = targetPosition.GetAbsoluteOrbitalPositionAtTime(entityLookup, new TimeOffset(tick));
 			var v1 = new Vector(interceptorPosition.X, interceptorPosition.Y);
 			var v2 = new Vector(targetAbsolutePosition.X, targetAbsolutePosition.Y);
 			var v = v2 - v1;

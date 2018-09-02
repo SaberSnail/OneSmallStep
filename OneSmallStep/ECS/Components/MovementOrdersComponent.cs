@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace OneSmallStep.ECS.Components
@@ -7,25 +8,56 @@ namespace OneSmallStep.ECS.Components
 	{
 		public MovementOrdersComponent()
 		{
-			Orders = new List<MovementOrderBase>();
+			m_orders = new List<MovementOrderBase>();
 		}
 
-		public List<MovementOrderBase> Orders { get; }
-
-		public void PrepareIntercept(Point currentAbsolutePosition, double speedPerTick)
+		public bool HasActiveOrder()
 		{
-			Orders[0].PrepareIntercept(currentAbsolutePosition, speedPerTick);
+			return m_orders.Count != 0;
 		}
 
-		public void ResolveOrderIfNeeded(Point currentAbsolutePosition)
+		public MovementOrderBase GetActiveOrder()
 		{
-			if (Orders[0].TryMarkAsResolved(currentAbsolutePosition))
-				Orders.RemoveAt(0);
+			return m_orders.FirstOrDefault()?.Clone();
+		}
+
+		public void AddOrderToBack(MovementOrderBase order)
+		{
+			using (ScopedPropertyChange())
+				m_orders.Add(order.Clone());
+		}
+
+		public void PrepareIntercept(IEntityLookup entityLookup, Point currentAbsolutePosition, double speedPerTick)
+		{
+			if (m_orders[0].PrepareIntercept(entityLookup, currentAbsolutePosition, speedPerTick))
+				SetChanged();
+		}
+
+		public void ResolveOrderIfNeeded(IEntityLookup entityLookup, Point currentAbsolutePosition)
+		{
+			if (m_orders[0].TryMarkAsResolved(entityLookup, currentAbsolutePosition))
+			{
+				using (ScopedPropertyChange())
+					m_orders.RemoveAt(0);
+			}
 		}
 
 		public Point MoveOneTick(Point currentAbsolutePosition)
 		{
-			return Orders[0].MoveOneTick(currentAbsolutePosition);
+			return m_orders[0].MoveOneTick(currentAbsolutePosition);
 		}
+
+		public override ComponentBase Clone()
+		{
+			return new MovementOrdersComponent(this);
+		}
+
+		private MovementOrdersComponent(MovementOrdersComponent that)
+			: base(that)
+		{
+			m_orders = that.m_orders.Select(x => x.Clone()).ToList();
+		}
+
+		readonly List<MovementOrderBase> m_orders;
 	}
 }

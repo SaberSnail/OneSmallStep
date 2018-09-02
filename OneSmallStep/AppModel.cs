@@ -31,6 +31,7 @@ namespace OneSmallStep
 
 		public void Shutdown()
 		{
+			m_gameServices.Dispose();
 		}
 
 		MainWindowViewModel m_mainWindowViewModel;

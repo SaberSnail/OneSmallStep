@@ -19,14 +19,16 @@ namespace OneSmallStep.ECS
 		{
 			EntityManager entityManager = new EntityManager();
 
-			entityManager.RegisterComponent<AgeComponent>();
-			entityManager.RegisterComponent<PopulationComponent>();
-			entityManager.RegisterComponent<OrbitalPositionComponent>();
-			entityManager.RegisterComponent<OrbitalBodyCharacteristicsComponent>();
-			entityManager.RegisterComponent<OrbitalUnitDesignComponent>();
-			entityManager.RegisterComponent<MovementOrdersComponent>();
+			using (entityManager.StartupScope())
+			{
+				entityManager.RegisterComponent<AgeComponent>();
+				entityManager.RegisterComponent<PopulationComponent>();
+				entityManager.RegisterComponent<OrbitalPositionComponent>();
+				entityManager.RegisterComponent<OrbitalBodyCharacteristicsComponent>();
+				entityManager.RegisterComponent<OrbitalUnitDesignComponent>();
+				entityManager.RegisterComponent<MovementOrdersComponent>();
+			}
 
-			entityManager.SetStartupFinished();
 			return entityManager;
 		}
 	}

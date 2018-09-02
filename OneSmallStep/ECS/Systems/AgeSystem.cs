@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using OneSmallStep.ECS.Components;
 using OneSmallStep.Time;
 using OneSmallStep.Utility;
@@ -10,20 +7,14 @@ namespace OneSmallStep.ECS.Systems
 {
 	public sealed class AgeSystem : SystemBase
 	{
-		public AgeSystem(GameData gameData, Random rng)
-			: base(gameData)
+		public AgeSystem(Random rng)
 		{
 			m_rng = rng;
 		}
 
-		protected override ComponentKey GetRequiredComponentsKey()
+		public override void ProcessTick(IEntityLookup entityLookup, TimePoint newTime)
 		{
-			return GameData.EntityManager.CreateComponentKey(typeof(AgeComponent));
-		}
-
-		protected override void ProcessTickCore(TimePoint newTime, IEnumerable<Entity> entities)
-		{
-			var entitiesList = entities.ToList().AsReadOnly();
+			var entitiesList = entityLookup.GetEntitiesMatchingKey(GetRequiredComponentsKey(entityLookup));
 
 			foreach (var entity in entitiesList)
 			{
@@ -40,6 +31,11 @@ namespace OneSmallStep.ECS.Systems
 					// death
 				}
 			}
+		}
+
+		protected override ComponentKey GetRequiredComponentsKey(IEntityLookup entityLookup)
+		{
+			return entityLookup.CreateComponentKey(typeof(AgeComponent));
 		}
 
 		private double GetSurvivalChance(double ageInTicks, double meanYearsBetweenFailures, double ageRiskDoublingYears)

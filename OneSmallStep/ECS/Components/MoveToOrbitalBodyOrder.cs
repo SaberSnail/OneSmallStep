@@ -8,25 +8,26 @@ namespace OneSmallStep.ECS.Components
 {
 	public sealed class MoveToOrbitalBodyOrder : MovementOrderBase
 	{
-		public MoveToOrbitalBodyOrder(Entity targetEntity, double speedPerTick)
+		public MoveToOrbitalBodyOrder(EntityId targetEntityId, double speedPerTick)
 		{
-			TargetEntity = targetEntity;
+			TargetEntityId = targetEntityId;
 			SpeedPerTick = speedPerTick;
 		}
 
-		public Entity TargetEntity { get; }
+		public EntityId TargetEntityId { get; }
 
 		public double SpeedPerTick { get; }
 
 		public Point? InterceptPoint { get; private set; }
 
-		public override void PrepareIntercept(Point currentAbsolutePosition, double maxSpeedPerTick)
+		public override bool PrepareIntercept(IEntityLookup entityLookup, Point currentAbsolutePosition, double maxSpeedPerTick)
 		{
 			if (InterceptPoint.HasValue)
-				return;
+				return false;
 
-			var targetOrders = TargetEntity.GetOptionalComponent<MovementOrdersComponent>();
-			var targetUnitDesign = TargetEntity.GetOptionalComponent<OrbitalUnitDesignComponent>();
+			var targetEntity = entityLookup.GetEntity(TargetEntityId);
+			var targetOrders = targetEntity.GetOptionalComponent<MovementOrdersComponent>();
+			var targetUnitDesign = targetEntity.GetOptionalComponent<OrbitalUnitDesignComponent>();
 			if (MovementOrderUtility.CanExecuteOrders(targetOrders, targetUnitDesign))
 			{
 				throw new NotImplementedException();
@@ -34,17 +35,20 @@ namespace OneSmallStep.ECS.Components
 			else
 			{
 				var speedPerTick = Math.Min(SpeedPerTick, maxSpeedPerTick);
-				InterceptPoint = MovementOrderUtility.GetInterceptPoint(currentAbsolutePosition, speedPerTick, TargetEntity);
+				InterceptPoint = MovementOrderUtility.GetInterceptPoint(entityLookup, currentAbsolutePosition, speedPerTick, targetEntity);
 			}
+
+			return true;
 		}
 
-		public override bool TryMarkAsResolved(Point currentAbsolutePosition)
+		public override bool TryMarkAsResolved(IEntityLookup entityLookup, Point currentAbsolutePosition)
 		{
 			if (currentAbsolutePosition != InterceptPoint)
 				return false;
 
-			var targetPosition = TargetEntity.GetRequiredComponent<OrbitalPositionComponent>();
-			if (currentAbsolutePosition.IsWithinOneMeter(targetPosition.GetCurrentAbsolutePosition()))
+			var targetEntity = entityLookup.GetEntity(TargetEntityId);
+			var targetPosition = targetEntity.GetRequiredComponent<OrbitalPositionComponent>();
+			if (currentAbsolutePosition.IsWithinOneMeter(targetPosition.GetCurrentAbsolutePosition(entityLookup)))
 				return true;
 
 			InterceptPoint = null;
@@ -67,6 +71,11 @@ namespace OneSmallStep.ECS.Components
 			return currentAbsolutePosition + (vector * SpeedPerTick);
 		}
 
-		private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(MoveToOrbitalBodyOrder));
+		public override MovementOrderBase Clone()
+		{
+			return new MoveToOrbitalBodyOrder(TargetEntityId, SpeedPerTick) { InterceptPoint = InterceptPoint };
+		}
+
+		static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(MoveToOrbitalBodyOrder));
 	}
 }

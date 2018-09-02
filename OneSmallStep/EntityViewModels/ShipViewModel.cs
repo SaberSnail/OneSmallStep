@@ -12,7 +12,7 @@ namespace OneSmallStep.EntityViewModels
 	public sealed class ShipViewModel : EntityViewModelBase, ISystemBodyRenderer
 	{
 		public ShipViewModel(Entity entity)
-			: base(entity)
+			: base(entity.Id)
 		{
 		}
 
@@ -25,7 +25,7 @@ namespace OneSmallStep.EntityViewModels
 			}
 			private set
 			{
-				SetPropertyField(nameof(PositionString), value, ref m_positionString);
+				SetPropertyField(value, ref m_positionString);
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace OneSmallStep.EntityViewModels
 			}
 			private set
 			{
-				SetPropertyField(nameof(Position), value, ref m_position);
+				SetPropertyField(value, ref m_position);
 			}
 		}
 
@@ -51,18 +51,20 @@ namespace OneSmallStep.EntityViewModels
 			}
 			private set
 			{
-				SetPropertyField(nameof(TargetPosition), value, ref m_targetPosition);
+				SetPropertyField(value, ref m_targetPosition);
 			}
 		}
 
-		public override void UpdateFromEntity()
+		public override void UpdateFromEntity(IEntityLookup entityLookup)
 		{
-			var body = Entity.GetRequiredComponent<OrbitalPositionComponent>();
-			Position = body.GetCurrentAbsolutePosition();
+			var entity = entityLookup.GetEntity(EntityId);
+
+			var body = entity.GetRequiredComponent<OrbitalPositionComponent>();
+			Position = body.GetCurrentAbsolutePosition(entityLookup);
 			PositionString = "{0}, {1}".FormatCurrentCulture(Position.X, Position.Y);
 
-			var order = Entity.GetRequiredComponent<MovementOrdersComponent>().Orders.FirstOrDefault() as MoveToOrbitalBodyOrder;
-			TargetPosition = order?.InterceptPoint ?? new Point();
+			var order = entity.GetRequiredComponent<MovementOrdersComponent>().GetActiveOrder() as MoveToOrbitalBodyOrder;
+			TargetPosition = order?.InterceptPoint;
 		}
 
 		public void Render(DrawingContext context, Point offset, double scale)

@@ -32,7 +32,7 @@
 						<Button
 							IsEnabled="{Binding IsGameStarted}"
 							Content="Next"
-							Command="{Binding Converter={x:Static utility:MethodToCommandConverter.Instance}, ConverterParameter=ProcessTick}"
+							Command="{Binding Converter={x:Static utility:MethodToCommandConverter.Instance}, ConverterParameter=StartProcessing}"
 							/>
 						<CheckBox
 							IsChecked="{Binding ShouldRunAtFullSpeed}"

@@ -21,7 +21,11 @@ namespace OneSmallStep.ECS.Components
 			Template = template;
 		}
 
-		public TimePoint CreationDate { get; set; }
+		public TimePoint CreationDate
+		{
+			get => m_creationDate;
+			set => SetPropertyField(value, ref m_creationDate);
+		}
 
 		public AgeTemplate Template { get; }
 
@@ -29,5 +33,19 @@ namespace OneSmallStep.ECS.Components
 		{
 			return CreationDate.GetTimeTo(currentDate);
 		}
+
+		public override ComponentBase Clone()
+		{
+			return new AgeComponent(this);
+		}
+
+		private AgeComponent(AgeComponent that)
+		: base(that)
+		{
+			Template = that.Template;
+			m_creationDate = that.m_creationDate;
+		}
+
+		TimePoint m_creationDate;
 	}
 }
