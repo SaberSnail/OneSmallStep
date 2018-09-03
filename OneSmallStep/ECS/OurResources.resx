@@ -117,67 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DistanceInGigameters" xml:space="preserve">
-    <value>{0:G4} Gm</value>
-  </data>
-  <data name="DistanceInKilometers" xml:space="preserve">
-    <value>{0:G4} km</value>
-  </data>
-  <data name="DistanceInMegameters" xml:space="preserve">
-    <value>{0:G4} Mm</value>
-  </data>
-  <data name="DIstanceInMeters" xml:space="preserve">
-    <value>{0:G4} m</value>
-  </data>
-  <data name="TimeOffsetDayLong_One" xml:space="preserve">
-    <value>{0:N0} day</value>
-  </data>
-  <data name="TimeOffsetDayLong_Other" xml:space="preserve">
-    <value>{0:N0} days</value>
-  </data>
-  <data name="TimeOffsetDayShort_One" xml:space="preserve">
-    <value>{0:N0}d</value>
-  </data>
-  <data name="TimeOffsetDayShort_Other" xml:space="preserve">
-    <value>{0:N0}d</value>
-  </data>
-  <data name="TimeOffsetMonthLong_One" xml:space="preserve">
-    <value>{0:N0} month</value>
-  </data>
-  <data name="TimeOffsetMonthLong_Other" xml:space="preserve">
-    <value>{0:N0} months</value>
-  </data>
-  <data name="TimeOffsetMonthShort_One" xml:space="preserve">
-    <value>{0:N0}m</value>
-  </data>
-  <data name="TimeOffsetMonthShort_Other" xml:space="preserve">
-    <value>{0:N0}m</value>
-  </data>
-  <data name="TimeOffsetTermJoin" xml:space="preserve">
-    <value>{0}, {1}</value>
-  </data>
-  <data name="TimeOffsetYearLong_One" xml:space="preserve">
-    <value>{0:N0} year</value>
-  </data>
-  <data name="TimeOffsetYearLong_Other" xml:space="preserve">
-    <value>{0:N0} years</value>
-  </data>
-  <data name="TimeOffsetYearShort_One" xml:space="preserve">
-    <value>{0:N0}y</value>
-  </data>
-  <data name="TimeOffsetYearShort_Other" xml:space="preserve">
-    <value>{0:N0}y</value>
-  </data>
-  <data name="DistanceInExameters" xml:space="preserve">
-    <value>{0:G4} Em</value>
-  </data>
-  <data name="DistanceInPetameters" xml:space="preserve">
-    <value>{0:G4} Pm</value>
-  </data>
-  <data name="DistanceInTerameters" xml:space="preserve">
-    <value>{0:G4} Tm</value>
-  </data>
   <data name="NotificationFinishedOrders" xml:space="preserve">
-    <value>Ship has no more order.</value>
+    <value>Ship has no more orders.</value>
   </data>
 </root>

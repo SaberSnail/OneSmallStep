@@ -80,6 +80,11 @@
     <Compile Include="ECS\GameProcessor.cs" />
     <Compile Include="ECS\GameServices.cs" />
     <Compile Include="ECS\NotificationLog.cs" />
+    <Compile Include="ECS\OurResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OurResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="ECS\SystemBase.cs" />
     <Compile Include="ECS\Systems\AgeSystem.cs" />
     <Compile Include="ECS\Systems\PopulationGrowthSystem.cs" />
@@ -87,15 +92,15 @@
     <Compile Include="EntityViewModels\EntityViewModelBase.cs" />
     <Compile Include="EntityViewModels\PlanetViewModel.cs" />
     <Compile Include="EntityViewModels\ShipViewModel.cs" />
-    <Compile Include="OurResources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OurResources.resx</DependentUpon>
-    </Compile>
     <Compile Include="SystemMap\ISystemBodyRenderer.cs" />
     <Compile Include="SystemMap\SystemMapControl.cs" />
     <Compile Include="SystemMap\SystemMapViewModel.cs" />
     <Compile Include="Time\ICalendar.cs" />
+    <Compile Include="Time\OurResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OurResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Time\StandardCalendar.cs" />
     <Compile Include="Time\TimeFormat.cs" />
     <Compile Include="Time\TimeOffset.cs" />
@@ -104,6 +109,11 @@
     <Compile Include="Utility\EventLog.cs" />
     <Compile Include="Utility\EventLogItem.cs" />
     <Compile Include="Utility\FormatUtility.cs" />
+    <Compile Include="Utility\OurResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OurResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utility\PositionUtility.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="App.xaml.cs">
@@ -142,13 +152,21 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="OurResources.resx">
+    <EmbeddedResource Include="ECS\OurResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OurResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Time\OurResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OurResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utility\OurResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OurResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

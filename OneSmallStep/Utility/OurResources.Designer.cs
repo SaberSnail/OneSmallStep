@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OneSmallStep {
+namespace OneSmallStep.Utility {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace OneSmallStep {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OneSmallStep.OurResources", typeof(OurResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OneSmallStep.Utility.OurResources", typeof(OurResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -120,132 +120,6 @@ namespace OneSmallStep {
         internal static string DistanceInTerameters {
             get {
                 return ResourceManager.GetString("DistanceInTerameters", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ship has no more order..
-        /// </summary>
-        internal static string NotificationFinishedOrders {
-            get {
-                return ResourceManager.GetString("NotificationFinishedOrders", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0:N0} day.
-        /// </summary>
-        internal static string TimeOffsetDayLong_One {
-            get {
-                return ResourceManager.GetString("TimeOffsetDayLong_One", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0:N0} days.
-        /// </summary>
-        internal static string TimeOffsetDayLong_Other {
-            get {
-                return ResourceManager.GetString("TimeOffsetDayLong_Other", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0:N0}d.
-        /// </summary>
-        internal static string TimeOffsetDayShort_One {
-            get {
-                return ResourceManager.GetString("TimeOffsetDayShort_One", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0:N0}d.
-        /// </summary>
-        internal static string TimeOffsetDayShort_Other {
-            get {
-                return ResourceManager.GetString("TimeOffsetDayShort_Other", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0:N0} month.
-        /// </summary>
-        internal static string TimeOffsetMonthLong_One {
-            get {
-                return ResourceManager.GetString("TimeOffsetMonthLong_One", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0:N0} months.
-        /// </summary>
-        internal static string TimeOffsetMonthLong_Other {
-            get {
-                return ResourceManager.GetString("TimeOffsetMonthLong_Other", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0:N0}m.
-        /// </summary>
-        internal static string TimeOffsetMonthShort_One {
-            get {
-                return ResourceManager.GetString("TimeOffsetMonthShort_One", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0:N0}m.
-        /// </summary>
-        internal static string TimeOffsetMonthShort_Other {
-            get {
-                return ResourceManager.GetString("TimeOffsetMonthShort_Other", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0}, {1}.
-        /// </summary>
-        internal static string TimeOffsetTermJoin {
-            get {
-                return ResourceManager.GetString("TimeOffsetTermJoin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0:N0} year.
-        /// </summary>
-        internal static string TimeOffsetYearLong_One {
-            get {
-                return ResourceManager.GetString("TimeOffsetYearLong_One", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0:N0} years.
-        /// </summary>
-        internal static string TimeOffsetYearLong_Other {
-            get {
-                return ResourceManager.GetString("TimeOffsetYearLong_Other", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0:N0}y.
-        /// </summary>
-        internal static string TimeOffsetYearShort_One {
-            get {
-                return ResourceManager.GetString("TimeOffsetYearShort_One", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0:N0}y.
-        /// </summary>
-        internal static string TimeOffsetYearShort_Other {
-            get {
-                return ResourceManager.GetString("TimeOffsetYearShort_Other", resourceCulture);
             }
         }
     }
