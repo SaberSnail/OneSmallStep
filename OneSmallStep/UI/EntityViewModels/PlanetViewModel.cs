@@ -131,8 +131,8 @@ namespace OneSmallStep.UI.EntityViewModels
 				var vectorToCenter = renderAt.VectorTo(offset);
 				vectorToCenter.Normalize();
 				var gradientStart = renderAt + (vectorToCenter * 10.0);
-				var lightColor = (Color) ThemesUtility.CurrentThemeDictionary["PlanetBodyLightColor"];
-				var darkColor = (Color) ThemesUtility.CurrentThemeDictionary["PlanetBodyDarkColor"];
+				var lightColor = ((SolidColorBrush) ThemesUtility.CurrentThemeDictionary["PlanetBodyLightBrush"]).Color;
+				var darkColor = ((SolidColorBrush) ThemesUtility.CurrentThemeDictionary["PlanetBodyDarkBrush"]).Color;
 				var gradientBrush = new LinearGradientBrush(new GradientStopCollection
 					{
 						new GradientStop(lightColor, 0.0),

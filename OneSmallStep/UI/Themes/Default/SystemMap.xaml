@@ -17,8 +17,8 @@
 
 	<Pen x:Key="PlanetOrbitPen" Brush="{StaticResource Gray20Brush}" Thickness="1" presentationOptions:Freeze="true" />
 	<SolidColorBrush x:Key="PlanetBodyBrush" Color="{StaticResource Gray100}" presentationOptions:Freeze="true" />
-	<Color x:Key="PlanetBodyLightColor">#E5E5E5</Color>
-	<Color x:Key="PlanetBodyDarkColor">#666666</Color>
+	<SolidColorBrush x:Key="PlanetBodyLightBrush" Color="{StaticResource Gray90}" presentationOptions:Freeze="true" />
+	<SolidColorBrush x:Key="PlanetBodyDarkBrush" Color="{StaticResource Gray40}" presentationOptions:Freeze="true" />
 	<Pen x:Key="PlanetBodyPen" Brush="Transparent" Thickness="0" presentationOptions:Freeze="true" />
 	<system:Double x:Key="PlanetMinRadius">4.0</system:Double>
 
