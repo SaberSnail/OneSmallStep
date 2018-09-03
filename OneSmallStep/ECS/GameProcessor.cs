@@ -49,8 +49,11 @@ namespace OneSmallStep.ECS
 
 		public void Dispose()
 		{
-			m_threadStopEvent.Set();
-			m_threadStoppedEvent.WaitOne();
+			if (m_workThread.IsAlive)
+			{
+				m_threadStopEvent.Set();
+				m_threadStoppedEvent.WaitOne();
+			}
 		}
 
 		private void DoProcessing()
