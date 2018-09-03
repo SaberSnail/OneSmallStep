@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Windows;
@@ -79,7 +78,7 @@ namespace OneSmallStep.EntityViewModels
 			}
 		}
 
-		static readonly Pen s_markerPen = new Pen(new SolidColorBrush(Colors.White).Frozen(), 1.0).Frozen();
+		static readonly Pen s_markerPen = new Pen(new SolidColorBrush(Colors.Red).Frozen(), 1.0).Frozen();
 		static readonly Pen s_pathPen = new Pen(new SolidColorBrush(Colors.Gray).Frozen(), 1.0).Frozen();
 
 		string m_positionString;

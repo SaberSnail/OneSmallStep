@@ -5,7 +5,7 @@ namespace OneSmallStep.ECS.Systems
 {
 	public sealed class StarSystemMovementSystem : SystemBase
 	{
-		public override void ProcessTick(IEntityLookup entityLookup, TimePoint newTime)
+		public override void ProcessTick(IEntityLookup entityLookup, ProcessorEventLog eventLog, TimePoint newTime)
 		{
 			var entitiesList = entityLookup.GetEntitiesMatchingKey(GetRequiredComponentsKey(entityLookup));
 
@@ -56,7 +56,11 @@ namespace OneSmallStep.ECS.Systems
 				var unitDesign = entity.GetOptionalComponent<OrbitalUnitDesignComponent>();
 
 				if (MovementOrderUtility.CanExecuteOrders(orders, unitDesign))
+				{
 					orders.ResolveOrderIfNeeded(entityLookup, position.GetCurrentAbsolutePosition(entityLookup));
+					if (!orders.HasActiveOrder())
+						eventLog.AddEvent(new ProcessorEvent(true));
+				}
 			}
 		}
 

@@ -131,6 +131,9 @@ namespace OneSmallStep.MainWindow
 					var newTarget = entityLookup.GetEntity(newTargetId);
 					var speed = ship.GetRequiredComponent<OrbitalUnitDesignComponent>().MaxSpeedPerTick;
 					orders.AddOrderToBack(new MoveToOrbitalBodyOrder(newTarget.Id, speed));
+					//newTargetId = m_planets[m_gameServices.RandomNumberGenerator.Next(0, m_planets.Count - 1)].EntityId;
+					//newTarget = entityLookup.GetEntity(newTargetId);
+					//orders.AddOrderToBack(new MoveToOrbitalBodyOrder(newTarget.Id, speed));
 				}
 			}
 		}

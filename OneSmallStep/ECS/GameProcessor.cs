@@ -55,6 +55,7 @@ namespace OneSmallStep.ECS
 		private void DoProcessing()
 		{
 			var entityLookup = m_entityManager.ProcessingEntityLookup;
+			var processorEventLog = new ProcessorEventLog();
 			m_currentDate = m_gameData.CurrentDate;
 
 			try
@@ -69,10 +70,10 @@ namespace OneSmallStep.ECS
 					m_currentDate = m_currentDate + Constants.Tick;
 
 					foreach (var system in m_systems)
-						system.ProcessTick(entityLookup, m_currentDate);
+						system.ProcessTick(entityLookup, processorEventLog, m_currentDate);
 
-					var shouldStop = true;//m_currentDate >= m_gameData.Calendar.CreateTimePoint(2100, 1, 1);
-					if (shouldStop)
+					//var shouldStop = m_currentDate >= m_gameData.Calendar.CreateTimePoint(2100, 1, 1);
+					if (processorEventLog.ShouldStopProcessing)
 					{
 						m_threadContinueEvent.Reset();
 						Log.Info("Pausing processing");
@@ -82,6 +83,7 @@ namespace OneSmallStep.ECS
 							m_gameData.CurrentDate = m_currentDate;
 							m_gameData.EntityManager.SwapDisplayWithProcessing();
 							ProcessingStopped.Raise(this);
+							processorEventLog.Reset();
 						});
 					}
 					else

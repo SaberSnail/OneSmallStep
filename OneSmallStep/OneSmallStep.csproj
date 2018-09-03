@@ -79,6 +79,7 @@
     <Compile Include="ECS\GameData.cs" />
     <Compile Include="ECS\GameProcessor.cs" />
     <Compile Include="ECS\GameServices.cs" />
+    <Compile Include="ECS\ProcessorEventLog.cs" />
     <Compile Include="ECS\SystemBase.cs" />
     <Compile Include="ECS\Systems\AgeSystem.cs" />
     <Compile Include="ECS\Systems\PopulationGrowthSystem.cs" />
