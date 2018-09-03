@@ -1,4 +1,5 @@
 ﻿using OneSmallStep.Time;
+using OneSmallStep.Utility.Time;
 
 namespace OneSmallStep.Utility
 {

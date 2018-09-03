@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using GoldenAnvil.Utility.Windows;
-using OneSmallStep.Time;
 using OneSmallStep.Utility;
+using OneSmallStep.Utility.Time;
 
 namespace OneSmallStep.ECS.Components
 {

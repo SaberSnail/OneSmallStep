@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace OneSmallStep.SystemMap
+namespace OneSmallStep.UI.SystemMap
 {
 	public interface ISystemBodyRenderer
 	{

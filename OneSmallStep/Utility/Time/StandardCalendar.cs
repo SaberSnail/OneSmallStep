@@ -1,7 +1,7 @@
 ﻿using System;
 using GoldenAnvil.Utility;
 
-namespace OneSmallStep.Time
+namespace OneSmallStep.Utility.Time
 {
 	public sealed class StandardCalendar : ICalendar
 	{
@@ -57,7 +57,7 @@ namespace OneSmallStep.Time
 			if (monthsOutput != null)
 			{
 				if (output.Length != 0)
-					output = OurResources.TimeOffsetTermJoin.FormatCurrentCulture(output, monthsOutput);
+					output = LocalizationUtility.FormatCurrentCulture(output, monthsOutput);
 				else
 					output = monthsOutput;
 			}
@@ -65,7 +65,7 @@ namespace OneSmallStep.Time
 			if (daysOutput != null)
 			{
 				if (output.Length != 0)
-					output = OurResources.TimeOffsetTermJoin.FormatCurrentCulture(output, daysOutput);
+					output = LocalizationUtility.FormatCurrentCulture(output, daysOutput);
 				else
 					output = daysOutput;
 			}

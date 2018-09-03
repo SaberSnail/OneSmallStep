@@ -5,7 +5,7 @@
     <Application.Resources>
          <ResourceDictionary>
 			 <ResourceDictionary.MergedDictionaries>
-				 <ResourceDictionary Source="SystemMap/SystemMapView.xaml" />
+				 <ResourceDictionary Source="UI/SystemMap/SystemMapView.xaml" />
 			 </ResourceDictionary.MergedDictionaries>
          </ResourceDictionary>
     </Application.Resources>

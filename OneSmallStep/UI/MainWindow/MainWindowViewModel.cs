@@ -7,12 +7,12 @@ using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Logging;
 using OneSmallStep.ECS;
 using OneSmallStep.ECS.Components;
-using OneSmallStep.EntityViewModels;
-using OneSmallStep.SystemMap;
-using OneSmallStep.Time;
+using OneSmallStep.UI.EntityViewModels;
+using OneSmallStep.UI.SystemMap;
 using OneSmallStep.Utility;
+using OneSmallStep.Utility.Time;
 
-namespace OneSmallStep.MainWindow
+namespace OneSmallStep.UI.MainWindow
 {
 	public class MainWindowViewModel : ViewModelBase
 	{

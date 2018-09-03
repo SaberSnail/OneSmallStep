@@ -4,9 +4,9 @@ using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Windows;
 using OneSmallStep.ECS;
 using OneSmallStep.ECS.Components;
-using OneSmallStep.SystemMap;
+using OneSmallStep.UI.SystemMap;
 
-namespace OneSmallStep.EntityViewModels
+namespace OneSmallStep.UI.EntityViewModels
 {
 	public sealed class ShipViewModel : EntityViewModelBase, ISystemBodyRenderer
 	{

@@ -91,22 +91,22 @@
     <Compile Include="ECS\Systems\AgeSystem.cs" />
     <Compile Include="ECS\Systems\PopulationGrowthSystem.cs" />
     <Compile Include="ECS\Systems\StarSystemMovementSystem.cs" />
-    <Compile Include="EntityViewModels\EntityViewModelBase.cs" />
-    <Compile Include="EntityViewModels\PlanetViewModel.cs" />
-    <Compile Include="EntityViewModels\ShipViewModel.cs" />
-    <Compile Include="SystemMap\ISystemBodyRenderer.cs" />
-    <Compile Include="SystemMap\SystemMapControl.cs" />
-    <Compile Include="SystemMap\SystemMapViewModel.cs" />
-    <Compile Include="Time\ICalendar.cs" />
-    <Compile Include="Time\OurResources.Designer.cs">
+    <Compile Include="UI\EntityViewModels\EntityViewModelBase.cs" />
+    <Compile Include="UI\EntityViewModels\PlanetViewModel.cs" />
+    <Compile Include="UI\EntityViewModels\ShipViewModel.cs" />
+    <Compile Include="UI\SystemMap\ISystemBodyRenderer.cs" />
+    <Compile Include="UI\SystemMap\SystemMapControl.cs" />
+    <Compile Include="UI\SystemMap\SystemMapViewModel.cs" />
+    <Compile Include="Utility\Time\ICalendar.cs" />
+    <Compile Include="Utility\Time\OurResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>OurResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Time\StandardCalendar.cs" />
-    <Compile Include="Time\TimeFormat.cs" />
-    <Compile Include="Time\TimeOffset.cs" />
-    <Compile Include="Time\TimePoint.cs" />
+    <Compile Include="Utility\Time\StandardCalendar.cs" />
+    <Compile Include="Utility\Time\TimeFormat.cs" />
+    <Compile Include="Utility\Time\TimeOffset.cs" />
+    <Compile Include="Utility\Time\TimePoint.cs" />
     <Compile Include="Utility\Constants.cs" />
     <Compile Include="Utility\EventLog.cs" />
     <Compile Include="Utility\EventLogItem.cs" />
@@ -123,24 +123,24 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppModel.cs" />
-    <Page Include="EntityViews\PlanetView.xaml">
+    <Page Include="UI\EntityViews\PlanetView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow\MainWindowView.xaml">
+    <Page Include="UI\MainWindow\MainWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SystemMap\SystemMapView.xaml">
+    <Page Include="UI\SystemMap\SystemMapView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainWindow\MainWindowView.xaml.cs">
+    <Compile Include="UI\MainWindow\MainWindowView.xaml.cs">
       <DependentUpon>MainWindowView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainWindow\MainWindowViewModel.cs" />
+    <Compile Include="UI\MainWindow\MainWindowViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -162,7 +162,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Time\OurResources.resx">
+    <EmbeddedResource Include="Utility\Time\OurResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OurResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>

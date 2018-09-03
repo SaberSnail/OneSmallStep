@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace OneSmallStep.MainWindow
+namespace OneSmallStep.UI.MainWindow
 {
 	/// <summary>
 	/// Interaction logic for MainWindowView.xaml

@@ -1,4 +1,4 @@
-﻿namespace OneSmallStep.Time
+﻿namespace OneSmallStep.Utility.Time
 {
 	public enum TimeFormat
 	{

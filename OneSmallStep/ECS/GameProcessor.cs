@@ -5,8 +5,8 @@ using System.Threading;
 using System.Windows.Threading;
 using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Logging;
-using OneSmallStep.Time;
 using OneSmallStep.Utility;
+using OneSmallStep.Utility.Time;
 
 namespace OneSmallStep.ECS
 {

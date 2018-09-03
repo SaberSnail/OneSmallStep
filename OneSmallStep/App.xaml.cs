@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using OneSmallStep.MainWindow;
+using OneSmallStep.UI.MainWindow;
 
 namespace OneSmallStep
 {

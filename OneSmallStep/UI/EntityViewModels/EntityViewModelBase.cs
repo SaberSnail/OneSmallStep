@@ -1,6 +1,6 @@
 ﻿using OneSmallStep.ECS;
 
-namespace OneSmallStep.EntityViewModels
+namespace OneSmallStep.UI.EntityViewModels
 {
 	public abstract class EntityViewModelBase : ViewModelBase
 	{

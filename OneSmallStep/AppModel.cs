@@ -2,7 +2,7 @@
 using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Logging;
 using OneSmallStep.ECS;
-using OneSmallStep.MainWindow;
+using OneSmallStep.UI.MainWindow;
 
 namespace OneSmallStep
 {

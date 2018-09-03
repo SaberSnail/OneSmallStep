@@ -9,7 +9,7 @@ using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Windows;
 using OneSmallStep.Utility;
 
-namespace OneSmallStep.SystemMap
+namespace OneSmallStep.UI.SystemMap
 {
 	public class SystemMapControl : Canvas
 	{

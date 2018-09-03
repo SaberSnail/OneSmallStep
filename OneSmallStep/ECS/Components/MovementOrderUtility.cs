@@ -5,7 +5,7 @@ using System.Windows;
 using GoldenAnvil.Utility.Logging;
 using GoldenAnvil.Utility.Windows;
 using JetBrains.Annotations;
-using OneSmallStep.Time;
+using OneSmallStep.Utility.Time;
 
 namespace OneSmallStep.ECS.Components
 {

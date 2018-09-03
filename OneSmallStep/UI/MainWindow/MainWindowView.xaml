@@ -1,11 +1,10 @@
 ﻿<Window
-	x:Class="OneSmallStep.MainWindow.MainWindowView"
+	x:Class="OneSmallStep.UI.MainWindow.MainWindowView"
 	x:Name="ThisView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mainWindow="clr-namespace:OneSmallStep.MainWindow"
     xmlns:utility="clr-namespace:GoldenAnvil.Utility.Windows;assembly=GoldenAnvil.Utility.Windows"
-    xmlns:systemMap="clr-namespace:OneSmallStep.SystemMap"
+	xmlns:mainWindow="clr-namespace:OneSmallStep.UI.MainWindow"
     Height="350" Width="525">
 
 	<Window.Resources>

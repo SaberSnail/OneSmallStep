@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OneSmallStep.Time
+namespace OneSmallStep.Utility.Time
 {
 	public struct TimeOffset : IEquatable<TimeOffset>, IComparable<TimeOffset>
 	{

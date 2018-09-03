@@ -2,7 +2,7 @@
 using System.Windows;
 using GoldenAnvil.Utility.Logging;
 
-namespace OneSmallStep.SystemMap
+namespace OneSmallStep.UI.SystemMap
 {
 	public sealed class SystemMapViewModel : ViewModelBase
 	{

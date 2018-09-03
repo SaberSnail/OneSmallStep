@@ -1,5 +1,5 @@
-using OneSmallStep.Time;
 using OneSmallStep.Utility;
+using OneSmallStep.Utility.Time;
 
 namespace OneSmallStep.ECS.Components
 {

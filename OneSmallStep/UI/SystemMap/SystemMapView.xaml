@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:OneSmallStep.SystemMap">
+    xmlns:local="clr-namespace:OneSmallStep.UI.SystemMap">
 
 	<DataTemplate DataType="{x:Type local:SystemMapViewModel}">
 		<local:SystemMapControl Date="{Binding CurrentDate}" Bodies="{Binding Bodies}" Scale="{Binding Scale}" Center="{Binding Center}" />
