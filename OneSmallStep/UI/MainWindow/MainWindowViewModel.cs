@@ -118,10 +118,10 @@ namespace OneSmallStep.UI.MainWindow
 
 		public void StartProcessing()
 		{
-			if (AppModel.CurrentTheme == new Uri(@"/UI/Themes/Default/Default.xaml", UriKind.Relative))
-				AppModel.CurrentTheme = new Uri(@"/UI/Themes/Test/Test.xaml", UriKind.Relative);
-			else
-				AppModel.CurrentTheme = new Uri(@"/UI/Themes/Default/Default.xaml", UriKind.Relative);
+			//if (AppModel.CurrentTheme == new Uri(@"/UI/Themes/Default/Default.xaml", UriKind.Relative))
+			//	AppModel.CurrentTheme = new Uri(@"/UI/Themes/Test/Test.xaml", UriKind.Relative);
+			//else
+			//	AppModel.CurrentTheme = new Uri(@"/UI/Themes/Default/Default.xaml", UriKind.Relative);
 
 			m_gameServices.Processor.StartRunning();
 		}
