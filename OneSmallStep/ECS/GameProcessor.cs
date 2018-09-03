@@ -55,7 +55,7 @@ namespace OneSmallStep.ECS
 		private void DoProcessing()
 		{
 			var entityLookup = m_entityManager.ProcessingEntityLookup;
-			var processorEventLog = new ProcessorEventLog();
+			var processorEventLog = new NotificationLog();
 			m_currentDate = m_gameData.CurrentDate;
 
 			try

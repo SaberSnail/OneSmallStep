@@ -177,4 +177,7 @@
   <data name="DistanceInTerameters" xml:space="preserve">
     <value>{0:G4} Tm</value>
   </data>
+  <data name="NotificationFinishedOrders" xml:space="preserve">
+    <value>Ship has no more order.</value>
+  </data>
 </root>

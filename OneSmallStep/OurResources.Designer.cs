@@ -124,6 +124,15 @@ namespace OneSmallStep {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ship has no more order..
+        /// </summary>
+        internal static string NotificationFinishedOrders {
+            get {
+                return ResourceManager.GetString("NotificationFinishedOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0:N0} day.
         /// </summary>
         internal static string TimeOffsetDayLong_One {
