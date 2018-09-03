@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -138,7 +137,7 @@ namespace OneSmallStep.MainWindow
 			}
 		}
 
-		private void OnProcessingStopped(object sender, EventArgs e)
+		private void OnProcessingStopped(object sender, ProcessingStoppedEventArgs e)
 		{
 			UpdateShipOrders();
 

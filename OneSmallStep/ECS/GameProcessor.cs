@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Windows.Threading;
 using GoldenAnvil.Utility;
@@ -25,7 +26,7 @@ namespace OneSmallStep.ECS
 			m_workThread = new Thread(DoProcessing);
 		}
 
-		public event EventHandler ProcessingStopped;
+		public event EventHandler<ProcessingStoppedEventArgs> ProcessingStopped;
 
 		public void RegisterSystem(SystemBase system)
 		{
@@ -55,7 +56,7 @@ namespace OneSmallStep.ECS
 		private void DoProcessing()
 		{
 			var entityLookup = m_entityManager.ProcessingEntityLookup;
-			var processorEventLog = new NotificationLog();
+			var notificationLog = new NotificationLog();
 			m_currentDate = m_gameData.CurrentDate;
 
 			try
@@ -70,20 +71,21 @@ namespace OneSmallStep.ECS
 					m_currentDate = m_currentDate + Constants.Tick;
 
 					foreach (var system in m_systems)
-						system.ProcessTick(entityLookup, processorEventLog, m_currentDate);
+						system.ProcessTick(entityLookup, notificationLog, m_currentDate);
 
 					//var shouldStop = m_currentDate >= m_gameData.Calendar.CreateTimePoint(2100, 1, 1);
-					if (processorEventLog.ShouldStopProcessing)
+					if (notificationLog.ShouldStopProcessing)
 					{
 						m_threadContinueEvent.Reset();
 						Log.Info("Pausing processing");
 
+						var notifications = notificationLog.Events.ToList();
+						notificationLog.Reset();
 						m_dispatcher.Invoke(() =>
 						{
 							m_gameData.CurrentDate = m_currentDate;
 							m_gameData.EntityManager.SwapDisplayWithProcessing();
-							ProcessingStopped.Raise(this);
-							processorEventLog.Reset();
+							ProcessingStopped.Raise(this, new ProcessingStoppedEventArgs(notifications));
 						});
 					}
 					else
