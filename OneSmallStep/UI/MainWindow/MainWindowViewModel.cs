@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -22,7 +23,10 @@ namespace OneSmallStep.UI.MainWindow
 			m_systemMap = new SystemMapViewModel();
 			m_planets = new List<PlanetViewModel>();
 			m_ships = new List<ShipViewModel>();
+			AppModel = ((App) Application.Current).AppModel;
 		}
+
+		public AppModel AppModel { get; }
 
 		public bool IsGameStarted
 		{
@@ -114,6 +118,11 @@ namespace OneSmallStep.UI.MainWindow
 
 		public void StartProcessing()
 		{
+			if (AppModel.CurrentTheme == new Uri(@"/UI/Themes/Default/Default.xaml", UriKind.Relative))
+				AppModel.CurrentTheme = new Uri(@"/UI/Themes/Test/Test.xaml", UriKind.Relative);
+			else
+				AppModel.CurrentTheme = new Uri(@"/UI/Themes/Default/Default.xaml", UriKind.Relative);
+
 			m_gameServices.Processor.StartRunning();
 		}
 

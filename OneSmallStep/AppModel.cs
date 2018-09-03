@@ -1,16 +1,19 @@
 ﻿using System;
 using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Logging;
+using GoldenAnvil.Utility.Windows;
 using OneSmallStep.ECS;
 using OneSmallStep.UI.MainWindow;
 
 namespace OneSmallStep
 {
-	public sealed class AppModel
+	public sealed class AppModel : NotifyPropertyChangedDispatcherBase
 	{
 		public AppModel()
 		{
 			LogManager.Initialize(new ConsoleLogDestination(true));
+
+			CurrentTheme = new Uri(@"/UI/Themes/Default/Default.xaml", UriKind.Relative);
 		}
 
 		public event EventHandler StartupFinished;
@@ -18,6 +21,20 @@ namespace OneSmallStep
 		public MainWindowViewModel MainWindowViewModel
 		{
 			get { return m_mainWindowViewModel; }
+		}
+
+		public Uri CurrentTheme
+		{
+			get
+			{
+				VerifyAccess();
+				return m_currentTheme;
+			}
+			set
+			{
+				if (SetPropertyField(value, ref m_currentTheme))
+					Log.Info($"Changing theme to \"{m_currentTheme.OriginalString}\"");
+			}
 		}
 
 		public void Startup()
@@ -34,7 +51,10 @@ namespace OneSmallStep
 			m_gameServices.Dispose();
 		}
 
+		private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(AppModel));
+
 		MainWindowViewModel m_mainWindowViewModel;
 		GameServices m_gameServices;
+		Uri m_currentTheme;
 	}
 }

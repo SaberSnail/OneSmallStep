@@ -1,0 +1,34 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:presentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"  
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
+	mc:Ignorable="presentationOptions"
+	xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="Colors.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
+	<SolidColorBrush x:Key="SystemMapBackgroundBrush" Color="{StaticResource Green10}" presentationOptions:Freeze="true" />
+	<SolidColorBrush x:Key="SystemMapScaleTextBrush" Color="{StaticResource Green60}" presentationOptions:Freeze="true" />
+	<Pen x:Key="SystemMapScalePen" Brush="{StaticResource Green60Brush}" Thickness="1" presentationOptions:Freeze="true" />
+	<system:Double x:Key="SystemMapScaleWidth">100</system:Double>
+
+	<Pen x:Key="PlanetOrbitPen" Brush="{StaticResource Green30Brush}" Thickness="1.5" presentationOptions:Freeze="true" />
+	<SolidColorBrush x:Key="PlanetBodyBrush" Color="{StaticResource Green100}" presentationOptions:Freeze="true" />
+	<Color x:Key="PlanetBodyLightColor">#00CC00</Color>
+	<Color x:Key="PlanetBodyDarkColor">#006600</Color>
+	<Pen x:Key="PlanetBodyPen" Brush="Transparent" Thickness="0" presentationOptions:Freeze="true" />
+	<system:Double x:Key="PlanetMinRadius">5.0</system:Double>
+
+	<Pen x:Key="ShipMarkerPen" Brush="{StaticResource WhiteBrush}" Thickness="1.5" presentationOptions:Freeze="true" />
+	<Pen x:Key="ShipPathPen" Brush="{StaticResource Green50Brush}" Thickness="1.5" presentationOptions:Freeze="true" />
+	<Pen x:Key="ShipTargetPathPen" Brush="{StaticResource Green40Brush}" Thickness="1.5" presentationOptions:Freeze="true">
+		<Pen.DashStyle>
+			<DashStyle Dashes="4 4" />
+		</Pen.DashStyle>
+	</Pen>
+
+</ResourceDictionary>
+	

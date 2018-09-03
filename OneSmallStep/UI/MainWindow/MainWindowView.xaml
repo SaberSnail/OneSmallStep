@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:utility="clr-namespace:GoldenAnvil.Utility.Windows;assembly=GoldenAnvil.Utility.Windows"
 	xmlns:mainWindow="clr-namespace:OneSmallStep.UI.MainWindow"
-    Height="350" Width="525">
+	xmlns:ui="clr-namespace:OneSmallStep.UI.Utility"
+	Height="350" Width="525">
 
 	<Window.Resources>
 		<ResourceDictionary>
@@ -56,6 +57,7 @@
 	</Window.Resources>
 
 	<ContentControl
+		ui:ThemesUtility.CurrentThemeUrl="{Binding ViewModel.AppModel.CurrentTheme, ElementName=ThisView}"
 		Focusable="False"
 		Content="{Binding ElementName=ThisView, Path=ViewModel}" />
 </Window>

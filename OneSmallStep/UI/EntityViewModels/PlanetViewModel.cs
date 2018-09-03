@@ -6,6 +6,7 @@ using GoldenAnvil.Utility.Windows;
 using OneSmallStep.ECS;
 using OneSmallStep.ECS.Components;
 using OneSmallStep.UI.SystemMap;
+using OneSmallStep.UI.Utility;
 
 namespace OneSmallStep.UI.EntityViewModels
 {
@@ -117,22 +118,26 @@ namespace OneSmallStep.UI.EntityViewModels
 			{
 				var renderOrbitAt = new Point((OrbitCenterPosition.X * scale) + offset.X, (OrbitCenterPosition.Y * scale) + offset.Y);
 				var orbitRadius = OrbitalRadius * scale;
-				context.DrawEllipse(null, s_orbitPen, renderOrbitAt, orbitRadius, orbitRadius);
+				var orbitPen = (Pen) ThemesUtility.CurrentThemeDictionary["PlanetOrbitPen"];
+				context.DrawEllipse(null, orbitPen, renderOrbitAt, orbitRadius, orbitRadius);
 			}
 
-			var radius = Math.Max(c_minRadius, Radius * scale);
+			var minRadius = (double) ThemesUtility.CurrentThemeDictionary["PlanetMinRadius"];
+			var radius = Math.Max(minRadius, Radius * scale);
 			var renderAt = new Point((Position.X * scale) + offset.X, (Position.Y * scale) + offset.Y);
-			var bodyBrush = s_bodyBrush;
+			var bodyBrush = (Brush) ThemesUtility.CurrentThemeDictionary["PlanetBodyBrush"];
 			if (Position != new Point())
 			{
 				var vectorToCenter = renderAt.VectorTo(offset);
 				vectorToCenter.Normalize();
 				var gradientStart = renderAt + (vectorToCenter * 10.0);
+				var lightColor = (Color) ThemesUtility.CurrentThemeDictionary["PlanetBodyLightColor"];
+				var darkColor = (Color) ThemesUtility.CurrentThemeDictionary["PlanetBodyDarkColor"];
 				var gradientBrush = new LinearGradientBrush(new GradientStopCollection
 					{
-						new GradientStop(Colors.LightGray, 0.0),
-						new GradientStop(Colors.LightGray, 1.0),
-						new GradientStop(Color.FromRgb(0x60, 0x60, 0x60), 1.0),
+						new GradientStop(lightColor, 0.0),
+						new GradientStop(lightColor, 1.0),
+						new GradientStop(darkColor, 1.0),
 					},
 					gradientStart,
 					renderAt
@@ -142,13 +147,9 @@ namespace OneSmallStep.UI.EntityViewModels
 				bodyBrush = gradientBrush.Frozen();
 			}
 
-			context.DrawEllipse(bodyBrush, s_bodyPen, renderAt, radius, radius);
+			var bodyPen = (Pen) ThemesUtility.CurrentThemeDictionary["PlanetBodyPen"];
+			context.DrawEllipse(bodyBrush, bodyPen, renderAt, radius, radius);
 		}
-
-		static readonly Brush s_bodyBrush = new SolidColorBrush(Colors.White).Frozen();//Color.FromRgb(0x20, 0x20, 0x20)).Frozen();
-		static readonly Pen s_bodyPen = null;//new Pen(new SolidColorBrush(Colors.White).Frozen(), 1.0).Frozen();
-		static readonly Pen s_orbitPen = new Pen(new SolidColorBrush(Color.FromRgb(0x30, 0x30, 0x30)), 1.0).Frozen();
-		const double c_minRadius = 4.0;
 
 		long m_population;
 		string m_positionString;

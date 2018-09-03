@@ -1,10 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 using GoldenAnvil.Utility;
-using GoldenAnvil.Utility.Windows;
 using OneSmallStep.ECS;
 using OneSmallStep.ECS.Components;
 using OneSmallStep.UI.SystemMap;
+using OneSmallStep.UI.Utility;
 
 namespace OneSmallStep.UI.EntityViewModels
 {
@@ -92,25 +92,24 @@ namespace OneSmallStep.UI.EntityViewModels
 		public void Render(DrawingContext context, Point offset, double scale)
 		{
 			var renderAt = new Point((Position.X * scale) + offset.X, (Position.Y * scale) + offset.Y);
-			context.DrawLine(s_markerPen, new Point(renderAt.X - 4, renderAt.Y), new Point(renderAt.X + 4, renderAt.Y));
-			context.DrawLine(s_markerPen, new Point(renderAt.X, renderAt.Y - 4), new Point(renderAt.X, renderAt.Y + 4));
+			var markerPen = (Pen) ThemesUtility.CurrentThemeDictionary["ShipMarkerPen"];
+			context.DrawLine(markerPen, new Point(renderAt.X - 4, renderAt.Y), new Point(renderAt.X + 4, renderAt.Y));
+			context.DrawLine(markerPen, new Point(renderAt.X, renderAt.Y - 4), new Point(renderAt.X, renderAt.Y + 4));
 
 			if (TargetPosition != null)
 			{
 				var renderTo = new Point((TargetPosition.Value.X * scale) + offset.X, (TargetPosition.Value.Y * scale) + offset.Y);
-				context.DrawLine(s_pathPen, renderAt, renderTo);
+				var pathPen = (Pen) ThemesUtility.CurrentThemeDictionary["ShipPathPen"];
+				context.DrawLine(pathPen, renderAt, renderTo);
 			}
 
 			if (TargetCurrentPosition != null)
 			{
 				var renderTo = new Point((TargetCurrentPosition.Value.X * scale) + offset.X, (TargetCurrentPosition.Value.Y * scale) + offset.Y);
-				context.DrawLine(s_targetPen, renderAt, renderTo);
+				var targetPathPen = (Pen) ThemesUtility.CurrentThemeDictionary["ShipTargetPathPen"];
+				context.DrawLine(targetPathPen, renderAt, renderTo);
 			}
 		}
-
-		static readonly Pen s_markerPen = new Pen(new SolidColorBrush(Colors.Red).Frozen(), 1.0).Frozen();
-		static readonly Pen s_pathPen = new Pen(new SolidColorBrush(Color.FromRgb(0x60, 0x60, 0x60)).Frozen(), 1.0).Frozen();
-		static readonly Pen s_targetPen = new Pen(new SolidColorBrush(Color.FromRgb(0x40, 0x40, 0x40)).Frozen(), 1.0) { DashStyle = new DashStyle(new [] { 4.0, 4.0 }, 0) }.Frozen();
 
 		string m_positionString;
 		Point m_position;

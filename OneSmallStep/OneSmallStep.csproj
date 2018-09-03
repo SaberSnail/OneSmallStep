@@ -97,6 +97,7 @@
     <Compile Include="UI\SystemMap\ISystemBodyRenderer.cs" />
     <Compile Include="UI\SystemMap\SystemMapControl.cs" />
     <Compile Include="UI\SystemMap\SystemMapViewModel.cs" />
+    <Compile Include="UI\Utility\ThemesUtility.cs" />
     <Compile Include="Utility\Time\ICalendar.cs" />
     <Compile Include="Utility\Time\OurResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -132,6 +133,30 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\SystemMap\SystemMapView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Themes\Default\Colors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Themes\Default\Default.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Themes\Default\SystemMap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Themes\Test\Colors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Themes\Test\SystemMap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Themes\Test\Test.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

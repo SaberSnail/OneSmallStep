@@ -104,7 +104,8 @@ namespace OneSmallStep.UI.SystemMap
 			base.OnRender(context);
 
 			var viewRect = new Rect(0, 0, ActualWidth, ActualHeight);
-			context.DrawRectangle(s_background, null, viewRect);
+			var background = (Brush) FindResource("SystemMapBackgroundBrush");
+			context.DrawRectangle(background, null, viewRect);
 
 			var centerPoint = new Point(viewRect.Width / 2.0, viewRect.Height / 2.0);
 			var scale = Scale * Math.Min(centerPoint.X, centerPoint.Y);
@@ -120,7 +121,9 @@ namespace OneSmallStep.UI.SystemMap
 
 		private void DrawScale(DrawingContext context, Rect viewRect)
 		{
-			context.DrawLine(s_scalePen, new Point(viewRect.Right - 8, viewRect.Bottom - 8), new Point(viewRect.Right - c_scaleWidth - 8, viewRect.Bottom - 8));
+			var scalePen = (Pen) FindResource("SystemMapScalePen");
+			var scaleWidth = (double) FindResource("SystemMapScaleWidth");
+			context.DrawLine(scalePen, new Point(viewRect.Right - 8, viewRect.Bottom - 8), new Point(viewRect.Right - scaleWidth - 8, viewRect.Bottom - 8));
 			if (m_scaleText != null)
 			context.DrawText(m_scaleText, new Point(viewRect.Right - 58 - (m_scaleText.Width / 2.0), viewRect.Bottom - 8 - m_scaleText.Height));
 		}
@@ -150,13 +153,10 @@ namespace OneSmallStep.UI.SystemMap
 			var centerPoint = new Point(viewRect.Width / 2.0, viewRect.Height / 2.0);
 			var scale = Scale * Math.Min(centerPoint.X, centerPoint.Y);
 
-			m_scaleText = new FormattedText(FormatUtility.RenderDistance(c_scaleWidth / scale), CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface("Verdana"), 12, s_scaleTextBrush, 1.0);
+			var textBrush = (Brush) FindResource("SystemMapScaleTextBrush");
+			var scaleWidth = (double) FindResource("SystemMapScaleWidth");
+			m_scaleText = new FormattedText(FormatUtility.RenderDistance(scaleWidth / scale), CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface("Verdana"), 12, textBrush, 1.0);
 		}
-
-		static readonly Brush s_background = new SolidColorBrush(Colors.Black).Frozen();
-		static readonly Pen s_scalePen = new Pen(new SolidColorBrush(Colors.LightGray).Frozen(), 1.0).Frozen();
-		static readonly Brush s_scaleTextBrush = new SolidColorBrush(Colors.DarkGray).Frozen();
-		const double c_scaleWidth = 100.0;
 
 		FormattedText m_scaleText;
 		Point m_mouseDownPosition;
