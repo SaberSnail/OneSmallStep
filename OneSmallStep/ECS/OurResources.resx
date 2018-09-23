@@ -118,6 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NotificationFinishedOrders" xml:space="preserve">
-    <value>Ship has no more orders.</value>
+    <value>{{{0}.InformationComponent.Name}} has no more orders.</value>
   </data>
 </root>

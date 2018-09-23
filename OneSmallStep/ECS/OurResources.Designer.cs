@@ -61,7 +61,7 @@ namespace OneSmallStep.ECS {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ship has no more orders..
+        ///   Looks up a localized string similar to {{{0}.InformationComponent.Name}} has no more orders..
         /// </summary>
         internal static string NotificationFinishedOrders {
             get {

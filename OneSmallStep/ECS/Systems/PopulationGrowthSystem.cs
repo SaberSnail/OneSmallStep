@@ -12,7 +12,7 @@ namespace OneSmallStep.ECS.Systems
 			m_rng = new Random();
 		}
 
-		public override void ProcessTick(IEntityLookup entityLookup, NotificationLog eventLog, TimePoint newTime)
+		public override void ProcessTick(IEntityLookup entityLookup, NotificationLog notificationLog, TimePoint newTime)
 		{
 			var entitiesList = entityLookup.GetEntitiesMatchingKey(GetRequiredComponentsKey(entityLookup));
 

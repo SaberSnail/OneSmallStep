@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -10,6 +9,7 @@ using OneSmallStep.ECS;
 using OneSmallStep.ECS.Components;
 using OneSmallStep.UI.EntityViewModels;
 using OneSmallStep.UI.SystemMap;
+using OneSmallStep.UI.Utility;
 using OneSmallStep.Utility;
 using OneSmallStep.Utility.Time;
 
@@ -180,6 +180,9 @@ namespace OneSmallStep.UI.MainWindow
 				if (ShouldRunAtFullSpeed)
 					m_gameServices.Processor.StartRunning();
 			}, DispatcherPriority.Background);
+
+			foreach (var notification in e.Notifications)
+				Log.Info($"{AppModel.GameData.Calendar.FormatTime(notification.Date, TimeFormat.Short)} - {TokenStringUtility.GetString(notification.Message, AppModel.GameData.EntityManager)}");
 		}
 
 		private void UpdateCurrentDate()

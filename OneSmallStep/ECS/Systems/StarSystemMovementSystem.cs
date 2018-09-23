@@ -1,11 +1,12 @@
-﻿using OneSmallStep.ECS.Components;
+﻿using System.Globalization;
+using OneSmallStep.ECS.Components;
 using OneSmallStep.Utility.Time;
 
 namespace OneSmallStep.ECS.Systems
 {
 	public sealed class StarSystemMovementSystem : SystemBase
 	{
-		public override void ProcessTick(IEntityLookup entityLookup, NotificationLog eventLog, TimePoint newTime)
+		public override void ProcessTick(IEntityLookup entityLookup, NotificationLog notificationLog, TimePoint newTime)
 		{
 			var entitiesList = entityLookup.GetEntitiesMatchingKey(GetRequiredComponentsKey(entityLookup));
 
@@ -59,7 +60,10 @@ namespace OneSmallStep.ECS.Systems
 				{
 					orders.ResolveOrderIfNeeded(entityLookup, position.GetCurrentAbsolutePosition(entityLookup));
 					if (!orders.HasActiveOrder())
-						eventLog.AddEvent(new Notification(OurResources.NotificationFinishedOrders, newTime, true, entity.Id));
+					{
+						var text = string.Format(CultureInfo.InvariantCulture, OurResources.NotificationFinishedOrders, entity.Id);
+						notificationLog.AddEvent(new Notification(text, newTime, true, entity.Id));
+					}
 				}
 			}
 		}
