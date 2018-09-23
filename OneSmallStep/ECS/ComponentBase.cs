@@ -26,7 +26,7 @@ namespace OneSmallStep.ECS
 
 		protected IDisposable ScopedPropertyChange()
 		{
-			return Scope.Create( () => Version++);
+			return Scope.Create(SetChanged);
 		}
 
 		protected bool SetPropertyField<T>(T newValue, ref T field)
