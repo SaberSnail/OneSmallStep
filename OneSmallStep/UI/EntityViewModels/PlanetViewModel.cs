@@ -17,6 +17,19 @@ namespace OneSmallStep.UI.EntityViewModels
 		{
 		}
 
+		public string Name
+		{
+			get
+			{
+				VerifyAccess();
+				return m_name;
+			}
+			private set
+			{
+				SetPropertyField(value, ref m_name);
+			}
+		}
+
 		public long Population
 		{
 			get
@@ -99,6 +112,9 @@ namespace OneSmallStep.UI.EntityViewModels
 		{
 			var entity = entityLookup.GetEntity(EntityId);
 
+			var information = entity.GetOptionalComponent<InformationComponent>();
+			Name = information?.Name;
+
 			var population = entity.GetOptionalComponent<PopulationComponent>();
 			Population = population?.Population ?? 0;
 
@@ -157,5 +173,6 @@ namespace OneSmallStep.UI.EntityViewModels
 		Point m_orbitCenterPosition;
 		double m_orbitalRadius;
 		double m_radius;
+		string m_name;
 	}
 }

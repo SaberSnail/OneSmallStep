@@ -36,6 +36,12 @@ namespace OneSmallStep.ECS
 			return (T) m_components.GetValueOrDefault(typeof(T));
 		}
 
+		[CanBeNull]
+		public ComponentBase GetOptionalComponentByName(string name)
+		{
+			return m_components.FirstOrDefault(x => x.Key.Name == name).Value;
+		}
+
 		[NotNull]
 		public T GetRequiredComponent<T>()
 			where T : ComponentBase

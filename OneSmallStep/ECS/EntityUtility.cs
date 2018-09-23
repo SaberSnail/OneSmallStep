@@ -6,9 +6,10 @@ namespace OneSmallStep.ECS
 {
 	public static class EntityUtility
 	{
-		public static Entity CreatePlanet(IEntityLookup entityLookup, double mass, double radius)
+		public static Entity CreatePlanet(IEntityLookup entityLookup, string name, double mass, double radius)
 		{
 			var planet = new Entity(entityLookup);
+			planet.AddComponent(new InformationComponent { Name = name });
 			planet.AddComponent(OrbitalPositionComponent.CreateUnpoweredBody());
 			planet.AddComponent(new OrbitalBodyCharacteristicsComponent
 			{
@@ -20,9 +21,10 @@ namespace OneSmallStep.ECS
 			return planet;
 		}
 
-		public static Entity CreatePlanet(IEntityLookup entityLookup, Entity parent, double mass, double radius, double periodInDays, double meanAnomalyInDegrees, bool isPrograde, ICalendar calendar)
+		public static Entity CreatePlanet(IEntityLookup entityLookup, string name, Entity parent, double mass, double radius, double periodInDays, double meanAnomalyInDegrees, bool isPrograde, ICalendar calendar)
 		{
 			var planet = new Entity(entityLookup);
+			planet.AddComponent(new InformationComponent { Name = name });
 			planet.AddComponent(OrbitalPositionComponent.CreateUnpoweredBody(parent, mass, periodInDays, meanAnomalyInDegrees, isPrograde, calendar));
 			planet.AddComponent(new OrbitalBodyCharacteristicsComponent
 			{
@@ -34,9 +36,10 @@ namespace OneSmallStep.ECS
 			return planet;
 		}
 
-		public static Entity CreateShip(IEntityLookup entityLookup, Point startingPoint)
+		public static Entity CreateShip(IEntityLookup entityLookup, string name, Point startingPoint)
 		{
 			var ship = new Entity(entityLookup);
+			ship.AddComponent(new InformationComponent { Name = name });
 			ship.AddComponent(OrbitalPositionComponent.CreatePoweredBody(startingPoint));
 			ship.AddComponent(new OrbitalBodyCharacteristicsComponent
 			{

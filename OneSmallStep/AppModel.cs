@@ -18,9 +18,21 @@ namespace OneSmallStep
 
 		public event EventHandler StartupFinished;
 
-		public MainWindowViewModel MainWindowViewModel
+		public MainWindowViewModel MainWindowViewModel => m_mainWindowViewModel;
+
+		public GameServices GameServices => m_gameServices;
+
+		public GameData GameData
 		{
-			get { return m_mainWindowViewModel; }
+			get
+			{
+				VerifyAccess();
+				return m_gameData;
+			}
+			set
+			{
+				SetPropertyField(value, ref m_gameData);
+			}
 		}
 
 		public Uri CurrentTheme
@@ -56,5 +68,6 @@ namespace OneSmallStep
 		MainWindowViewModel m_mainWindowViewModel;
 		GameServices m_gameServices;
 		Uri m_currentTheme;
+		GameData m_gameData;
 	}
 }

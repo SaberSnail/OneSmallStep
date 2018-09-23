@@ -22,6 +22,7 @@ namespace OneSmallStep.ECS
 			using (entityManager.StartupScope())
 			{
 				entityManager.RegisterComponent<AgeComponent>();
+				entityManager.RegisterComponent<InformationComponent>();
 				entityManager.RegisterComponent<PopulationComponent>();
 				entityManager.RegisterComponent<OrbitalPositionComponent>();
 				entityManager.RegisterComponent<OrbitalBodyCharacteristicsComponent>();

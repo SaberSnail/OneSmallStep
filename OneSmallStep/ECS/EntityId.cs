@@ -34,6 +34,11 @@ namespace OneSmallStep.ECS
 			return !left.Equals(right);
 		}
 
+		public override string ToString()
+		{
+			return m_id.ToString();
+		}
+
 		readonly int m_id;
 	}
 }

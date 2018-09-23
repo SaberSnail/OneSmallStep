@@ -8,17 +8,21 @@
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="*" />
 			</Grid.ColumnDefinitions>
 			
-			<TextBlock Grid.Row="0" Grid.Column="0" Text="Population:" />
-			<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Population}" />
+			<TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" />
+			<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" />
 
-			<TextBlock Grid.Row="1" Grid.Column="0" Text="Position:" />
-			<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PositionString}" />
+			<TextBlock Grid.Row="1" Grid.Column="0" Text="Population:" />
+			<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Population}" />
+
+			<TextBlock Grid.Row="2" Grid.Column="0" Text="Position:" />
+			<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding PositionString}" />
 		</Grid>
 	</DataTemplate>
 

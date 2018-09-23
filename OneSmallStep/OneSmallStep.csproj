@@ -64,6 +64,7 @@
     <Compile Include="ECS\ComponentBase.cs" />
     <Compile Include="ECS\ComponentKey.cs" />
     <Compile Include="ECS\Components\AgeComponent.cs" />
+    <Compile Include="ECS\Components\InformationComponent.cs" />
     <Compile Include="ECS\Components\MovementOrderBase.cs" />
     <Compile Include="ECS\Components\MovementOrdersComponent.cs" />
     <Compile Include="ECS\Components\MovementOrderUtility.cs" />
