@@ -59,6 +59,10 @@
 						Focusable="False"
 						Content="{Binding SystemMap}"
 						/>
+					
+					<Grid.CommandBindings>
+						<CommandBinding Command="{x:Static ui:TokenStringUtility.GoToEntityCommand}" Executed="OnGoToEntity" />
+					</Grid.CommandBindings>
 				</Grid>
 			</DataTemplate>
 		</ResourceDictionary>

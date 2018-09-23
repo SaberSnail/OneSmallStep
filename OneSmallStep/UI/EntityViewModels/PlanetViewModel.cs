@@ -121,10 +121,10 @@ namespace OneSmallStep.UI.EntityViewModels
 			var position = entity.GetRequiredComponent<OrbitalPositionComponent>();
 			var body = entity.GetRequiredComponent<OrbitalBodyCharacteristicsComponent>();
 			Radius = body.Radius;
-			PositionString = "{0}, {1}".FormatCurrentCulture(Position.X, Position.Y);
 			var parentEntity = position.ParentId.HasValue ? entityLookup.GetEntity(position.ParentId.Value) : null;
 			OrbitCenterPosition = parentEntity?.GetOptionalComponent<OrbitalPositionComponent>()?.GetCurrentAbsolutePosition(entityLookup) ?? new Point();
 			Position = position.RelativePosition.WithOffset(OrbitCenterPosition);
+			PositionString = "{0}, {1}".FormatCurrentCulture(Position.X, Position.Y);
 			OrbitalRadius = position.OrbitalRadius ?? 0.0;
 		}
 

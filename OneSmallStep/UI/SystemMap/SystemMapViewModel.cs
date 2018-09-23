@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using GoldenAnvil.Utility.Logging;
+using OneSmallStep.ECS;
+using OneSmallStep.ECS.Components;
 
 namespace OneSmallStep.UI.SystemMap
 {
@@ -67,6 +69,16 @@ namespace OneSmallStep.UI.SystemMap
 			{
 				m_currentDate = date;
 				m_bodies = entities;
+			}
+		}
+
+		public void GoToEntity(EntityId entityId, IEntityLookup entityLookup)
+		{
+			var entity = entityLookup.GetEntity(entityId);
+			if (entity != null)
+			{
+				var position = entity.GetRequiredComponent<OrbitalPositionComponent>();
+				Center = position.GetCurrentAbsolutePosition(entityLookup);
 			}
 		}
 

@@ -108,7 +108,8 @@ namespace OneSmallStep.UI.MainWindow
 			}
 			private set
 			{
-				SetPropertyField(value, ref m_tokenStringTest);
+				if (SetPropertyField(value, ref m_tokenStringTest))
+					CommandManager.InvalidateRequerySuggested();
 			}
 		}
 
@@ -137,6 +138,12 @@ namespace OneSmallStep.UI.MainWindow
 			//	AppModel.CurrentTheme = new Uri(@"/UI/Themes/Default/Default.xaml", UriKind.Relative);
 
 			m_gameServices.Processor.StartRunning();
+		}
+
+		public void GoToEntity(EntityId entityId)
+		{
+			var entityLookup = AppModel.GameData.EntityManager.DisplayEntityLookup;
+			m_systemMap.GoToEntity(entityId, entityLookup);
 		}
 
 		private void UpdateShipOrders()

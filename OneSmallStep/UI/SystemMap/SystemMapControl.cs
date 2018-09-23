@@ -13,7 +13,7 @@ namespace OneSmallStep.UI.SystemMap
 {
 	public class SystemMapControl : Canvas
 	{
-		public static readonly DependencyProperty CenterProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Center, OnInvalidatingPropertyChanged);
+		public static readonly DependencyProperty CenterProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Center, null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault | FrameworkPropertyMetadataOptions.AffectsRender);
 
 		public Point Center
 		{
@@ -21,7 +21,7 @@ namespace OneSmallStep.UI.SystemMap
 			set { SetValue(CenterProperty, value); }
 		}
 
-		public static readonly DependencyProperty ScaleProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Scale, OnScaleChanged, 1.0);
+		public static readonly DependencyProperty ScaleProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Scale, OnScaleChanged, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault | FrameworkPropertyMetadataOptions.AffectsRender, 1.0);
 
 		public double Scale
 		{
@@ -29,7 +29,7 @@ namespace OneSmallStep.UI.SystemMap
 			set { SetValue(ScaleProperty, value); }
 		}
 
-		public static readonly DependencyProperty DateProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Date, OnInvalidatingPropertyChanged);
+		public static readonly DependencyProperty DateProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Date, null, FrameworkPropertyMetadataOptions.AffectsRender);
 
 		public string Date
 		{
@@ -37,7 +37,7 @@ namespace OneSmallStep.UI.SystemMap
 			set { SetValue(DateProperty, value); }
 		}
 
-		public static readonly DependencyProperty BodiesProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Bodies, OnInvalidatingPropertyChanged, new List<ISystemBodyRenderer>());
+		public static readonly DependencyProperty BodiesProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Bodies, null, FrameworkPropertyMetadataOptions.AffectsRender, new List<ISystemBodyRenderer>());
 
 		public IReadOnlyList<ISystemBodyRenderer> Bodies
 		{
@@ -90,8 +90,8 @@ namespace OneSmallStep.UI.SystemMap
 				{
 					var scale = Scale * Math.Min(ActualWidth / 2.0, ActualHeight / 2.0);
 					Center = new Point(
-						m_mouseDownCenter.X + ((currentPosition.X - m_mouseDownPosition.X) / scale),
-						m_mouseDownCenter.Y + ((currentPosition.Y - m_mouseDownPosition.Y) / scale)
+						m_mouseDownCenter.X + ((m_mouseDownPosition.X - currentPosition.X) / scale),
+						m_mouseDownCenter.Y + ((m_mouseDownPosition.Y - currentPosition.Y) / scale)
 					);
 				}
 
@@ -109,7 +109,7 @@ namespace OneSmallStep.UI.SystemMap
 
 			var centerPoint = new Point(viewRect.Width / 2.0, viewRect.Height / 2.0);
 			var scale = Scale * Math.Min(centerPoint.X, centerPoint.Y);
-			var offset = new Point(centerPoint.X + (Center.X * scale), centerPoint.Y + (Center.Y * scale));
+			var offset = new Point(centerPoint.X - (Center.X * scale), centerPoint.Y - (Center.Y * scale));
 			using (context.ScopedClip(new RectangleGeometry(viewRect)))
 			{
 				foreach (var body in Bodies.EmptyIfNull())
@@ -135,16 +135,10 @@ namespace OneSmallStep.UI.SystemMap
 			return actualSize;
 		}
 
-		private static void OnInvalidatingPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			((SystemMapControl) d).InvalidateVisual();
-		}
-
 		private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			var control = (SystemMapControl) d;
 			control.RefreshScaleText(new Size(control.ActualWidth, control.ActualHeight));
-			control.InvalidateVisual();
 		}
 
 		private void RefreshScaleText(Size actualSize)

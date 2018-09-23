@@ -15,7 +15,7 @@ namespace OneSmallStep.UI.Utility
 {
 	public static class TokenStringUtility
 	{
-		public static readonly RoutedCommand GoToEntityCommand = new RoutedCommand("GoToEntityCommand", typeof(Hyperlink));
+		public static readonly RoutedCommand GoToEntityCommand = new RoutedCommand("GoToEntityCommand", typeof(TokenStringUtility));
 
 		public static string GetString(string tokenString, EntityManager entityManager)
 		{
