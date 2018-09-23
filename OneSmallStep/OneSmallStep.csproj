@@ -97,6 +97,7 @@
     <Compile Include="UI\SystemMap\ISystemBodyRenderer.cs" />
     <Compile Include="UI\SystemMap\SystemMapControl.cs" />
     <Compile Include="UI\SystemMap\SystemMapViewModel.cs" />
+    <Compile Include="UI\Utility\TokenStringUtility.cs" />
     <Compile Include="UI\Utility\ThemesUtility.cs" />
     <Compile Include="Utility\Time\ICalendar.cs" />
     <Compile Include="Utility\Time\OurResources.Designer.cs">
