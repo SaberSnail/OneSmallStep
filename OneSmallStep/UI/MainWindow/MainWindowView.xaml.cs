@@ -17,11 +17,5 @@ namespace OneSmallStep.UI.MainWindow
 		}
 
 		public MainWindowViewModel ViewModel { get; }
-
-		void OnGoToEntity(object sender, ExecutedRoutedEventArgs e)
-		{
-			ViewModel.GoToEntity((EntityId) e.Parameter);
-			e.Handled = true;
-		}
 	}
 }

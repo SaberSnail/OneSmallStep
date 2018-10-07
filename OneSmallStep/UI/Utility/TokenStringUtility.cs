@@ -121,7 +121,7 @@ namespace OneSmallStep.UI.Utility
 				yield return new Run(tokenString.Substring(currentIndex));
 		}
 
-		public static readonly DependencyProperty TokenStringProperty = DependencyProperty.RegisterAttached("TokenString", typeof(string), typeof(TokenStringUtility), new UIPropertyMetadata(null, OnTokenStringChanged));
+		public static readonly DependencyProperty TokenStringProperty = DependencyProperty.RegisterAttached("TokenString", typeof(string), typeof(TokenStringUtility), new PropertyMetadata(null, OnTokenStringChanged));
 
 		public static string GetTokenString(DependencyObject d)
 		{
@@ -145,6 +145,8 @@ namespace OneSmallStep.UI.Utility
 				IEnumerable<Inline> inlines = entityManager != null ? GetInlines(tokenString, entityManager) : EnumerableUtility.Enumerate(new Run(tokenString));
 
 				textBlock.Inlines.AddRange(inlines);
+
+				CommandManager.InvalidateRequerySuggested();
 			}
 		}
 

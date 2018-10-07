@@ -60,9 +60,12 @@
 						Content="{Binding SystemMap}"
 						/>
 					
-					<Grid.CommandBindings>
-						<CommandBinding Command="{x:Static ui:TokenStringUtility.GoToEntityCommand}" Executed="OnGoToEntity" />
-					</Grid.CommandBindings>
+					<utility:CommandUtility.MergedCommandBindings>
+						<MultiBinding Converter="{x:Static utility:RoutedCommandToCommandBindingConverter.Instance}">
+							<Binding Source="{x:Static ui:TokenStringUtility.GoToEntityCommand}" />
+							<Binding Converter="{x:Static utility:MethodToCommandConverter.Instance}" ConverterParameter="GoToEntity" />
+						</MultiBinding>
+					</utility:CommandUtility.MergedCommandBindings>
 				</Grid>
 			</DataTemplate>
 		</ResourceDictionary>

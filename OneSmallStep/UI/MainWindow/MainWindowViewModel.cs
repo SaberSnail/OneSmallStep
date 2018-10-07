@@ -104,12 +104,11 @@ namespace OneSmallStep.UI.MainWindow
 			get
 			{
 				VerifyAccess();
-				return m_tokenStringTest;
+				return m_status;
 			}
 			private set
 			{
-				if (SetPropertyField(value, ref m_tokenStringTest))
-					CommandManager.InvalidateRequerySuggested();
+				SetPropertyField(value, ref m_status);
 			}
 		}
 
@@ -315,6 +314,6 @@ namespace OneSmallStep.UI.MainWindow
 		bool m_shouldRunAtFullSpeed;
 		ShipViewModel m_ship;
 		DispatcherOperation m_refreshOperation;
-		string m_tokenStringTest;
+		string m_status;
 	}
 }
