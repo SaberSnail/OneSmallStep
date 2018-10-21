@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace OneSmallStep.ECS
 {
+	[DebuggerDisplay("{m_id}")]
 	public struct EntityId : IEquatable<EntityId>
 	{
 		public EntityId(int id)

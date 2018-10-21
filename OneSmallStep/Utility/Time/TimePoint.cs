@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace OneSmallStep.Utility.Time
 {
+	[DebuggerDisplay("{Tick}")]
 	public struct TimePoint : IEquatable<TimePoint>, IComparable<TimePoint>
 	{
 		public TimePoint(long tick)

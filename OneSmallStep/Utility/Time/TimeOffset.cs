@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace OneSmallStep.Utility.Time
 {
+	[DebuggerDisplay("{TickOffset}")]
 	public struct TimeOffset : IEquatable<TimeOffset>, IComparable<TimeOffset>
 	{
 		public TimeOffset(long offset)
