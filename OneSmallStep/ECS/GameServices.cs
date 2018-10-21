@@ -7,7 +7,7 @@ namespace OneSmallStep.ECS
 	{
 		public GameServices()
 		{
-			RandomNumberGenerator = new Random(0);
+			RandomNumberGenerator = new Random(2);
 			Processor = CreateGameProcessor();
 		}
 

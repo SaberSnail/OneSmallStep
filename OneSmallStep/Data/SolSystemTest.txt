@@ -1,0 +1,45 @@
+﻿// For Types: S=Star, H=Hostile, E=Garden, A=Airless, G=Gas Giant
+// Type,Name,Radius,Mass/Density,Orbits,SemiMajorAxis,Eccentricity,LongOfPeriapsis,MeanAnom
+// Mass/Density: if negative, then mass is actually density
+// For Type: B=Random Belt
+// Type,Count,Orbits,MinSemiMajAxis,MaxSemiMajAxis,MinEccentricity,MaxEccentricity
+S,Sol,1392000,1.9891e+30
+A,Test24,6371,5.9736e+24,Sol,8E11,0.25,0,179.9
+//A,Test1,6371,5.9736e+24,Sol,8E11,0.8,45,0
+//A,Test2,6371,5.9736e+24,Sol,8E11,0.35,0,20
+//A,Test3,6371,5.9736e+24,Sol,8E11,0.35,0,40
+//A,Test4,6371,5.9736e+24,Sol,8E11,0.35,0,60
+//A,Test5,6371,5.9736e+24,Sol,8E11,0.35,0,80
+//A,Test6,6371,5.9736e+24,Sol,8E11,0.35,0,100
+//A,Test7,6371,5.9736e+24,Sol,8E11,0.35,0,120
+//A,Test8,6371,5.9736e+24,Sol,8E11,0.35,0,140
+//A,Test9,6371,5.9736e+24,Sol,8E11,0.35,0,160
+//A,Test10,6371,5.9736e+24,Sol,8E11,0.35,0,180
+//A,Test11,6371,5.9736e+24,Sol,8E11,0.35,0,200
+//A,Test12,6371,5.9736e+24,Sol,8E11,0.35,0,220
+//A,Test13,6371,5.9736e+24,Sol,8E11,0.35,0,240
+//A,Test14,6371,5.9736e+24,Sol,8E11,0.35,0,260
+//A,Test15,6371,5.9736e+24,Sol,8E11,0.35,0,280
+//A,Test16,6371,5.9736e+24,Sol,8E11,0.35,0,300
+//A,Test17,6371,5.9736e+24,Sol,8E11,0.35,0,320
+//A,Test18,6371,5.9736e+24,Sol,8E11,0.35,0,340
+//A,Test19,6371,5.9736e+24,Sol,8E11,0.35,0,360
+//A,Test20,6371,5.9736e+24,Sol,8E11,0.05,0,20
+//A,Test21,6371,5.9736e+24,Sol,8E11,0.10,0,40
+//A,Test22,6371,5.9736e+24,Sol,8E11,0.15,0,60
+//A,Test23,6371,5.9736e+24,Sol,8E11,0.20,0,80
+//A,Test24,6371,5.9736e+24,Sol,8E11,0.25,0,100
+//A,Test25,6371,5.9736e+24,Sol,8E11,0.30,0,120
+//A,Test26,6371,5.9736e+24,Sol,8E11,0.35,0,140
+//A,Test27,6371,5.9736e+24,Sol,8E11,0.40,0,160
+//A,Test28,6371,5.9736e+24,Sol,8E11,0.45,0,180
+//A,Test29,6371,5.9736e+24,Sol,8E11,0.50,0,200
+//A,Test30,6371,5.9736e+24,Sol,8E11,0.55,0,220
+//A,Test31,6371,5.9736e+24,Sol,8E11,0.60,0,240
+//A,Test32,6371,5.9736e+24,Sol,8E11,0.65,0,260
+//A,Test33,6371,5.9736e+24,Sol,8E11,0.70,0,280
+//A,Test34,6371,5.9736e+24,Sol,8E11,0.75,0,300
+//A,Test35,6371,5.9736e+24,Sol,8E11,0.80,0,320
+//A,Test36,6371,5.9736e+24,Sol,8E11,0.85,0,340
+//A,Test37,6371,5.9736e+24,Sol,8E11,0.90,0,360
+//A,Test38,6371,5.9736e+24,Sol,8E11,0.95,0,360

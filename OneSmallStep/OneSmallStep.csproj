@@ -64,6 +64,7 @@
     <Compile Include="ECS\ComponentBase.cs" />
     <Compile Include="ECS\ComponentKey.cs" />
     <Compile Include="ECS\Components\AgeComponent.cs" />
+    <Compile Include="ECS\Components\EllipticalOrbitalPositionComponent.cs" />
     <Compile Include="ECS\Components\InformationComponent.cs" />
     <Compile Include="ECS\Components\MovementOrderBase.cs" />
     <Compile Include="ECS\Components\MovementOrdersComponent.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="UI\SystemMap\SystemMapViewModel.cs" />
     <Compile Include="UI\Utility\TokenStringUtility.cs" />
     <Compile Include="UI\Utility\ThemesUtility.cs" />
+    <Compile Include="Utility\SystemDataFileUtility.cs" />
     <Compile Include="Utility\Time\ICalendar.cs" />
     <Compile Include="Utility\Time\OurResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -216,6 +218,13 @@
       <Name>GoldenAnvil.Utility</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Data\SolSystemTest.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\SolSystem.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

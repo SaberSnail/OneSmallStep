@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using OneSmallStep.Utility.Time;
 
 namespace OneSmallStep.ECS.Components
 {
@@ -27,9 +28,9 @@ namespace OneSmallStep.ECS.Components
 				m_orders.Add(order.Clone());
 		}
 
-		public void PrepareIntercept(IEntityLookup entityLookup, Point currentAbsolutePosition, double speedPerTick)
+		public void PrepareIntercept(IEntityLookup entityLookup, Point currentAbsolutePosition, double speedPerTick, TimePoint currentTime)
 		{
-			if (m_orders[0].PrepareIntercept(entityLookup, currentAbsolutePosition, speedPerTick))
+			if (m_orders[0].PrepareIntercept(entityLookup, currentAbsolutePosition, speedPerTick, currentTime))
 				SetChanged();
 		}
 

@@ -71,7 +71,7 @@ namespace OneSmallStep.UI.EntityViewModels
 		{
 			var entity = entityLookup.GetEntity(EntityId);
 
-			var body = entity.GetRequiredComponent<OrbitalPositionComponent>();
+			var body = entity.GetRequiredComponent<EllipticalOrbitalPositionComponent>();
 			Position = body.GetCurrentAbsolutePosition(entityLookup);
 			PositionString = "{0}, {1}".FormatCurrentCulture(Position.X, Position.Y);
 
@@ -79,7 +79,7 @@ namespace OneSmallStep.UI.EntityViewModels
 			{
 				TargetPosition = order.InterceptPoint;
 				var targetEntity = entityLookup.GetEntity(order.TargetEntityId);
-				var targetBody = targetEntity.GetRequiredComponent<OrbitalPositionComponent>();
+				var targetBody = targetEntity.GetRequiredComponent<EllipticalOrbitalPositionComponent>();
 				TargetCurrentPosition = targetBody.GetCurrentAbsolutePosition(entityLookup);
 			}
 			else

@@ -203,7 +203,13 @@ namespace OneSmallStep.UI.MainWindow
 		{
 			var gameData = AppModel.GameData;
 			var entityLookup = gameData.EntityManager.DisplayEntityLookup;
+			var rng = m_gameServices.RandomNumberGenerator;
 
+			var planetViewModels = SystemDataFileUtility.LoadEntities("Data\\SolSystem.txt", entityLookup, rng)
+				.Select(x => new PlanetViewModel(x));
+			m_planets.AddRange(planetViewModels);
+
+			/*
 			var sol = EntityUtility.CreatePlanet(entityLookup, "Sol", 1.9885E30, 6.957E8);
 			m_planets.Add(new PlanetViewModel(sol));
 
@@ -289,6 +295,7 @@ namespace OneSmallStep.UI.MainWindow
 			m_planets.Add(new PlanetViewModel(nereid));
 			var proteus = EntityUtility.CreatePlanet(entityLookup, "Proteus", neptune, 4.4E19, 210000, 1.12231477, 117.050, true, gameData.Calendar);
 			m_planets.Add(new PlanetViewModel(proteus));
+			*/
 
 			foreach (var planet in m_planets)
 				planet.UpdateFromEntity(entityLookup);

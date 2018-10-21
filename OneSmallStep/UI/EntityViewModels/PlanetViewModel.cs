@@ -95,16 +95,55 @@ namespace OneSmallStep.UI.EntityViewModels
 			}
 		}
 
-		public double OrbitalRadius
+		public double SemiMajorAxis
 		{
 			get
 			{
 				VerifyAccess();
-				return m_orbitalRadius;
+				return m_semiMajorAxis;
 			}
 			private set
 			{
-				SetPropertyField(value, ref m_orbitalRadius);
+				SetPropertyField(value, ref m_semiMajorAxis);
+			}
+		}
+
+		public double SemiMinorAxis
+		{
+			get
+			{
+				VerifyAccess();
+				return m_semiMinorAxis;
+			}
+			private set
+			{
+				SetPropertyField(value, ref m_semiMinorAxis);
+			}
+		}
+
+		public double Focus
+		{
+			get
+			{
+				VerifyAccess();
+				return m_focus;
+			}
+			private set
+			{
+				SetPropertyField(value, ref m_focus);
+			}
+		}
+
+		public double LongitudeOfPeriapsis
+		{
+			get
+			{
+				VerifyAccess();
+				return m_longitudeOfPeriapsis;
+			}
+			private set
+			{
+				SetPropertyField(value, ref m_longitudeOfPeriapsis);
 			}
 		}
 
@@ -118,24 +157,31 @@ namespace OneSmallStep.UI.EntityViewModels
 			var population = entity.GetOptionalComponent<PopulationComponent>();
 			Population = population?.Population ?? 0;
 
-			var position = entity.GetRequiredComponent<OrbitalPositionComponent>();
+			var position = entity.GetRequiredComponent<EllipticalOrbitalPositionComponent>();
 			var body = entity.GetRequiredComponent<OrbitalBodyCharacteristicsComponent>();
 			Radius = body.Radius;
 			var parentEntity = position.ParentId.HasValue ? entityLookup.GetEntity(position.ParentId.Value) : null;
-			OrbitCenterPosition = parentEntity?.GetOptionalComponent<OrbitalPositionComponent>()?.GetCurrentAbsolutePosition(entityLookup) ?? new Point();
+			OrbitCenterPosition = parentEntity?.GetOptionalComponent<EllipticalOrbitalPositionComponent>()?.GetCurrentAbsolutePosition(entityLookup) ?? new Point();
 			Position = position.RelativePosition.WithOffset(OrbitCenterPosition);
 			PositionString = "{0}, {1}".FormatCurrentCulture(Position.X, Position.Y);
-			OrbitalRadius = position.OrbitalRadius ?? 0.0;
+			SemiMajorAxis = position.SemiMajorAxis ?? 0.0;
+			SemiMinorAxis = position.SemiMinorAxis ?? 0.0;
+			Focus = position.Focus ?? 0.0;
+			LongitudeOfPeriapsis = position.LongitudeOfPeriapsis ?? 0.0;
 		}
 
 		public void Render(DrawingContext context, Point offset, double scale)
 		{
-			if (m_position != m_orbitCenterPosition)
+			if (m_position != m_orbitCenterPosition && !Name.StartsWith("Asteroid"))
 			{
-				var renderOrbitAt = new Point((OrbitCenterPosition.X * scale) + offset.X, (OrbitCenterPosition.Y * scale) + offset.Y);
-				var orbitRadius = OrbitalRadius * scale;
+				var focus = Focus * scale;
+				var renderOrbitAt = new Point((OrbitCenterPosition.X * scale) - focus + offset.X, (OrbitCenterPosition.Y * scale) + offset.Y);
+				var semiMajorAxis = SemiMajorAxis * scale;
+				var semiMinorAxis = SemiMinorAxis * scale;
 				var orbitPen = (Pen) ThemesUtility.CurrentThemeDictionary["PlanetOrbitPen"];
-				context.DrawEllipse(null, orbitPen, renderOrbitAt, orbitRadius, orbitRadius);
+				using (context.ScopedTransform(new TranslateTransform(renderOrbitAt.X, renderOrbitAt.Y)))
+				using (context.ScopedTransform(new RotateTransform(LongitudeOfPeriapsis, focus, 0.0)))
+					context.DrawEllipse(null, orbitPen, new Point(), semiMajorAxis, semiMinorAxis);
 			}
 
 			var minRadius = (double) ThemesUtility.CurrentThemeDictionary["PlanetMinRadius"];
@@ -171,8 +217,11 @@ namespace OneSmallStep.UI.EntityViewModels
 		string m_positionString;
 		Point m_position;
 		Point m_orbitCenterPosition;
-		double m_orbitalRadius;
+		double m_semiMajorAxis;
+		double m_semiMinorAxis;
 		double m_radius;
+		double m_focus;
+		double m_longitudeOfPeriapsis;
 		string m_name;
 	}
 }

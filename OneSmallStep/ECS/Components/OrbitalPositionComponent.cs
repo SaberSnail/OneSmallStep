@@ -8,19 +8,19 @@ using OneSmallStep.Utility.Time;
 
 namespace OneSmallStep.ECS.Components
 {
-	public sealed class OrbitalPositionComponent : ComponentBase
+	public sealed class CircularOrbitalPositionComponent : ComponentBase
 	{
-		public static OrbitalPositionComponent CreatePoweredBody(Point startingPoint)
+		public static CircularOrbitalPositionComponent CreatePoweredBody(Point startingPoint)
 		{
-			return new OrbitalPositionComponent(null, startingPoint, null, null);
+			return new CircularOrbitalPositionComponent(null, startingPoint, null, null);
 		}
 
-		public static OrbitalPositionComponent CreateUnpoweredBody()
+		public static CircularOrbitalPositionComponent CreateUnpoweredBody()
 		{
-			return new OrbitalPositionComponent(null, new Point(), null, null);
+			return new CircularOrbitalPositionComponent(null, new Point(), null, null);
 		}
 
-		public static OrbitalPositionComponent CreateUnpoweredBody(Entity parent, double mass, double periodInDays, double meanAnomalyInDegrees, bool isPrograde, ICalendar calendar)
+		public static CircularOrbitalPositionComponent CreateUnpoweredBody(Entity parent, double mass, double periodInDays, double meanAnomalyInDegrees, bool isPrograde, ICalendar calendar)
 		{
 			if (parent == null)
 				throw new ArgumentNullException(nameof(parent));
@@ -35,7 +35,7 @@ namespace OneSmallStep.ECS.Components
 			var relativePosition = new Point(orbitalRadius * Math.Cos(initialAngle), orbitalRadius * Math.Sin(initialAngle));
 			var angularVelocityPerTick = angularVelocity * Constants.SecondsPerTick;
 
-			return new OrbitalPositionComponent(parent.Id, relativePosition, angularVelocityPerTick, orbitalRadius);
+			return new CircularOrbitalPositionComponent(parent.Id, relativePosition, angularVelocityPerTick, orbitalRadius);
 		}
 
 		public EntityId? ParentId
@@ -65,7 +65,7 @@ namespace OneSmallStep.ECS.Components
 		public Point GetCurrentAbsolutePosition(IEntityLookup entityLookup)
 		{
 			var position = m_relativePosition;
-			var parentAbsolutePosition = GetParentEntity(entityLookup)?.GetOptionalComponent<OrbitalPositionComponent>()?.GetCurrentAbsolutePosition(entityLookup);
+			var parentAbsolutePosition = GetParentEntity(entityLookup)?.GetOptionalComponent<CircularOrbitalPositionComponent>()?.GetCurrentAbsolutePosition(entityLookup);
 
 			if (parentAbsolutePosition != null)
 				position = position.WithOffset(parentAbsolutePosition.Value);
@@ -92,7 +92,7 @@ namespace OneSmallStep.ECS.Components
 				m_orbitalRadius = m_relativePosition.DistanceTo(new Point());
 
 				var parent = GetParentEntity(entityLookup);
-				var parentPosition = parent?.GetOptionalComponent<OrbitalPositionComponent>();
+				var parentPosition = parent?.GetOptionalComponent<CircularOrbitalPositionComponent>();
 				if (parentPosition != null)
 				{
 					var parentBody = parent.GetRequiredComponent<OrbitalBodyCharacteristicsComponent>();
@@ -115,15 +115,15 @@ namespace OneSmallStep.ECS.Components
 
 		public Point GetAbsoluteOrbitalPositionAtTime(IEntityLookup entityLookup, TimeOffset timeOffset)
 		{
-			var parentPosition = GetParentEntity(entityLookup)?.GetOptionalComponent<OrbitalPositionComponent>()?.GetAbsoluteOrbitalPositionAtTime(entityLookup, timeOffset);
+			var parentPosition = GetParentEntity(entityLookup)?.GetOptionalComponent<CircularOrbitalPositionComponent>()?.GetAbsoluteOrbitalPositionAtTime(entityLookup, timeOffset);
 			if (parentPosition == null)
 				return m_relativePosition;
 			return GetRelativeOrbitalPositionAtTime(timeOffset).WithOffset(parentPosition.Value);
 		}
 
-		public IEnumerable<OrbitalPositionComponent> EnumerateThisAndParents(IEntityLookup entityLookup)
+		public IEnumerable<CircularOrbitalPositionComponent> EnumerateThisAndParents(IEntityLookup entityLookup)
 		{
-			var parent = GetParentEntity(entityLookup)?.GetOptionalComponent<OrbitalPositionComponent>();
+			var parent = GetParentEntity(entityLookup)?.GetOptionalComponent<CircularOrbitalPositionComponent>();
 			if (parent == null)
 				return Enumerable.Repeat(this, 1);
 			return parent.EnumerateThisAndParents(entityLookup).Prepend(this);
@@ -131,10 +131,10 @@ namespace OneSmallStep.ECS.Components
 
 		public override ComponentBase Clone()
 		{
-			return new OrbitalPositionComponent(this);
+			return new CircularOrbitalPositionComponent(this);
 		}
 
-		private OrbitalPositionComponent(EntityId? parentId, Point relativePosition, double? angularVelocityPerTick, double? orbitalRadius)
+		private CircularOrbitalPositionComponent(EntityId? parentId, Point relativePosition, double? angularVelocityPerTick, double? orbitalRadius)
 		{
 			m_parentId = parentId;
 			m_relativePosition = relativePosition;
@@ -142,7 +142,7 @@ namespace OneSmallStep.ECS.Components
 			m_orbitalRadius = orbitalRadius;
 		}
 
-		private OrbitalPositionComponent(OrbitalPositionComponent that)
+		private CircularOrbitalPositionComponent(CircularOrbitalPositionComponent that)
 		: base(that)
 		{
 			m_parentId = that.m_parentId;

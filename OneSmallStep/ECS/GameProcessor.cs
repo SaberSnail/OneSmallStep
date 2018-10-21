@@ -69,6 +69,7 @@ namespace OneSmallStep.ECS
 					if (WaitHandle.WaitAny(m_threadWaitHandles) == c_stopEventIndex)
 						break;
 
+					// TODO: only if starting up again after pause?
 					m_gameData.EntityManager.UpdateProcessingEntitiesFromDisplay();
 
 					m_currentDate = m_currentDate + Constants.Tick;
@@ -77,7 +78,8 @@ namespace OneSmallStep.ECS
 						system.ProcessTick(entityLookup, notificationLog, m_currentDate);
 
 					//var shouldStop = m_currentDate >= m_gameData.Calendar.CreateTimePoint(2100, 1, 1);
-					if (notificationLog.ShouldStopProcessing)
+					var shouldStop = m_currentDate.Tick % 10 == 0;
+					if (shouldStop || notificationLog.ShouldStopProcessing)
 					{
 						m_threadContinueEvent.Reset();
 						Log.Info("Pausing processing");

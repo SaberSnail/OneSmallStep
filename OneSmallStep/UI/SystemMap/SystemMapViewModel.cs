@@ -77,7 +77,7 @@ namespace OneSmallStep.UI.SystemMap
 			var entity = entityLookup.GetEntity(entityId);
 			if (entity != null)
 			{
-				var position = entity.GetRequiredComponent<OrbitalPositionComponent>();
+				var position = entity.GetRequiredComponent<EllipticalOrbitalPositionComponent>();
 				Center = position.GetCurrentAbsolutePosition(entityLookup);
 			}
 		}

@@ -3,6 +3,7 @@ using System.Windows;
 using GoldenAnvil.Utility.Logging;
 using GoldenAnvil.Utility.Windows;
 using OneSmallStep.Utility;
+using OneSmallStep.Utility.Time;
 
 namespace OneSmallStep.ECS.Components
 {
@@ -20,7 +21,7 @@ namespace OneSmallStep.ECS.Components
 
 		public Point? InterceptPoint { get; private set; }
 
-		public override bool PrepareIntercept(IEntityLookup entityLookup, Point currentAbsolutePosition, double maxSpeedPerTick)
+		public override bool PrepareIntercept(IEntityLookup entityLookup, Point currentAbsolutePosition, double maxSpeedPerTick, TimePoint currentTime)
 		{
 			if (InterceptPoint.HasValue)
 				return false;
@@ -35,7 +36,7 @@ namespace OneSmallStep.ECS.Components
 			else
 			{
 				var speedPerTick = Math.Min(SpeedPerTick, maxSpeedPerTick);
-				InterceptPoint = MovementOrderUtility.GetInterceptPoint(entityLookup, currentAbsolutePosition, speedPerTick, targetEntity);
+				InterceptPoint = MovementOrderUtility.GetInterceptPoint(entityLookup, currentAbsolutePosition, speedPerTick, targetEntity, currentTime);
 			}
 
 			return true;
@@ -47,7 +48,7 @@ namespace OneSmallStep.ECS.Components
 				return false;
 
 			var targetEntity = entityLookup.GetEntity(TargetEntityId);
-			var targetPosition = targetEntity.GetRequiredComponent<OrbitalPositionComponent>();
+			var targetPosition = targetEntity.GetRequiredComponent<EllipticalOrbitalPositionComponent>();
 			if (currentAbsolutePosition.IsWithinOneMeter(targetPosition.GetCurrentAbsolutePosition(entityLookup)))
 				return true;
 

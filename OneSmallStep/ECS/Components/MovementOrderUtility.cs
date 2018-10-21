@@ -17,15 +17,16 @@ namespace OneSmallStep.ECS.Components
 				((unitDesign?.MaxSpeedPerTick ?? 0) > 0);
 		}
 
-		public static Point GetInterceptPoint(IEntityLookup entityLookup, Point interceptorPosition, double interceptorMaxSpeedPerTick, [NotNull] Entity targetEntity)
+		public static Point GetInterceptPoint(IEntityLookup entityLookup, Point interceptorPosition, double interceptorMaxSpeedPerTick, [NotNull] Entity targetEntity, TimePoint currentTime)
 		{
-			var targetPosition = targetEntity.GetRequiredComponent<OrbitalPositionComponent>();
+			var targetPosition = targetEntity.GetRequiredComponent<EllipticalOrbitalPositionComponent>();
 			if (!targetPosition.ParentId.HasValue)
 				return targetPosition.GetCurrentAbsolutePosition(entityLookup);
 
-			double? interceptorDistanceToCenter = null;
 			double longestDistance = 0.0;
-			double? minDistanceToCenter = null;
+			double shortestDistance = 0.0;
+			double? interceptorDistanceToCenter = null;
+			//double? minDistanceToCenter = null;
 			double? maxDistanceToCenter = null;
 			foreach (var parentBody in targetPosition.EnumerateThisAndParents(entityLookup).Reverse())
 			{
@@ -36,13 +37,13 @@ namespace OneSmallStep.ECS.Components
 				}
 				else
 				{
-					var orbitaRadius = parentBody.RelativePosition.DistanceTo(new Point());
-					longestDistance += orbitaRadius;
-					minDistanceToCenter = minDistanceToCenter.HasValue ? minDistanceToCenter - orbitaRadius : orbitaRadius;
-					maxDistanceToCenter = maxDistanceToCenter.HasValue ? maxDistanceToCenter + orbitaRadius : orbitaRadius;
+					var maxDistance = parentBody.Focus.Value + parentBody.SemiMajorAxis.Value;
+					longestDistance += maxDistance;
+					//minDistanceToCenter = minDistanceToCenter.HasValue ? minDistanceToCenter - maxDistance : maxDistance;
+					maxDistanceToCenter = maxDistanceToCenter.HasValue ? maxDistanceToCenter + maxDistance : maxDistance;
 				}
 			}
-			double shortestDistance;
+			/*
 			if (maxDistanceToCenter.HasValue)
 			{
 				if (interceptorDistanceToCenter.Value > maxDistanceToCenter.Value)
@@ -56,7 +57,7 @@ namespace OneSmallStep.ECS.Components
 			{
 				shortestDistance = interceptorDistanceToCenter.Value;
 			}
-
+			*/
 			int minTimeInTicks = (int) Math.Floor(shortestDistance / interceptorMaxSpeedPerTick);
 			int maxTimeInTicks = (int) Math.Ceiling(longestDistance / interceptorMaxSpeedPerTick);
 
@@ -74,7 +75,7 @@ namespace OneSmallStep.ECS.Components
 				}
 
 				timeInTicks = newTimeInTicks;
-				var positionDifference = GetPositionDifference(entityLookup, targetPosition, interceptorPosition, interceptorMaxSpeedPerTick, timeInTicks);
+				var positionDifference = GetPositionDifference(entityLookup, targetPosition, interceptorPosition, interceptorMaxSpeedPerTick, timeInTicks, currentTime);
 				if (positionDifference >= 0.0 && positionDifference < interceptorMaxSpeedPerTick)
 					break;
 
@@ -94,7 +95,7 @@ namespace OneSmallStep.ECS.Components
 					timeInTicks = minTimeInTicks;
 			}
 
-			var targetPoint = targetPosition.GetAbsoluteOrbitalPositionAtTime(entityLookup, new TimeOffset(timeInTicks));
+			var targetPoint = targetPosition.GetAbsoluteOrbitalPositionAtTime(entityLookup, currentTime + new TimeOffset(timeInTicks));
 			if (failedIntercept)
 			{
 				var vector = interceptorPosition.VectorTo(targetPoint);
@@ -107,9 +108,9 @@ namespace OneSmallStep.ECS.Components
 			return targetPoint;
 		}
 
-		private static double GetPositionDifference(IEntityLookup entityLookup, OrbitalPositionComponent targetPosition, Point interceptorPosition, double interceptorSpeedPerTick, int tick)
+		private static double GetPositionDifference(IEntityLookup entityLookup, EllipticalOrbitalPositionComponent targetPosition, Point interceptorPosition, double interceptorSpeedPerTick, int tick, TimePoint currentTime)
 		{
-			var targetAbsolutePosition = targetPosition.GetAbsoluteOrbitalPositionAtTime(entityLookup, new TimeOffset(tick));
+			var targetAbsolutePosition = targetPosition.GetAbsoluteOrbitalPositionAtTime(entityLookup, currentTime + new TimeOffset(tick));
 			var v1 = new Vector(interceptorPosition.X, interceptorPosition.Y);
 			var v2 = new Vector(targetAbsolutePosition.X, targetAbsolutePosition.Y);
 			var v = v2 - v1;
