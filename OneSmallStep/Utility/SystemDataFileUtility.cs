@@ -54,8 +54,8 @@ namespace OneSmallStep.Utility
 
 		private static void CreatePlanetEntity(string[] parts, IEntityLookup entityLookup, Dictionary<string, Entity> entities, Action<string> throwFormatException)
 		{
-			if (parts.Length != 9)
-				throwFormatException($"Planet data must have 9 fields, but found {parts.Length} fields.");
+			if (parts.Length != 11)
+				throwFormatException($"Planet data must have 11 fields, but found {parts.Length} fields.");
 
 			var name = parts[1];
 			var radius = double.Parse(parts[2]);
@@ -67,8 +67,10 @@ namespace OneSmallStep.Utility
 			var eccentricity = double.Parse(parts[6]);
 			var longitudeOfPeriapsis = double.Parse(parts[7]);
 			var meanAnomaly = double.Parse(parts[8]);
+			var isRetrograde = int.Parse(parts[9]) != 0;
+			var epoch = int.Parse(parts[10]);
 
-			var entity = EntityUtility.CreatePlanet(entityLookup, name, parentId, mass, radius, semiMajorAxis, eccentricity, longitudeOfPeriapsis, meanAnomaly);
+			var entity = EntityUtility.CreatePlanet(entityLookup, name, parentId, mass, radius, semiMajorAxis, eccentricity, longitudeOfPeriapsis, meanAnomaly, isRetrograde, epoch);
 			entities.Add(name, entity);
 		}
 
@@ -94,8 +96,10 @@ namespace OneSmallStep.Utility
 				var eccentricity = rng.NextDouble(minEccentricity, maxEccentricity);
 				var longitudeOfPeriapsis = rng.NextDouble(0.0, 360.0);
 				var meanAnomaly = rng.NextDouble(0.0, 360.0);
+				var isRetrograde = rng.Next(0, 1000) == 0;
+				var epoch = 2000;
 
-				var entity = EntityUtility.CreatePlanet(entityLookup, name, parentId, mass, radius, semiMajorAxis, eccentricity, longitudeOfPeriapsis, meanAnomaly);
+				var entity = EntityUtility.CreatePlanet(entityLookup, name, parentId, mass, radius, semiMajorAxis, eccentricity, longitudeOfPeriapsis, meanAnomaly, isRetrograde, epoch);
 				entities.Add(name, entity);
 			}
 		}

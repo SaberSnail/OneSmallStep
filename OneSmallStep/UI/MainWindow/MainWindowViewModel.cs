@@ -154,7 +154,7 @@ namespace OneSmallStep.UI.MainWindow
 				var orders = ship.GetRequiredComponent<MovementOrdersComponent>();
 				if (!orders.HasActiveOrder())
 				{
-					var newTargetId = m_planets[m_gameServices.RandomNumberGenerator.Next(0, m_planets.Count - 1)].EntityId;
+					var newTargetId = m_planets[m_gameServices.RandomNumberGenerator.Next(0, m_planets.Count)].EntityId;
 					var newTarget = entityLookup.GetEntity(newTargetId);
 					var speed = ship.GetRequiredComponent<OrbitalUnitDesignComponent>().MaxSpeedPerTick;
 					orders.AddOrderToBack(new MoveToOrbitalBodyOrder(newTarget.Id, speed));
@@ -208,94 +208,6 @@ namespace OneSmallStep.UI.MainWindow
 			var planetViewModels = SystemDataFileUtility.LoadEntities("Data\\SolSystem.txt", entityLookup, rng)
 				.Select(x => new PlanetViewModel(x));
 			m_planets.AddRange(planetViewModels);
-
-			/*
-			var sol = EntityUtility.CreatePlanet(entityLookup, "Sol", 1.9885E30, 6.957E8);
-			m_planets.Add(new PlanetViewModel(sol));
-
-			var mercury = EntityUtility.CreatePlanet(entityLookup, "Mercury", sol, 3.3011E23, 2.4397E6, 87.9691, 174.796, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(mercury));
-
-			var venus = EntityUtility.CreatePlanet(entityLookup, "Venus", sol, 4.8675E24, 6.0518E6, 224.701, 50.115, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(venus));
-
-			var earth = EntityUtility.CreatePlanet(entityLookup, "Earth", sol, 5.97237E24, 6.371E6, 365.256363004, 358.617, true, gameData.Calendar);
-			var population = new PopulationComponent { Population = 1000000000 };
-			earth.AddComponent(population);
-			Planet = new PlanetViewModel(earth);
-			m_planets.Add(Planet);
-			var luna = EntityUtility.CreatePlanet(entityLookup, "Luna", earth, 7.342E22, 1.7371E6, 27.321661, 134.96292, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(luna));
-
-			var mars = EntityUtility.CreatePlanet(entityLookup, "Mars", sol, 6.4171E23, 3.3895E6, 686.971, 320.45776, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(mars));
-			var phobos = EntityUtility.CreatePlanet(entityLookup, "Phobos", mars, 4.0659E16, 11266.7, 0.31891023, 92.474, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(phobos));
-			var deimos = EntityUtility.CreatePlanet(entityLookup, "Deimos", mars, 1.4762E15, 6200, 1.263, 296.23, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(deimos));
-
-			var jupiter = EntityUtility.CreatePlanet(entityLookup, "Jupiter", sol, 1.8982E27, 6.9911E7, 4332.59, 20.02, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(jupiter));
-			var metis = EntityUtility.CreatePlanet(entityLookup, "Metis", jupiter, 3.6E16, 21500, 0.294780, 276.047, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(metis));
-			var adrastea = EntityUtility.CreatePlanet(entityLookup, "Adrastea", jupiter, 2E15, 8200, 0.29826, 328.047, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(adrastea));
-			var amalthea = EntityUtility.CreatePlanet(entityLookup, "Amalthea", jupiter, 2.08E18, 83500, 0.49817943, 185.194, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(amalthea));
-			var thebe = EntityUtility.CreatePlanet(entityLookup, "Thebe", jupiter, 4.3E17, 49300, 0.674536, 135.956, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(thebe));
-			var io = EntityUtility.CreatePlanet(entityLookup, "Io", jupiter, 8.931938E22, 1.8216E6, 1.769137786, 342.021, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(io));
-			var europa = EntityUtility.CreatePlanet(entityLookup, "Europa", jupiter, 4.799844E22, 1.5608E6, 3.551181, 171.016, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(europa));
-			var ganymede = EntityUtility.CreatePlanet(entityLookup, "Ganymede", jupiter, 1.4819E23, 2.6341E6, 7.15455296, 317.54, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(ganymede));
-			var callisto = EntityUtility.CreatePlanet(entityLookup, "Callisto", jupiter, 1.075938E23, 2.4103E6, 16.6890184, 181.408, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(callisto));
-
-			var saturn = EntityUtility.CreatePlanet(entityLookup, "Saturn", sol, 5.6834E26, 5.8232E7, 10759.22, 317.02, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(saturn));
-			var mimas = EntityUtility.CreatePlanet(entityLookup, "Mimas", saturn, 3.7493E19, 198200, 0.942, 255.312, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(mimas));
-			var enceladus = EntityUtility.CreatePlanet(entityLookup, "Enceladus", saturn, 1.08022E20, 252100, 1.370218, 197.047, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(enceladus));
-			var tethys = EntityUtility.CreatePlanet(entityLookup, "Tethys", saturn, 6.17449E20, 5.0311E6, 1.887802, 189.003, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(tethys));
-			var dione = EntityUtility.CreatePlanet(entityLookup, "Dione", saturn, 1.095452E21, 561400, 2.736915, 65.99, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(dione));
-			var rhea = EntityUtility.CreatePlanet(entityLookup, "Rhea", saturn, 2.306218E21, 763800, 4.518212, 311.551, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(rhea));
-			var titan = EntityUtility.CreatePlanet(entityLookup, "Titan", saturn, 1.3452E23, 2575.5, 15.945, 15.154, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(titan));
-			var hyperion = EntityUtility.CreatePlanet(entityLookup, "Hyperion", saturn, 5.6199E18, 180.1, 21.276, 295.906, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(hyperion));
-			var iapetus = EntityUtility.CreatePlanet(entityLookup, "Iapetus", saturn, 1.805635E21, 367.2, 79.3215, 356.029, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(iapetus));
-			var phoebe = EntityUtility.CreatePlanet(entityLookup, "Phoebe", saturn, 8.292E18, 106.5, 550.564636, 287.593, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(phoebe));
-
-			var uranus = EntityUtility.CreatePlanet(entityLookup, "Uranus", sol, 8.6810E25, 2.5362E7, 30688.5, 142.2386, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(uranus));
-			var miranda = EntityUtility.CreatePlanet(entityLookup, "Miranda", uranus, 6.59E19, 235800, 1.413479, 311.33, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(miranda));
-			var ariel = EntityUtility.CreatePlanet(entityLookup, "Ariel", uranus, 1.353E21, 578900, 2.52, 39.481, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(ariel));
-			var umbriel = EntityUtility.CreatePlanet(entityLookup, "Umbriel", uranus, 1.172E21, 584700, 4.144, 12.469, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(umbriel));
-			var titania = EntityUtility.CreatePlanet(entityLookup, "Titania", uranus, 3.527E21, 788400, 8.706234, 24.614, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(titania));
-			var oberon = EntityUtility.CreatePlanet(entityLookup, "Oberon", uranus, 3.014E21, 761400, 13.463234, 283.088, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(oberon));
-
-			var neptune = EntityUtility.CreatePlanet(entityLookup, "Neptune", sol, 1.0243E26, 2.4622E7, 60182, 256.228, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(neptune));
-			var triton = EntityUtility.CreatePlanet(entityLookup, "Triton", neptune, 2.14E22, 1.3534E6, 5.876854, 264.775, false, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(triton));
-			var nereid = EntityUtility.CreatePlanet(entityLookup, "Nereid", neptune, 3E19, 170000, 360.1362, 359.341, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(nereid));
-			var proteus = EntityUtility.CreatePlanet(entityLookup, "Proteus", neptune, 4.4E19, 210000, 1.12231477, 117.050, true, gameData.Calendar);
-			m_planets.Add(new PlanetViewModel(proteus));
-			*/
 
 			foreach (var planet in m_planets)
 				planet.UpdateFromEntity(entityLookup);

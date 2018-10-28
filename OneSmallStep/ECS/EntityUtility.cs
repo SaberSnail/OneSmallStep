@@ -20,11 +20,14 @@ namespace OneSmallStep.ECS
 			return planet;
 		}
 
-		public static Entity CreatePlanet(IEntityLookup entityLookup, string name, EntityId parentId, double mass, double radius, double semiMajorAxis, double eccentricity, double longitudeOfPeriapsis, double meanAnomaly)
+		public static Entity CreatePlanet(IEntityLookup entityLookup, string name, EntityId parentId, double mass, double radius, double semiMajorAxis, double eccentricity, double longitudeOfPeriapsis, double meanAnomaly, bool isRetrograde, int epoch)
 		{
 			var planet = new Entity(entityLookup);
 			planet.AddComponent(new InformationComponent { Name = name });
-			planet.AddComponent(EllipticalOrbitalPositionComponent.CreateUnpoweredBody(parentId, semiMajorAxis, eccentricity, longitudeOfPeriapsis, meanAnomaly));
+
+			// TODO: calculate correct initial position usinig epoch
+
+			planet.AddComponent(EllipticalOrbitalPositionComponent.CreateUnpoweredBody(parentId, semiMajorAxis, eccentricity, longitudeOfPeriapsis, meanAnomaly, isRetrograde));
 			planet.AddComponent(new OrbitalBodyCharacteristicsComponent
 			{
 				Mass = mass,

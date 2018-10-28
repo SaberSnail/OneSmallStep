@@ -20,7 +20,7 @@ namespace OneSmallStep.ECS.Components
 			return new EllipticalOrbitalPositionComponent(new Point(), null);
 		}
 
-		public static EllipticalOrbitalPositionComponent CreateUnpoweredBody(EntityId parentId, double semiMajorAxis, double eccentricity, double longitutdeOfPeriapsis, double meanAnomaly)
+		public static EllipticalOrbitalPositionComponent CreateUnpoweredBody(EntityId parentId, double semiMajorAxis, double eccentricity, double longitutdeOfPeriapsis, double meanAnomaly, bool isRetrograde)
 		{
 			var orbitalData = new OrbitalData
 			{
@@ -29,8 +29,9 @@ namespace OneSmallStep.ECS.Components
 				Eccentricity = eccentricity,
 				LongitudeOfPeriapsis = longitutdeOfPeriapsis,
 				MeanAnomalyAtTimeZero = meanAnomaly,
+				IsRetrograde = isRetrograde,
 			};
-			return new EllipticalOrbitalPositionComponent(new Point()/*relativePosition*/, orbitalData);
+			return new EllipticalOrbitalPositionComponent(new Point(), orbitalData);
 		}
 
 		public Point RelativePosition
@@ -107,6 +108,8 @@ namespace OneSmallStep.ECS.Components
 
 			var timeInSeconds = timePoint.Tick * Constants.SecondsPerTick;
 			var meanAnomaly = timeInSeconds % m_orbitalData.Period;
+			if (m_orbitalData.IsRetrograde)
+				meanAnomaly *= -1;
 			meanAnomaly = 2.0 * Math.PI * meanAnomaly / m_orbitalData.Period;
 			meanAnomaly += m_orbitalData.MeanAnomalyAtTimeZero * Math.PI / 180.0;
 			var anomaly = CalculateAnomaly(meanAnomaly);
@@ -311,6 +314,7 @@ namespace OneSmallStep.ECS.Components
 			public double MeanAnomalyAtTimeZero { get; set; }
 			public double Period { get; set; }
 			public double Focus { get; set; }
+			public bool IsRetrograde { get; set; }
 
 			public OrbitalData Clone()
 			{
@@ -325,6 +329,7 @@ namespace OneSmallStep.ECS.Components
 					MeanAnomalyAtTimeZero = MeanAnomalyAtTimeZero,
 					Period = Period,
 					Focus = Focus,
+					IsRetrograde = IsRetrograde,
 				};
 			}
 		}
