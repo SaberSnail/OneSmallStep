@@ -14,7 +14,7 @@ namespace OneSmallStep.ECS.Systems
 
 		public override void ProcessTick(IEntityLookup entityLookup, NotificationLog notificationLog, TimePoint newTime)
 		{
-			var entitiesList = entityLookup.GetEntitiesMatchingKey(GetRequiredComponentsKey(entityLookup));
+			var entitiesList = entityLookup.GetEntitiesMatchingKey(entityLookup.CreateComponentKey(typeof(PopulationComponent)));
 
 			foreach (var entity in entitiesList)
 			{
@@ -23,11 +23,6 @@ namespace OneSmallStep.ECS.Systems
 				growthRate = growthRate + growthRate * m_rng.NextGauss() * 0.5;
 				population.Population = Math.Max(0, population.Population + (long) (population.Population * growthRate));
 			}
-		}
-
-		protected override ComponentKey GetRequiredComponentsKey(IEntityLookup entityLookup)
-		{
-			return entityLookup.CreateComponentKey(typeof(PopulationComponent));
 		}
 
 		readonly Random m_rng;

@@ -22,12 +22,13 @@ namespace OneSmallStep.ECS
 			using (entityManager.StartupScope())
 			{
 				entityManager.RegisterComponent<AgeComponent>();
-				entityManager.RegisterComponent<InformationComponent>();
-				entityManager.RegisterComponent<PopulationComponent>();
 				entityManager.RegisterComponent<EllipticalOrbitalPositionComponent>();
+				entityManager.RegisterComponent<InformationComponent>();
+				entityManager.RegisterComponent<MovementOrdersComponent>();
 				entityManager.RegisterComponent<OrbitalBodyCharacteristicsComponent>();
 				entityManager.RegisterComponent<OrbitalUnitDesignComponent>();
-				entityManager.RegisterComponent<MovementOrdersComponent>();
+				entityManager.RegisterComponent<PopulationComponent>();
+				entityManager.RegisterComponent<ShipyardComponent>();
 			}
 
 			return entityManager;

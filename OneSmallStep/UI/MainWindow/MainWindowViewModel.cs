@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
-using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Logging;
 using OneSmallStep.ECS;
 using OneSmallStep.ECS.Components;
@@ -22,7 +21,7 @@ namespace OneSmallStep.UI.MainWindow
 			m_gameServices = gameServices;
 			m_systemMap = new SystemMapViewModel();
 			m_planets = new List<PlanetViewModel>();
-			m_ships = new List<ShipViewModel>();
+			m_ships = new Dictionary<EntityId, ShipViewModel>();
 			AppModel = ((App) Application.Current).AppModel;
 		}
 
@@ -149,20 +148,22 @@ namespace OneSmallStep.UI.MainWindow
 		{
 			var entityLookup = AppModel.GameData.EntityManager.DisplayEntityLookup;
 
-			foreach (var ship in m_ships.Select(x => entityLookup.GetEntity(x.EntityId)))
+			foreach (var ship in m_ships.Keys.Select(x => entityLookup.GetEntity(x)))
 			{
 				var orders = ship.GetRequiredComponent<MovementOrdersComponent>();
 				if (!orders.HasActiveOrder())
 				{
-					var newTargetId = m_planets[m_gameServices.RandomNumberGenerator.Next(0, m_planets.Count)].EntityId;
-					var newTarget = entityLookup.GetEntity(newTargetId);
 					var speed = ship.GetRequiredComponent<OrbitalUnitDesignComponent>().MaxSpeedPerTick;
-					orders.AddOrderToBack(new MoveToOrbitalBodyOrder(newTarget.Id, speed));
-					//newTargetId = m_planets[m_gameServices.RandomNumberGenerator.Next(0, m_planets.Count - 1)].EntityId;
-					//newTarget = entityLookup.GetEntity(newTargetId);
-					//orders.AddOrderToBack(new MoveToOrbitalBodyOrder(newTarget.Id, speed));
+					Entity newTarget = null;
+					for (int i = 0; i < 5; i++)
+					{
+						var newTargetId = m_planets[m_gameServices.RandomNumberGenerator.Next(0, m_planets.Count)].EntityId;
+						if (newTarget == null)
+							newTarget = entityLookup.GetEntity(newTargetId);
+						orders.AddOrderToBack(new MoveToOrbitalBodyOrder(newTarget.Id, speed));
+					}
 
-					Status = $"{{{ship.Id}.InformationComponent.Name}} is headed to {{{newTargetId}.InformationComponent.Name}}.";
+					Status = $"{{{ship.Id}.InformationComponent.Name}} is headed to {{{newTarget.Id}.InformationComponent.Name}}.";
 				}
 			}
 		}
@@ -176,9 +177,18 @@ namespace OneSmallStep.UI.MainWindow
 			{
 				var entityLookup = AppModel.GameData.EntityManager.DisplayEntityLookup;
 
+				var ships = entityLookup.GetEntitiesMatchingKey(entityLookup.CreateComponentKey<OrbitalUnitDesignComponent>());
+				var newShips = ships
+					.Where(x => !m_ships.ContainsKey(x.Id));
+				foreach (var newShip in newShips)
+				{
+					Ship = new ShipViewModel(newShip);
+					m_ships.Add(newShip.Id, Ship);
+				}
+
 				foreach (var planet in m_planets)
 					planet.UpdateFromEntity(entityLookup);
-				foreach (var ship in m_ships)
+				foreach (var ship in m_ships.Values)
 					ship.UpdateFromEntity(entityLookup);
 
 				UpdateCurrentDate();
@@ -196,7 +206,7 @@ namespace OneSmallStep.UI.MainWindow
 			var date = AppModel.GameData.Calendar.FormatTime(AppModel.GameData.CurrentDate, TimeFormat.Long);
 			SetPropertyField(nameof(CurrentDate), date, ref m_currentDate);
 
-			m_systemMap.Update(date, m_planets.Cast<ISystemBodyRenderer>().Concat(m_ships).ToList());
+			m_systemMap.Update(date, m_planets.Cast<ISystemBodyRenderer>().Concat(m_ships.Values).ToList());
 		}
 
 		private void InitializeEntities()
@@ -205,19 +215,24 @@ namespace OneSmallStep.UI.MainWindow
 			var entityLookup = gameData.EntityManager.DisplayEntityLookup;
 			var rng = m_gameServices.RandomNumberGenerator;
 
-			var planetViewModels = SystemDataFileUtility.LoadEntities("Data\\SolSystem.txt", entityLookup, rng)
-				.Select(x => new PlanetViewModel(x));
+			var entities = SystemDataFileUtility.LoadEntities("Data\\SolSystem.txt", entityLookup, rng);
+			var earthEntity = entities.FirstOrDefault(x => x.GetRequiredComponent<InformationComponent>().Name == "Earth");
+			if (earthEntity != null)
+				EntityUtility.MakeHomeWorld(earthEntity);
+
+			var planetViewModels = entities.Select(x => new PlanetViewModel(x));
 			m_planets.AddRange(planetViewModels);
 
 			foreach (var planet in m_planets)
 				planet.UpdateFromEntity(entityLookup);
 
-			var ship1 = EntityUtility.CreateShip(entityLookup, "Discovery", new Point(m_gameServices.RandomNumberGenerator.NextDouble(-1E12, 1E12), m_gameServices.RandomNumberGenerator.NextDouble(-1E12, 1E12)));
-			Ship = new ShipViewModel(ship1);
-			m_ships.Add(Ship);
+			Planet = m_planets.FirstOrDefault(x => x.Name == "Earth");
 
-			foreach (var ship in m_ships)
-				ship.UpdateFromEntity(entityLookup);
+			//var ship1 = EntityUtility.CreateShip(entityLookup, "Discovery", new Point(m_gameServices.RandomNumberGenerator.NextDouble(-1E12, 1E12), m_gameServices.RandomNumberGenerator.NextDouble(-1E12, 1E12)));
+			//Ship = new ShipViewModel(ship1);
+			//m_ships.Add(ship1.Id, Ship);
+			//foreach (var ship in m_ships.Values)
+			//	ship.UpdateFromEntity(entityLookup);
 		}
 
 		private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(MainWindowViewModel));
@@ -225,7 +240,7 @@ namespace OneSmallStep.UI.MainWindow
 		readonly GameServices m_gameServices;
 		readonly SystemMapViewModel m_systemMap;
 		readonly List<PlanetViewModel> m_planets;
-		readonly List<ShipViewModel> m_ships;
+		readonly Dictionary<EntityId, ShipViewModel> m_ships;
 
 		bool m_isGameStarted;
 		string m_currentDate;

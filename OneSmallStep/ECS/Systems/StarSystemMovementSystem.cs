@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using GoldenAnvil.Utility.Logging;
 using GoldenAnvil.Utility.Windows;
 using OneSmallStep.ECS.Components;
@@ -12,7 +10,7 @@ namespace OneSmallStep.ECS.Systems
 	{
 		public override void ProcessTick(IEntityLookup entityLookup, NotificationLog notificationLog, TimePoint newTime)
 		{
-			var entities = entityLookup.GetEntitiesMatchingKey(GetRequiredComponentsKey(entityLookup));
+			var entities = entityLookup.GetEntitiesMatchingKey(entityLookup.CreateComponentKey<EllipticalOrbitalPositionComponent>());
 
 			foreach (var entity in entities)
 			{
@@ -78,11 +76,6 @@ namespace OneSmallStep.ECS.Systems
 					}
 				}
 			}
-		}
-
-		protected override ComponentKey GetRequiredComponentsKey(IEntityLookup entityLookup)
-		{
-			return entityLookup.CreateComponentKey<EllipticalOrbitalPositionComponent>();
 		}
 
 		private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(StarSystemMovementSystem));

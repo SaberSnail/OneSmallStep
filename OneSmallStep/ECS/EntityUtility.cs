@@ -57,5 +57,14 @@ namespace OneSmallStep.ECS
 			entityLookup.RegisterEntity(ship);
 			return ship;
 		}
+
+		public static void MakeHomeWorld(Entity entity)
+		{
+			var population = new PopulationComponent { Population = 1000000000 };
+			entity.AddComponent(population);
+
+			var shipyard = new ShipyardComponent();
+			entity.AddComponent(shipyard);
+		}
 	}
 }

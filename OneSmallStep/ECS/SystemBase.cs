@@ -5,7 +5,5 @@ namespace OneSmallStep.ECS
 	public abstract class SystemBase
 	{
 		public abstract void ProcessTick(IEntityLookup entityLookup, NotificationLog notificationLog, TimePoint newTime);
-
-		protected abstract ComponentKey GetRequiredComponentsKey(IEntityLookup entityLookup);
 	}
 }

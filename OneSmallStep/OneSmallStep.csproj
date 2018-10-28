@@ -74,6 +74,7 @@
     <Compile Include="ECS\Components\OrbitalPositionComponent.cs" />
     <Compile Include="ECS\Components\OrbitalUnitDesignComponent.cs" />
     <Compile Include="ECS\Components\PopulationComponent.cs" />
+    <Compile Include="ECS\Components\ShipyardComponent.cs" />
     <Compile Include="ECS\Entity.cs" />
     <Compile Include="ECS\EntityId.cs" />
     <Compile Include="ECS\EntityManager.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="ECS\SystemBase.cs" />
     <Compile Include="ECS\Systems\AgeSystem.cs" />
     <Compile Include="ECS\Systems\PopulationGrowthSystem.cs" />
+    <Compile Include="ECS\Systems\ShipyardSystem.cs" />
     <Compile Include="ECS\Systems\StarSystemMovementSystem.cs" />
     <Compile Include="UI\EntityViewModels\EntityViewModelBase.cs" />
     <Compile Include="UI\EntityViewModels\PlanetViewModel.cs" />

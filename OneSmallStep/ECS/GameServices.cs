@@ -24,8 +24,9 @@ namespace OneSmallStep.ECS
 		{
 			var processor = new GameProcessor();
 
-			processor.RegisterSystem(new PopulationGrowthSystem());
 			processor.RegisterSystem(new StarSystemMovementSystem());
+			processor.RegisterSystem(new PopulationGrowthSystem());
+			processor.RegisterSystem(new ShipyardSystem());
 
 			return processor;
 		}

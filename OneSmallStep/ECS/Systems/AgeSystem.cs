@@ -14,7 +14,7 @@ namespace OneSmallStep.ECS.Systems
 
 		public override void ProcessTick(IEntityLookup entityLookup, NotificationLog notificationLog, TimePoint newTime)
 		{
-			var entitiesList = entityLookup.GetEntitiesMatchingKey(GetRequiredComponentsKey(entityLookup));
+			var entitiesList = entityLookup.GetEntitiesMatchingKey(entityLookup.CreateComponentKey(typeof(AgeComponent)));
 
 			foreach (var entity in entitiesList)
 			{
@@ -31,11 +31,6 @@ namespace OneSmallStep.ECS.Systems
 					// death
 				}
 			}
-		}
-
-		protected override ComponentKey GetRequiredComponentsKey(IEntityLookup entityLookup)
-		{
-			return entityLookup.CreateComponentKey(typeof(AgeComponent));
 		}
 
 		private double GetSurvivalChance(double ageInTicks, double meanYearsBetweenFailures, double ageRiskDoublingYears)
