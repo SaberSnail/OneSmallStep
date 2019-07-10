@@ -11,9 +11,9 @@ namespace OneSmallStep.ECS.Components
 {
 	public static class MovementOrderUtility
 	{
-		public static bool CanExecuteOrders([CanBeNull] MovementOrdersComponent orders, [CanBeNull] OrbitalUnitDesignComponent unitDesign)
+		public static bool CanExecuteOrders([CanBeNull] OrdersComponent orders, [CanBeNull] OrbitalUnitDesignComponent unitDesign)
 		{
-			return (orders?.HasActiveOrder() ?? false) &&
+			return (orders?.HasActiveOrder<MovementOrderBase>() ?? false) &&
 				((unitDesign?.MaxSpeedPerTick ?? 0) > 0);
 		}
 
@@ -100,7 +100,7 @@ namespace OneSmallStep.ECS.Components
 			{
 				var vector = interceptorPosition.VectorTo(targetPoint);
 				targetPoint = interceptorPosition + (vector * 0.5);
-				Log.Info($"Failed intercept.");
+				Log.Info("Failed intercept.");
 			}
 
 			Log.Info($"Targeting point ({targetPoint.X}, {targetPoint.Y}), will reach in {timeInTicks} ticks from ({interceptorPosition.X}, {interceptorPosition.Y}).");

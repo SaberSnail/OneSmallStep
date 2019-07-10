@@ -150,17 +150,16 @@ namespace OneSmallStep.UI.MainWindow
 
 			foreach (var ship in m_ships.Keys.Select(x => entityLookup.GetEntity(x)))
 			{
-				var orders = ship.GetRequiredComponent<MovementOrdersComponent>();
-				if (!orders.HasActiveOrder())
+				var orders = ship.GetRequiredComponent<OrdersComponent>();
+				if (!orders.HasActiveOrder<MovementOrderBase>())
 				{
 					var speed = ship.GetRequiredComponent<OrbitalUnitDesignComponent>().MaxSpeedPerTick;
 					Entity newTarget = null;
 					for (int i = 0; i < 5; i++)
 					{
 						var newTargetId = m_planets[m_gameServices.RandomNumberGenerator.Next(0, m_planets.Count)].EntityId;
-						if (newTarget == null)
-							newTarget = entityLookup.GetEntity(newTargetId);
-						orders.AddOrderToBack(new MoveToOrbitalBodyOrder(newTarget.Id, speed));
+						newTarget = entityLookup.GetEntity(newTargetId);
+						orders.AddOrderToBack(new MoveToOrbitalBodyOrder(AppModel.GameData.GetNextOrderId(), newTarget.Id, speed));
 					}
 
 					Status = $"{{{ship.Id}.InformationComponent.Name}} is headed to {{{newTarget.Id}.InformationComponent.Name}}.";

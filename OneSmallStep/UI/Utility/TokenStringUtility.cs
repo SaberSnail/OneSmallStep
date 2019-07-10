@@ -38,7 +38,7 @@ namespace OneSmallStep.UI.Utility
 					if (tokenParts.Length > 2)
 					{
 						Entity entity = null;
-						if (int.TryParse(tokenParts[0], out int idValue))
+						if (uint.TryParse(tokenParts[0], out uint idValue))
 						{
 							var entityId = new EntityId(idValue);
 							entity = entityLookup.GetEntity(entityId);
@@ -89,7 +89,7 @@ namespace OneSmallStep.UI.Utility
 					{
 						EntityId? entityId = null;
 						Entity entity = null;
-						if (int.TryParse(tokenParts[0], out int idValue))
+						if (uint.TryParse(tokenParts[0], out uint idValue))
 						{
 							entityId = new EntityId(idValue);
 							entity = entityLookup.GetEntity(entityId.Value);

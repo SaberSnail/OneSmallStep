@@ -52,7 +52,7 @@ namespace OneSmallStep.ECS
 			{
 				MaxSpeedPerTick = 5E10,
 			});
-			ship.AddComponent(new MovementOrdersComponent());
+			ship.AddComponent(new OrdersComponent());
 
 			entityLookup.RegisterEntity(ship);
 			return ship;

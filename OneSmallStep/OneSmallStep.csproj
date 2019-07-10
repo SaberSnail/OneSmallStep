@@ -67,12 +67,14 @@
     <Compile Include="ECS\Components\EllipticalOrbitalPositionComponent.cs" />
     <Compile Include="ECS\Components\InformationComponent.cs" />
     <Compile Include="ECS\Components\MovementOrderBase.cs" />
-    <Compile Include="ECS\Components\MovementOrdersComponent.cs" />
     <Compile Include="ECS\Components\MovementOrderUtility.cs" />
     <Compile Include="ECS\Components\MoveToOrbitalBodyOrder.cs" />
     <Compile Include="ECS\Components\OrbitalBodyCharacteristicsComponent.cs" />
     <Compile Include="ECS\Components\OrbitalPositionComponent.cs" />
     <Compile Include="ECS\Components\OrbitalUnitDesignComponent.cs" />
+    <Compile Include="ECS\Components\OrderBase.cs" />
+    <Compile Include="ECS\Components\OrderId.cs" />
+    <Compile Include="ECS\Components\OrdersComponent.cs" />
     <Compile Include="ECS\Components\PopulationComponent.cs" />
     <Compile Include="ECS\Components\ShipyardComponent.cs" />
     <Compile Include="ECS\Entity.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="ECS\GameData.cs" />
     <Compile Include="ECS\GameProcessor.cs" />
     <Compile Include="ECS\GameServices.cs" />
+    <Compile Include="ECS\IEntityLookup.cs" />
     <Compile Include="ECS\Notification.cs" />
     <Compile Include="ECS\NotificationLog.cs" />
     <Compile Include="ECS\OurResources.Designer.cs">

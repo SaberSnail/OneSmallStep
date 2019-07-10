@@ -23,8 +23,7 @@ namespace OneSmallStep.UI.SystemMap
 			}
 			set
 			{
-				if (SetPropertyField(value, ref m_center))
-					Log.Info($"Setting Center to ({Center.X}, {Center.Y})");
+				SetPropertyField(value, ref m_center);
 			}
 		}
 

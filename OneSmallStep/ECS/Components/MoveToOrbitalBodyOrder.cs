@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using GoldenAnvil.Utility.Logging;
 using GoldenAnvil.Utility.Windows;
+using JetBrains.Annotations;
 using OneSmallStep.Utility;
 using OneSmallStep.Utility.Time;
 
@@ -9,25 +10,25 @@ namespace OneSmallStep.ECS.Components
 {
 	public sealed class MoveToOrbitalBodyOrder : MovementOrderBase
 	{
-		public MoveToOrbitalBodyOrder(EntityId targetEntityId, double speedPerTick)
+		public MoveToOrbitalBodyOrder(OrderId orderId, EntityId targetEntityId, double speedPerTick)
+			: this(orderId, targetEntityId, speedPerTick, null)
 		{
-			TargetEntityId = targetEntityId;
-			SpeedPerTick = speedPerTick;
 		}
 
 		public EntityId TargetEntityId { get; }
 
 		public double SpeedPerTick { get; }
 
-		public Point? InterceptPoint { get; private set; }
+		public Point? InterceptPoint { get; }
 
-		public override bool PrepareIntercept(IEntityLookup entityLookup, Point currentAbsolutePosition, double maxSpeedPerTick, TimePoint currentTime)
+		public override MovementOrderBase PrepareIntercept(IEntityLookup entityLookup, Point currentAbsolutePosition, double maxSpeedPerTick, TimePoint currentTime)
 		{
 			if (InterceptPoint.HasValue)
-				return false;
+				return null;
 
+			MoveToOrbitalBodyOrder newOrder = null;
 			var targetEntity = entityLookup.GetEntity(TargetEntityId);
-			var targetOrders = targetEntity.GetOptionalComponent<MovementOrdersComponent>();
+			var targetOrders = targetEntity.GetOptionalComponent<OrdersComponent>();
 			var targetUnitDesign = targetEntity.GetOptionalComponent<OrbitalUnitDesignComponent>();
 			if (MovementOrderUtility.CanExecuteOrders(targetOrders, targetUnitDesign))
 			{
@@ -36,23 +37,28 @@ namespace OneSmallStep.ECS.Components
 			else
 			{
 				var speedPerTick = Math.Min(SpeedPerTick, maxSpeedPerTick);
-				InterceptPoint = MovementOrderUtility.GetInterceptPoint(entityLookup, currentAbsolutePosition, speedPerTick, targetEntity, currentTime);
+				var interceptPoint = MovementOrderUtility.GetInterceptPoint(entityLookup, currentAbsolutePosition, speedPerTick, targetEntity, currentTime);
+				newOrder = CloneWithIntercept(interceptPoint);
 			}
 
-			return true;
+			return newOrder;
 		}
 
-		public override bool TryMarkAsResolved(IEntityLookup entityLookup, Point currentAbsolutePosition)
+		public override bool TryMarkAsResolved(IEntityLookup entityLookup, Point currentAbsolutePosition, out MovementOrderBase newOrder)
 		{
+			newOrder = null;
+
 			if (currentAbsolutePosition != InterceptPoint)
 				return false;
 
 			var targetEntity = entityLookup.GetEntity(TargetEntityId);
 			var targetPosition = targetEntity.GetRequiredComponent<EllipticalOrbitalPositionComponent>();
-			if (currentAbsolutePosition.IsWithinOneMeter(targetPosition.GetCurrentAbsolutePosition(entityLookup)))
+			var targetAbsolutePosition = targetPosition.GetCurrentAbsolutePosition(entityLookup);
+			if (currentAbsolutePosition.IsWithinOneMeter(targetAbsolutePosition))
 				return true;
 
-			InterceptPoint = null;
+			Log.Info($"Reached InterceptPoint ({InterceptPoint.Value.X}, {InterceptPoint.Value.Y}), but target is not nearby ({targetAbsolutePosition.X}, {targetAbsolutePosition.Y})");
+			newOrder = CloneWithIntercept(null);
 			return false;
 		}
 
@@ -72,9 +78,24 @@ namespace OneSmallStep.ECS.Components
 			return currentAbsolutePosition + (vector * SpeedPerTick);
 		}
 
-		public override MovementOrderBase Clone()
+		public override OrderBase Clone() => new MoveToOrbitalBodyOrder(this, this.InterceptPoint);
+
+		private MoveToOrbitalBodyOrder CloneWithIntercept(Point? interceptPoint) => new MoveToOrbitalBodyOrder(this, interceptPoint);
+
+		private MoveToOrbitalBodyOrder([NotNull] MoveToOrbitalBodyOrder that, Point? interceptPoint)
+			: base(that)
 		{
-			return new MoveToOrbitalBodyOrder(TargetEntityId, SpeedPerTick) { InterceptPoint = InterceptPoint };
+			TargetEntityId = that.TargetEntityId;
+			SpeedPerTick = that.SpeedPerTick;
+			InterceptPoint = interceptPoint;
+		}
+
+		private MoveToOrbitalBodyOrder(OrderId orderId, EntityId targetEntityId, double speedPerTick, Point? interceptPoint)
+			: base(orderId)
+		{
+			TargetEntityId = targetEntityId;
+			SpeedPerTick = speedPerTick;
+			InterceptPoint = interceptPoint;
 		}
 
 		static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(MoveToOrbitalBodyOrder));

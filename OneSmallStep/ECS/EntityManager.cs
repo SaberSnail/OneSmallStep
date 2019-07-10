@@ -5,30 +5,9 @@ using System.Threading;
 using System.Windows.Threading;
 using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Windows;
-using JetBrains.Annotations;
 
 namespace OneSmallStep.ECS
 {
-	public interface IEntityLookup
-	{
-		EntityId GetNextEntityId();
-
-		[NotNull]
-		IReadOnlyList<Entity> GetEntitiesMatchingKey(ComponentKey componentKey);
-
-		[NotNull]
-		IReadOnlyList<Entity> GetEntitiesMatchingKeys(params ComponentKey[] componentKey);
-
-		Entity GetEntity(EntityId entityId);
-
-		void RegisterEntity([NotNull] Entity entity);
-
-		ComponentKey CreateComponentKey([NotNull] IEnumerable<ComponentBase> components);
-
-		ComponentKey CreateComponentKey<T>();
-
-		ComponentKey CreateComponentKey(params Type[] componentTypes);
-	}
 	public sealed class EntityManager
 	{
 		public EntityManager()
@@ -38,7 +17,7 @@ namespace OneSmallStep.ECS
 			m_componentTypeToId = new Dictionary<Type, int>();
 			m_displayLookup = new EntityLookup(this);
 			m_processingLookup = new EntityLookup(this);
-
+			m_nextEntityId = 1;
 			m_state = State.StartingUp;
 		}
 
@@ -93,7 +72,7 @@ namespace OneSmallStep.ECS
 
 		private EntityId GetNextEntityId()
 		{
-			return new EntityId(Interlocked.Increment(ref m_nextEntityId));
+			return new EntityId(unchecked((uint) Interlocked.Increment(ref m_nextEntityId)));
 		}
 
 		private sealed class EntityLookup : IEntityLookup

@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 
-namespace OneSmallStep.ECS
+namespace OneSmallStep.ECS.Components
 {
 	[DebuggerDisplay("{m_id}")]
-	public struct EntityId : IEquatable<EntityId>
+	public struct OrderId : IEquatable<OrderId>
 	{
-		public EntityId(uint id)
+		public OrderId(uint id)
 		{
 			m_id = id;
 		}
@@ -18,20 +18,20 @@ namespace OneSmallStep.ECS
 
 		public override bool Equals(object that)
 		{
-			return that is EntityId id && Equals(id);
+			return that is OrderId id && Equals(id);
 		}
 
-		public bool Equals(EntityId that)
+		public bool Equals(OrderId that)
 		{
 			return m_id == that.m_id;
 		}
 
-		public static bool operator ==(EntityId left, EntityId right)
+		public static bool operator ==(OrderId left, OrderId right)
 		{
 			return left.Equals(right);
 		}
 
-		public static bool operator !=(EntityId left, EntityId right)
+		public static bool operator !=(OrderId left, OrderId right)
 		{
 			return !left.Equals(right);
 		}

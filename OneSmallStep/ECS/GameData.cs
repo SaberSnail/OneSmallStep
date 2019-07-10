@@ -1,4 +1,5 @@
-﻿using OneSmallStep.ECS.Components;
+﻿using System.Threading;
+using OneSmallStep.ECS.Components;
 using OneSmallStep.Utility.Time;
 
 namespace OneSmallStep.ECS
@@ -7,6 +8,7 @@ namespace OneSmallStep.ECS
 	{
 		public GameData(ICalendar calendar)
 		{
+			m_nextOrderId = 1;
 			EntityManager = CreateEntityManager();
 			Calendar = calendar;
 		}
@@ -14,6 +16,11 @@ namespace OneSmallStep.ECS
 		public ICalendar Calendar { get; }
 		public TimePoint CurrentDate { get; set; }
 		public EntityManager EntityManager { get; }
+
+		public OrderId GetNextOrderId()
+		{
+			return new OrderId(unchecked((uint) Interlocked.Increment(ref m_nextOrderId)));
+		}
 
 		private static EntityManager CreateEntityManager()
 		{
@@ -24,14 +31,16 @@ namespace OneSmallStep.ECS
 				entityManager.RegisterComponent<AgeComponent>();
 				entityManager.RegisterComponent<EllipticalOrbitalPositionComponent>();
 				entityManager.RegisterComponent<InformationComponent>();
-				entityManager.RegisterComponent<MovementOrdersComponent>();
 				entityManager.RegisterComponent<OrbitalBodyCharacteristicsComponent>();
 				entityManager.RegisterComponent<OrbitalUnitDesignComponent>();
+				entityManager.RegisterComponent<OrdersComponent>();
 				entityManager.RegisterComponent<PopulationComponent>();
 				entityManager.RegisterComponent<ShipyardComponent>();
 			}
 
 			return entityManager;
 		}
+
+		int m_nextOrderId;
 	}
 }

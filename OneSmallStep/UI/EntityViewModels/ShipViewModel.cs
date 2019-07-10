@@ -75,7 +75,8 @@ namespace OneSmallStep.UI.EntityViewModels
 			Position = body.GetCurrentAbsolutePosition(entityLookup);
 			PositionString = "{0}, {1}".FormatCurrentCulture(Position.X, Position.Y);
 
-			if (entity.GetRequiredComponent<MovementOrdersComponent>().GetActiveOrder() is MoveToOrbitalBodyOrder order)
+			var order = entity.GetRequiredComponent<OrdersComponent>().GetActiveOrder<MoveToOrbitalBodyOrder>();
+			if (order != null)
 			{
 				TargetPosition = order.InterceptPoint;
 				var targetEntity = entityLookup.GetEntity(order.TargetEntityId);
