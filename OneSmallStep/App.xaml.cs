@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using OneSmallStep.UI.EllipseTest;
 using OneSmallStep.UI.MainWindow;
 
 namespace OneSmallStep
@@ -36,6 +37,8 @@ namespace OneSmallStep
 			AppModel.StartupFinished -= AppModel_StartupFinished;
 
 			new MainWindowView(AppModel.MainWindowViewModel).Show();
+
+			new EllipseTest().Show();
 		}
 	}
 }

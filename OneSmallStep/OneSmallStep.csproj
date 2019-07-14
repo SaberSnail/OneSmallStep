@@ -98,6 +98,10 @@
     <Compile Include="ECS\Systems\PopulationGrowthSystem.cs" />
     <Compile Include="ECS\Systems\ShipyardSystem.cs" />
     <Compile Include="ECS\Systems\StarSystemMovementSystem.cs" />
+    <Compile Include="UI\EllipseTest\EllipseTest.xaml.cs">
+      <DependentUpon>EllipseTest.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\EllipseTest\EllipseTestRenderer.cs" />
     <Compile Include="UI\EntityViewModels\EntityViewModelBase.cs" />
     <Compile Include="UI\EntityViewModels\PlanetViewModel.cs" />
     <Compile Include="UI\EntityViewModels\ShipViewModel.cs" />
@@ -106,6 +110,7 @@
     <Compile Include="UI\SystemMap\SystemMapViewModel.cs" />
     <Compile Include="UI\Utility\TokenStringUtility.cs" />
     <Compile Include="UI\Utility\ThemesUtility.cs" />
+    <Compile Include="Utility\EllipseUtility.cs" />
     <Compile Include="Utility\SystemDataFileUtility.cs" />
     <Compile Include="Utility\Time\ICalendar.cs" />
     <Compile Include="Utility\Time\OurResources.Designer.cs">
@@ -133,9 +138,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppModel.cs" />
-    <Page Include="UI\EntityViews\PlanetView.xaml">
+    <Page Include="UI\EllipseTest\EllipseTest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\EntityViews\PlanetView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\MainWindow\MainWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>

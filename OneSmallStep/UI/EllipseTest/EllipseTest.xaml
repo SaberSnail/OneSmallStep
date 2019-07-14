@@ -1,0 +1,76 @@
+﻿<Window
+	x:Class="OneSmallStep.UI.EllipseTest.EllipseTest"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:OneSmallStep.UI.EllipseTest"
+	Title="EllipseTest"
+	Width="800"
+	Height="450"
+	>
+	<DockPanel LastChildFill="True">
+		<DockPanel Dock="Left" LastChildFill="False">
+			<DockPanel Dock="Top" LastChildFill="False">
+				<TextBlock DockPanel.Dock="Left" Text="Rectangle Left/Top" />
+				<TextBox
+					DockPanel.Dock="Left"
+					Width="40"
+					Text="{Binding Left, ElementName=Renderer, UpdateSourceTrigger=PropertyChanged}"
+					/>
+				<TextBox
+					DockPanel.Dock="Left"
+					Width="40"
+					Text="{Binding Top, ElementName=Renderer, UpdateSourceTrigger=PropertyChanged}"
+					/>
+			</DockPanel>
+			<DockPanel Dock="Top" LastChildFill="False">
+				<TextBlock DockPanel.Dock="Left" Text="Rectangle Right/Bottom" />
+				<TextBox
+					DockPanel.Dock="Left"
+					Width="40"
+					Text="{Binding Right, ElementName=Renderer, UpdateSourceTrigger=PropertyChanged}"
+					/>
+				<TextBox
+					DockPanel.Dock="Left"
+					Width="40"
+					Text="{Binding Bottom, ElementName=Renderer, UpdateSourceTrigger=PropertyChanged}"
+					/>
+			</DockPanel>
+			<DockPanel Dock="Top" LastChildFill="False">
+				<TextBlock DockPanel.Dock="Left" Text="Ellipse Center X/Y" />
+				<TextBox
+					DockPanel.Dock="Left"
+					Width="40"
+					Text="{Binding EllipseCenterX, ElementName=Renderer, UpdateSourceTrigger=PropertyChanged}"
+					/>
+				<TextBox
+					DockPanel.Dock="Left"
+					Width="40"
+					Text="{Binding EllipseCenterY, ElementName=Renderer, UpdateSourceTrigger=PropertyChanged}"
+					/>
+			</DockPanel>
+			<DockPanel Dock="Top" LastChildFill="False">
+				<TextBlock DockPanel.Dock="Left" Text="Major/Minor Radius" />
+				<TextBox
+					DockPanel.Dock="Left"
+					Width="40"
+					Text="{Binding MajorRadius, ElementName=Renderer, UpdateSourceTrigger=PropertyChanged}"
+					/>
+				<TextBox
+					DockPanel.Dock="Left"
+					Width="40"
+					Text="{Binding MinorRadius, ElementName=Renderer, UpdateSourceTrigger=PropertyChanged}"
+					/>
+			</DockPanel>
+			<DockPanel Dock="Top" LastChildFill="False">
+				<TextBlock DockPanel.Dock="Left" Text="Ellipse Rotation" />
+				<TextBox
+					DockPanel.Dock="Left"
+					Width="40"
+					Text="{Binding EllipseRotation, ElementName=Renderer, UpdateSourceTrigger=PropertyChanged}"
+					/>
+			</DockPanel>
+		</DockPanel>
+
+		<local:EllipseTestRenderer x:Name="Renderer" />
+	</DockPanel>
+</Window>
