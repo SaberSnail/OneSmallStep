@@ -47,7 +47,7 @@ namespace OneSmallStep.ECS
 		}
 
 		public void RegisterComponent<T>()
-			where T: ComponentBase
+			where T : ComponentBase
 		{
 			if (m_state != State.StartingUp)
 				throw new InvalidOperationException("This code may only be called during startup.");

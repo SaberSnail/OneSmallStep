@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using NUnit.Framework;
-using OneSmallStep.Time;
 using OneSmallStep.Utility.Time;
 
 namespace OneSmallStep.Tests

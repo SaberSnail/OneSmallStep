@@ -24,7 +24,7 @@ namespace OneSmallStep.Utility
 				}
 
 				lineNumber++;
-				var parts = TrimComments(line).Split(new [] { ',' }, StringSplitOptions.None);
+				var parts = TrimComments(line).Split(new[] { ',' }, StringSplitOptions.None);
 				if (parts.Length == 0 || (parts.Length == 1 && parts[0].Length == 0))
 					continue;
 
