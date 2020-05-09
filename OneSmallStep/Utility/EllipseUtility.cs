@@ -17,7 +17,7 @@ namespace OneSmallStep.Utility
 			var viewCenter = new Point(viewRect.Left + (viewRect.Width / 2.0), viewRect.Top + (viewRect.Height / 2.0));
 			var distanceBetweenCenters = ellipseCenter.DistanceTo(viewCenter);
 			var maxEllipseRadius = semiMajorAxis;
-			if (distanceBetweenCenters  - maxEllipseRadius > viewRadius)
+			if (distanceBetweenCenters - maxEllipseRadius > viewRadius)
 				return false;
 
 			var centerEllipseRadius = semiMinorAxis;

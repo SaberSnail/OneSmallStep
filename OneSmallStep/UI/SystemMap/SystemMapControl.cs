@@ -51,9 +51,9 @@ namespace OneSmallStep.UI.SystemMap
 			base.OnMouseWheel(e);
 
 			if (e.Delta > 0)
-				Scale *= Math.Pow(1.1, Math.Abs(e.Delta * 0.01));
+				Scale *= Math.Pow(1.15, Math.Abs(e.Delta * 0.01));
 			else if (e.Delta < 0)
-				Scale /= Math.Pow(1.1, Math.Abs(e.Delta * 0.01));
+				Scale /= Math.Pow(1.15, Math.Abs(e.Delta * 0.01));
 
 			e.Handled = true;
 		}

@@ -71,6 +71,6 @@
 			</DockPanel>
 		</DockPanel>
 
-		<local:EllipseTestRenderer x:Name="Renderer" />
+		<local:EllipseTestRenderer x:Name="Renderer" Focusable="true" />
 	</DockPanel>
 </Window>
