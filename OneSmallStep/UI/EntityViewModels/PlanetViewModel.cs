@@ -7,6 +7,7 @@ using OneSmallStep.ECS;
 using OneSmallStep.ECS.Components;
 using OneSmallStep.UI.SystemMap;
 using OneSmallStep.UI.Utility;
+using OneSmallStep.Utility;
 
 namespace OneSmallStep.UI.EntityViewModels
 {
@@ -170,7 +171,7 @@ namespace OneSmallStep.UI.EntityViewModels
 			LongitudeOfPeriapsis = position.LongitudeOfPeriapsis ?? 0.0;
 		}
 
-		public void Render(DrawingContext context, Point offset, double scale)
+		public void Render(DrawingContext context, Point offset, double scale, Rect viewRect)
 		{
 			if (m_position != m_orbitCenterPosition && !Name.StartsWith("Asteroid"))
 			{
@@ -178,10 +179,25 @@ namespace OneSmallStep.UI.EntityViewModels
 				var renderOrbitAt = new Point((OrbitCenterPosition.X * scale) - focus + offset.X, (OrbitCenterPosition.Y * scale) + offset.Y);
 				var semiMajorAxis = SemiMajorAxis * scale;
 				var semiMinorAxis = SemiMinorAxis * scale;
-				var orbitPen = (Pen) ThemesUtility.CurrentThemeDictionary["PlanetOrbitPen"];
-				using (context.ScopedTransform(new TranslateTransform(renderOrbitAt.X, renderOrbitAt.Y)))
-				using (context.ScopedTransform(new RotateTransform(LongitudeOfPeriapsis, focus, 0.0)))
-					context.DrawEllipse(null, orbitPen, new Point(), semiMajorAxis, semiMinorAxis);
+				var center = new Point((OrbitCenterPosition.X * scale) - focus, OrbitCenterPosition.Y * scale)
+					.RotateAround(new Point((OrbitCenterPosition.X * scale), OrbitCenterPosition.Y * scale), LongitudeOfPeriapsis)
+					.WithOffset(offset);
+				if (EllipseUtility.ShouldRenderEllipseInRectangle(viewRect, center, semiMajorAxis, semiMinorAxis))
+				{
+					EllipseUtility.OrbitsRendered++;
+					var orbitPen = (Pen) ThemesUtility.CurrentThemeDictionary["PlanetOrbitPen"];
+					using (context.ScopedTransform(new TranslateTransform(renderOrbitAt.X, renderOrbitAt.Y)))
+					using (context.ScopedTransform(new RotateTransform(LongitudeOfPeriapsis, focus, 0.0)))
+					{
+						//context.DrawEllipse(null, new Pen(new SolidColorBrush(Colors.LawnGreen), 1), new Point(), semiMajorAxis, semiMajorAxis);
+						//context.DrawEllipse(null, new Pen(new SolidColorBrush(Colors.Gold), 1), new Point(), semiMinorAxis, semiMinorAxis);
+						context.DrawEllipse(null, orbitPen, new Point(), semiMajorAxis, semiMinorAxis);
+					}
+				}
+				else
+				{
+					EllipseUtility.OrbitsSkipped++;
+				}
 			}
 
 			var minRadius = (double) ThemesUtility.CurrentThemeDictionary["PlanetMinRadius"];

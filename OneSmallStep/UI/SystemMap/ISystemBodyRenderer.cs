@@ -5,6 +5,6 @@ namespace OneSmallStep.UI.SystemMap
 {
 	public interface ISystemBodyRenderer
 	{
-		void Render(DrawingContext context, Point offset, double scale);
+		void Render(DrawingContext context, Point offset, double scale, Rect viewRect);
 	}
 }

@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using GoldenAnvil.Utility;
+using GoldenAnvil.Utility.Logging;
 using GoldenAnvil.Utility.Windows;
 using OneSmallStep.Utility;
 
@@ -112,9 +113,12 @@ namespace OneSmallStep.UI.SystemMap
 			var offset = new Point(centerPoint.X - (Center.X * scale), centerPoint.Y - (Center.Y * scale));
 			using (context.ScopedClip(new RectangleGeometry(viewRect)))
 			{
+				EllipseUtility.OrbitsRendered = 0;
+				EllipseUtility.OrbitsSkipped = 0;
+				var adjustedViewRect = new Rect(offset.X, offset.Y, viewRect.Width, viewRect.Height);
 				foreach (var body in Bodies.EmptyIfNull())
-					body.Render(context, offset, scale);
-
+					body.Render(context, offset, scale, adjustedViewRect);
+				Log.Info($"Orbits rendered: {EllipseUtility.OrbitsRendered}; skipped: {EllipseUtility.OrbitsSkipped}");
 				DrawScale(context, viewRect);
 			}
 		}
@@ -125,7 +129,7 @@ namespace OneSmallStep.UI.SystemMap
 			var scaleWidth = (double) FindResource("SystemMapScaleWidth");
 			context.DrawLine(scalePen, new Point(viewRect.Right - 8, viewRect.Bottom - 8), new Point(viewRect.Right - scaleWidth - 8, viewRect.Bottom - 8));
 			if (m_scaleText != null)
-			context.DrawText(m_scaleText, new Point(viewRect.Right - 58 - (m_scaleText.Width / 2.0), viewRect.Bottom - 8 - m_scaleText.Height));
+				context.DrawText(m_scaleText, new Point(viewRect.Right - 58 - (m_scaleText.Width / 2.0), viewRect.Bottom - 8 - m_scaleText.Height));
 		}
 
 		protected override Size ArrangeOverride(Size arrangeSize)
@@ -151,6 +155,8 @@ namespace OneSmallStep.UI.SystemMap
 			var scaleWidth = (double) FindResource("SystemMapScaleWidth");
 			m_scaleText = new FormattedText(FormatUtility.RenderDistance(scaleWidth / scale), CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface("Verdana"), 12, textBrush, 1.0);
 		}
+
+		static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(SystemMapControl));
 
 		FormattedText m_scaleText;
 		Point m_mouseDownPosition;

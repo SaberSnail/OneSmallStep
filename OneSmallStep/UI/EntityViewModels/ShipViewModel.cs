@@ -90,7 +90,7 @@ namespace OneSmallStep.UI.EntityViewModels
 			}
 		}
 
-		public void Render(DrawingContext context, Point offset, double scale)
+		public void Render(DrawingContext context, Point offset, double scale, Rect viewRect)
 		{
 			var renderAt = new Point((Position.X * scale) + offset.X, (Position.Y * scale) + offset.Y);
 			var markerPen = (Pen) ThemesUtility.CurrentThemeDictionary["ShipMarkerPen"];

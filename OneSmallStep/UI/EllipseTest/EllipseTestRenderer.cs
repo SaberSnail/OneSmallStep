@@ -6,7 +6,6 @@ using System.Windows.Media;
 using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Logging;
 using GoldenAnvil.Utility.Windows;
-using OneSmallStep.UI.MainWindow;
 using OneSmallStep.Utility;
 
 namespace OneSmallStep.UI.EllipseTest
@@ -134,23 +133,34 @@ namespace OneSmallStep.UI.EllipseTest
 				using (context.ScopedTransform(new RotateTransform(ellipseRotation, 0.0, 0.0)))
 					context.DrawEllipse(null, s_orbitPen, new Point(), adjustedMajorRadius, adjustedMinorRadius);
 
+				context.DrawEllipse(s_centerBrush, null, new Point(adjustedEllipseCenterX, adjustedEllipseCenterY), c_markerRadius, c_markerRadius);
+
 				var rotationRadians = MathUtility.DegreesToRadians(-ellipseRotation);
 				var ellipseCenter = new Point(ellipseCenterX, ellipseCenterY);
-				RenderIntersectionPoints(EllipseUtility.FindIntersectionOfLineAndEllipse(new Point(left, top), new Point(right, top), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, context);
-				RenderIntersectionPoints(EllipseUtility.FindIntersectionOfLineAndEllipse(new Point(right, top), new Point(right, bottom), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, context);
-				RenderIntersectionPoints(EllipseUtility.FindIntersectionOfLineAndEllipse(new Point(right, bottom), new Point(left, bottom), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, context);
-				RenderIntersectionPoints(EllipseUtility.FindIntersectionOfLineAndEllipse(new Point(left, bottom), new Point(left, top), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, context);
+				RenderIntersectionPoints(EllipseUtility.FindIntersectionAndSlopeOfLineAndEllipse(new Point(left, top), new Point(right, top), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, context);
+				RenderIntersectionPoints(EllipseUtility.FindIntersectionAndSlopeOfLineAndEllipse(new Point(right, top), new Point(right, bottom), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, context);
+				RenderIntersectionPoints(EllipseUtility.FindIntersectionAndSlopeOfLineAndEllipse(new Point(right, bottom), new Point(left, bottom), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, context);
+				RenderIntersectionPoints(EllipseUtility.FindIntersectionAndSlopeOfLineAndEllipse(new Point(left, bottom), new Point(left, top), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, context);
 			}
 		}
 
-		private void RenderIntersectionPoints(IEnumerable<Point> points, double scale, DrawingContext context)
+		private void RenderIntersectionPoints(IEnumerable<(Point Intersection, double Slope)> points, double scale, DrawingContext context)
 		{
 			foreach (var point in points)
 			{
-				Log.Info($"Intersection at {point.X}, {point.Y}");
-				var x = (point.X * scale) + (ActualWidth / 2.0);
-				var y = (point.Y * scale) + (ActualHeight / 2.0);
-				context.DrawEllipse(s_intersectionBrush, null, new Point(x, y), 4.0, 4.0);
+				Log.Info($"Intersection at {point.Intersection.X}, {point.Intersection.Y}; Slope = {point.Slope}");
+				var x = (point.Intersection.X * scale) + (ActualWidth / 2.0);
+				var y = (point.Intersection.Y * scale) + (ActualHeight / 2.0);
+				var intersectionPoint = new Point(x, y);
+
+				var slopeVector = new Vector(1, point.Slope);
+				slopeVector.Normalize();
+				slopeVector *= 25.0;
+				var p1 = intersectionPoint - slopeVector;
+				var p2 = intersectionPoint + slopeVector;
+				context.DrawLine(s_tangentPen, p1, p2);
+
+				context.DrawEllipse(s_intersectionBrush, null, intersectionPoint, c_markerRadius, c_markerRadius);
 			}
 		}
 
@@ -160,7 +170,10 @@ namespace OneSmallStep.UI.EllipseTest
 		static readonly Pen s_rectanglePen = new Pen(new SolidColorBrush(Colors.LightGray).Frozen(), 1.0).Frozen();
 		static readonly Pen s_orbitPen = new Pen(new SolidColorBrush(Colors.LightGray).Frozen(), 1.0).Frozen();
 		static readonly Brush s_intersectionBrush = new SolidColorBrush(Colors.Red).Frozen();
+		static readonly Brush s_centerBrush = new SolidColorBrush(Colors.LawnGreen).Frozen();
+		static readonly Pen s_tangentPen = new Pen(new SolidColorBrush(Colors.DarkGray).Frozen(), 1.0).Frozen();
 
 		const double c_margin = 50.0;
+		const double c_markerRadius = 4.0;
 	}
 }
