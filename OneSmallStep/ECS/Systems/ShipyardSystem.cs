@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using OneSmallStep.ECS.Components;
 using OneSmallStep.Utility;
 using OneSmallStep.Utility.Time;
@@ -15,9 +16,11 @@ namespace OneSmallStep.ECS.Systems
 				if (((newTime.Tick - 1) % (int) Math.Round(Constants.TicksPerDay * 365.25 * 5)) == 0)
 				{
 					var position = entity.GetRequiredComponent<EllipticalOrbitalPositionComponent>().GetCurrentAbsolutePosition(entityLookup);
-					EntityUtility.CreateShip(entityLookup, "Discovery", position);
+					EntityUtility.CreateShip(entityLookup, $"Discovery {Interlocked.Increment(ref m_shipId)}", position);
 				}
 			}
 		}
+
+		int m_shipId;
 	}
 }
