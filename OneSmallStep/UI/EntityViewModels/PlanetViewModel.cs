@@ -189,8 +189,6 @@ namespace OneSmallStep.UI.EntityViewModels
 					using (context.ScopedTransform(new TranslateTransform(renderOrbitAt.X, renderOrbitAt.Y)))
 					using (context.ScopedTransform(new RotateTransform(LongitudeOfPeriapsis, focus, 0.0)))
 					{
-						//context.DrawEllipse(null, new Pen(new SolidColorBrush(Colors.LawnGreen), 1), new Point(), semiMajorAxis, semiMajorAxis);
-						//context.DrawEllipse(null, new Pen(new SolidColorBrush(Colors.Gold), 1), new Point(), semiMinorAxis, semiMinorAxis);
 						context.DrawEllipse(null, orbitPen, new Point(), semiMajorAxis, semiMinorAxis);
 					}
 				}

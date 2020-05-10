@@ -43,6 +43,7 @@ namespace OneSmallStep.ECS.Components
 					maxDistanceToCenter = maxDistanceToCenter.HasValue ? maxDistanceToCenter + maxDistance : maxDistance;
 				}
 			}
+			// TODO: Use minimum distance to narrow down results more quickly
 			/*
 			if (maxDistanceToCenter.HasValue)
 			{

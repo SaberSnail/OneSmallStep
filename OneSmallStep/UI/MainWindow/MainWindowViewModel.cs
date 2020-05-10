@@ -226,12 +226,6 @@ namespace OneSmallStep.UI.MainWindow
 				planet.UpdateFromEntity(entityLookup);
 
 			Planet = m_planets.FirstOrDefault(x => x.Name == "Earth");
-
-			//var ship1 = EntityUtility.CreateShip(entityLookup, "Discovery", new Point(m_gameServices.RandomNumberGenerator.NextDouble(-1E12, 1E12), m_gameServices.RandomNumberGenerator.NextDouble(-1E12, 1E12)));
-			//Ship = new ShipViewModel(ship1);
-			//m_ships.Add(ship1.Id, Ship);
-			//foreach (var ship in m_ships.Values)
-			//	ship.UpdateFromEntity(entityLookup);
 		}
 
 		private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(MainWindowViewModel));
