@@ -27,6 +27,31 @@ namespace OneSmallStep.Utility
 			return true;
 		}
 
+		public static Point GetPointAtAngle(Point ellipseCenter, double ellipseAngle, double semiMajorAxis, double semiMinorAxis, double angle)
+		{
+			var sinA = Math.Sin(ellipseAngle);
+			var cosA = Math.Cos(ellipseAngle);
+			var tanTheta = Math.Tan(angle);
+
+			var v1 = cosA + (tanTheta * sinA);
+			var v2 = sinA - (tanTheta * cosA);
+
+			var theta = MathUtility.NormalizeRadians(angle);
+			var sign = (theta < (Math.PI / 2.0)) || (theta > 3.0 * Math.PI / 2.0) ? 1 : -1;
+
+			var x = sign * semiMajorAxis * semiMinorAxis / Math.Sqrt((semiMinorAxis * semiMinorAxis * v1 * v1) + (semiMajorAxis * semiMajorAxis * v2 * v2));
+
+			var a = (semiMinorAxis * semiMinorAxis * sinA * sinA) + (semiMajorAxis * semiMajorAxis * cosA * cosA);
+			var b = 2.0 * sinA * cosA * x * ((semiMinorAxis * semiMinorAxis) - (semiMajorAxis * semiMajorAxis));
+			var c = (x * x * ((semiMinorAxis * semiMinorAxis * cosA * cosA) + (semiMajorAxis * semiMajorAxis * sinA * sinA))) - (semiMajorAxis * semiMajorAxis * semiMinorAxis * semiMinorAxis);
+
+			sign = theta > Math.PI ? -1 : 1;
+			var discriminant = (b * b) - (4.0 * a * c);
+			var y = (-b + (discriminant >= 0 ? (sign * Math.Sqrt(discriminant)) : 0.0)) / (2.0 * a);
+
+			return new Point(x + ellipseCenter.X, y + ellipseCenter.Y);
+		}
+
 		public static IReadOnlyList<(Point Intersection, double Slope)> FindIntersectionAndSlopeOfLineAndEllipse(Point linePoint1, Point linePoint2, bool isLineSegment, Point ellipseCenter, double majorRadius, double minorRadius, double ellipseRotation)
 		{
 			var sinA = Math.Sin(ellipseRotation);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -121,10 +122,33 @@ namespace OneSmallStep.UI.EllipseTest
 		{
 			base.OnMouseWheel(e);
 
-			if (e.Delta > 0)
-				Scale *= Math.Pow(1.15, Math.Abs(e.Delta * 0.01));
-			else if (e.Delta < 0)
-				Scale /= Math.Pow(1.15, Math.Abs(e.Delta * 0.01));
+			if (IsEllipseActive)
+			{
+				if (double.TryParse(MajorRadius, out var majorRadius) &&
+					double.TryParse(MinorRadius, out var minorRadius))
+				{
+					if (e.Delta > 0)
+					{
+						majorRadius *= Math.Pow(1.05, Math.Abs(e.Delta * 0.01));
+						minorRadius *= Math.Pow(1.05, Math.Abs(e.Delta * 0.01));
+					}
+					else if (e.Delta < 0)
+					{
+						majorRadius /= Math.Pow(1.05, Math.Abs(e.Delta * 0.01));
+						minorRadius /= Math.Pow(1.05, Math.Abs(e.Delta * 0.01));
+					}
+					MajorRadius = majorRadius.ToString();
+					MinorRadius = minorRadius.ToString();
+				}
+			}
+
+			if (!IsEllipseActive && !IsRectangleActive)
+			{
+				if (e.Delta > 0)
+					Scale *= Math.Pow(1.15, Math.Abs(e.Delta * 0.01));
+				else if (e.Delta < 0)
+					Scale /= Math.Pow(1.15, Math.Abs(e.Delta * 0.01));
+			}
 
 			e.Handled = true;
 		}
@@ -241,7 +265,8 @@ namespace OneSmallStep.UI.EllipseTest
 				var adjustedTop = (top * scale) + offset.Y;
 				var adjustedRight = (right * scale) + offset.X;
 				var adjustedBottom = (bottom * scale) + offset.Y;
-				context.DrawRectangle(null, IsRectangleActive ? s_activePen : s_rectanglePen, new Rect(adjustedLeft, adjustedTop, adjustedRight - adjustedLeft, adjustedBottom - adjustedTop));
+				var adjustedRectangle = new Rect(adjustedLeft, adjustedTop, adjustedRight - adjustedLeft, adjustedBottom - adjustedTop);
+				context.DrawRectangle(null, IsRectangleActive ? s_activePen : s_rectanglePen, adjustedRectangle);
 
 				if (!double.TryParse(EllipseCenterX, out var ellipseCenterX))
 					return;
@@ -266,30 +291,104 @@ namespace OneSmallStep.UI.EllipseTest
 
 				var rotationRadians = MathUtility.DegreesToRadians(-ellipseRotation);
 				var ellipseCenter = new Point(ellipseCenterX, ellipseCenterY);
-				RenderIntersectionPoints(EllipseUtility.FindIntersectionAndSlopeOfLineAndEllipse(new Point(left, top), new Point(right, top), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, offset, context);
-				RenderIntersectionPoints(EllipseUtility.FindIntersectionAndSlopeOfLineAndEllipse(new Point(right, top), new Point(right, bottom), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, offset, context);
-				RenderIntersectionPoints(EllipseUtility.FindIntersectionAndSlopeOfLineAndEllipse(new Point(right, bottom), new Point(left, bottom), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, offset, context);
-				RenderIntersectionPoints(EllipseUtility.FindIntersectionAndSlopeOfLineAndEllipse(new Point(left, bottom), new Point(left, top), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, offset, context);
+
+				var leftPoints = NormalizeIntersectionPoints(EllipseUtility.FindIntersectionAndSlopeOfLineAndEllipse(new Point(left, bottom), new Point(left, top), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, offset);
+				RenderIntersectionPoints(leftPoints, context);
+
+				var topPoints = NormalizeIntersectionPoints(EllipseUtility.FindIntersectionAndSlopeOfLineAndEllipse(new Point(left, top), new Point(right, top), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, offset);
+				RenderIntersectionPoints(topPoints, context);
+
+				var rightPoints = NormalizeIntersectionPoints(EllipseUtility.FindIntersectionAndSlopeOfLineAndEllipse(new Point(right, top), new Point(right, bottom), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, offset);
+				RenderIntersectionPoints(rightPoints, context);
+
+				var bottomPoints = NormalizeIntersectionPoints(EllipseUtility.FindIntersectionAndSlopeOfLineAndEllipse(new Point(right, bottom), new Point(left, bottom), true, ellipseCenter, majorRadius, minorRadius, rotationRadians), scale, offset);
+				RenderIntersectionPoints(bottomPoints, context);
+
+				var normalizedEllipseCenter = new Point((ellipseCenter.X * scale) + offset.X, (ellipseCenter.Y * scale) + offset.Y);
+				RenderEstimates(leftPoints, topPoints, rightPoints, bottomPoints, normalizedEllipseCenter, MathUtility.DegreesToRadians(ellipseRotation), adjustedMajorRadius, adjustedMinorRadius, adjustedRectangle, context);
 			}
 		}
 
-		private void RenderIntersectionPoints(IEnumerable<(Point Intersection, double Slope)> points, double scale, Point offset, DrawingContext context)
+		private IReadOnlyList<(Point Intersection, double Slope)> NormalizeIntersectionPoints(IReadOnlyList<(Point Intersection, double Slope)> points, double scale, Point offset)
+		{
+			return points
+				.Select(point =>
+				{
+					Log.Info($"Intersection at {point.Intersection.X}, {point.Intersection.Y}; Slope = {point.Slope}");
+					var x = (point.Intersection.X * scale) + offset.X;
+					var y = (point.Intersection.Y * scale) + offset.Y;
+					return (Intersection: new Point(x, y), Slope: point.Slope);
+				})
+				.ToList()
+				.AsReadOnly();
+		}
+
+		private void RenderIntersectionPoints(IReadOnlyList<(Point Intersection, double Slope)> points, DrawingContext context)
 		{
 			foreach (var point in points)
 			{
-				Log.Info($"Intersection at {point.Intersection.X}, {point.Intersection.Y}; Slope = {point.Slope}");
-				var x = (point.Intersection.X * scale) + offset.X;
-				var y = (point.Intersection.Y * scale) + offset.Y;
-				var intersectionPoint = new Point(x, y);
-
 				var slopeVector = new Vector(1, point.Slope);
 				slopeVector.Normalize();
 				slopeVector *= 25.0;
-				var p1 = intersectionPoint - slopeVector;
-				var p2 = intersectionPoint + slopeVector;
+				var p1 = point.Intersection - slopeVector;
+				var p2 = point.Intersection + slopeVector;
 				context.DrawLine(s_tangentPen, p1, p2);
 
-				context.DrawEllipse(s_intersectionBrush, null, intersectionPoint, c_markerRadius, c_markerRadius);
+				context.DrawEllipse(s_intersectionBrush, null, point.Intersection, c_markerRadius, c_markerRadius);
+			}
+		}
+
+		private void RenderEstimates(IReadOnlyList<(Point Intersection, double Slope)> leftPoints, IReadOnlyList<(Point Intersection, double Slope)> topPoints, IReadOnlyList<(Point Intersection, double Slope)> rightPoints, IReadOnlyList<(Point Intersection, double Slope)> bottomPoints, Point ellipseCenter, double ellipseAngle, double semiMajorAxis, double semiMinorAxis, Rect rectangle, DrawingContext context)
+		{
+			var points = leftPoints.Select(p => p.Intersection).OrderBy(p => p.Y)
+				.Concat(bottomPoints.Select(p => p.Intersection).OrderBy(p => p.X))
+				.Concat(rightPoints.Select(p => p.Intersection).OrderByDescending(p => p.Y))
+				.Concat(topPoints.Select(p => p.Intersection).OrderByDescending(p => p.X))
+				.AsReadOnlyList();
+
+			if (points.Count <= 1)
+				return;
+
+			var a1 = ellipseCenter.AngleTo(points[0]);
+			var a2 = ellipseCenter.AngleTo(points[1]);
+			while (a1 < a2)
+				a1 += 2.0 * Math.PI;
+			var midA = (a1 + a2) / 2.0;
+			var midPoint = EllipseUtility.GetPointAtAngle(ellipseCenter, ellipseAngle, semiMajorAxis, semiMinorAxis, midA);
+
+			if (!rectangle.Contains(midPoint))
+			{
+				points = points
+					.Append(points[0])
+					.Skip(1)
+					.AsReadOnlyList();
+			}
+
+			for (int i = 0; i < points.Count; i += 2)
+			{
+				var angle1 = ellipseCenter.AngleTo(points[i]);
+				var angle2 = ellipseCenter.AngleTo(points[i+1]);
+				while (angle1 < angle2)
+					angle1 += 2.0 * Math.PI;
+				var midAngle = (angle1 + angle2) / 2.0;
+				var midPointOnEllipse = EllipseUtility.GetPointAtAngle(ellipseCenter, ellipseAngle, semiMajorAxis, semiMinorAxis, midAngle);
+
+				if (i == 0)
+				{
+					context.DrawLine(s_tangentPen, ellipseCenter, new Point(semiMajorAxis * Math.Cos(midAngle) + ellipseCenter.X, semiMajorAxis * Math.Sin(midAngle) + ellipseCenter.Y));
+					context.DrawLine(s_angle1Pen, ellipseCenter, new Point(semiMajorAxis * Math.Cos(angle1) + ellipseCenter.X, semiMajorAxis * Math.Sin(angle1) + ellipseCenter.Y));
+					context.DrawLine(s_angle2Pen, ellipseCenter, new Point(semiMajorAxis * Math.Cos(angle2) + ellipseCenter.X, semiMajorAxis * Math.Sin(angle2) + ellipseCenter.Y));
+					context.DrawEllipse(s_intersectionBrush, null, midPointOnEllipse, c_markerRadius, c_markerRadius);
+				}
+
+				var control1 = points[i] + ((midPointOnEllipse - points[i]) / 2.0);
+				var control2 = points[i+1] + ((midPointOnEllipse - points[i+1]) / 2.0);
+				var geometry = new PathGeometry(new PathFigure[] {
+					new PathFigure(points[i], new PathSegment[] {
+						new BezierSegment(control1, control2, points[i+1], true)
+					}, false),
+				});
+				context.DrawGeometry(null, s_estimatePen, geometry);
 			}
 		}
 
@@ -302,6 +401,9 @@ namespace OneSmallStep.UI.EllipseTest
 		static readonly Brush s_centerBrush = new SolidColorBrush(Colors.LawnGreen).Frozen();
 		static readonly Pen s_tangentPen = new Pen(new SolidColorBrush(Colors.DarkGray).Frozen(), 1.0).Frozen();
 		static readonly Pen s_activePen = new Pen(new SolidColorBrush(Colors.White).Frozen(), 1.5).Frozen();
+		static readonly Pen s_estimatePen = new Pen(new SolidColorBrush(Colors.Green).Frozen(), 1.0).Frozen();
+		static readonly Pen s_angle1Pen = new Pen(new SolidColorBrush(Colors.Blue).Frozen(), 1.0).Frozen();
+		static readonly Pen s_angle2Pen = new Pen(new SolidColorBrush(Colors.Yellow).Frozen(), 1.0).Frozen();
 
 		const double c_margin = 50.0;
 		const double c_markerRadius = 4.0;
