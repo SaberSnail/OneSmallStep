@@ -35,7 +35,7 @@ namespace OneSmallStep
 
 			new MainWindowView(AppModel.MainWindowViewModel).Show();
 
-			new EllipseTest().Show();
+			// new EllipseTest().Show();
 		}
 	}
 }
