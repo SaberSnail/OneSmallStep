@@ -57,7 +57,7 @@ namespace OneSmallStep.Utility.Time
 			if (monthsOutput != null)
 			{
 				if (output.Length != 0)
-					output = LocalizationUtility.FormatCurrentCulture(output, monthsOutput);
+					output = OurResources.TimeOffsetTermJoin.FormatCurrentCulture(output, monthsOutput);
 				else
 					output = monthsOutput;
 			}
@@ -65,7 +65,7 @@ namespace OneSmallStep.Utility.Time
 			if (daysOutput != null)
 			{
 				if (output.Length != 0)
-					output = LocalizationUtility.FormatCurrentCulture(output, daysOutput);
+					output = OurResources.TimeOffsetTermJoin.FormatCurrentCulture(output, daysOutput);
 				else
 					output = daysOutput;
 			}
