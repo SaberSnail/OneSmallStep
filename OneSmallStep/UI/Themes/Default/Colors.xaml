@@ -32,5 +32,11 @@
 	<Color x:Key="BrightRed">#FF0000</Color>
 	<SolidColorBrush x:Key="BrightRedBrush" Color="{StaticResource BrightRed}" />
 
+	<Color x:Key="CoolBlue">#0000AA</Color>
+	<SolidColorBrush x:Key="CoolBlueBrush" Color="{StaticResource CoolBlue}" />
+
+	<Color x:Key="VeryLightBlue">#AAAAFF</Color>
+	<SolidColorBrush x:Key="VeryLightBlueBrush" Color="{StaticResource VeryLightBlue}" />
+
 </ResourceDictionary>
 	

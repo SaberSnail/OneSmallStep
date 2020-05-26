@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using GoldenAnvil.Utility;
 using OneSmallStep.ECS;
+using OneSmallStep.ECS.Utility;
+using static System.Math;
 
 namespace OneSmallStep.Utility
 {
@@ -61,7 +63,7 @@ namespace OneSmallStep.Utility
 			var radius = double.Parse(parts[2]);
 			var mass = double.Parse(parts[3]);
 			if (mass < 0)
-				mass = 1e12 * (4.0 / 3.0) * Math.PI * radius * radius * radius * mass;
+				mass = 1e12 * (4.0 / 3.0) * PI * radius * radius * radius * mass;
 			var parentId = entities[parts[4]].Id;
 			var semiMajorAxis = double.Parse(parts[5]);
 			var eccentricity = double.Parse(parts[6]);
@@ -91,7 +93,7 @@ namespace OneSmallStep.Utility
 				asteroidCount++;
 				var name = $"Asteroid {asteroidCount}";
 				var radius = 100.0;
-				var mass = 1e12 * (4.0 / 3.0) * Math.PI * radius * radius * radius * 2600.0;
+				var mass = 1e12 * (4.0 / 3.0) * PI * radius * radius * radius * 2600.0;
 				var semiMajorAxis = rng.NextDouble(minSemiMajorAxis, maxSemiMajorAxis);
 				var eccentricity = rng.NextDouble(minEccentricity, maxEccentricity);
 				var longitudeOfPeriapsis = rng.NextDouble(0.0, 360.0);

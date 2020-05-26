@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Windows;
 using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Windows;
+using static System.Math;
 
-namespace OneSmallStep.Utility
+namespace OneSmallStep.Utility.Math
 {
 	public static class EllipseUtility
 	{
@@ -13,7 +14,7 @@ namespace OneSmallStep.Utility
 
 		public static bool ShouldRenderEllipseInRectangle(Rect viewRect, Point ellipseCenter, double semiMajorAxis, double semiMinorAxis)
 		{
-			var viewRadius = Math.Sqrt(viewRect.Width * viewRect.Width + viewRect.Height * viewRect.Height) / 2.0;
+			var viewRadius = Sqrt(viewRect.Width * viewRect.Width + viewRect.Height * viewRect.Height) / 2.0;
 			var viewCenter = new Point(viewRect.Left + (viewRect.Width / 2.0), viewRect.Top + (viewRect.Height / 2.0));
 			var distanceBetweenCenters = ellipseCenter.DistanceTo(viewCenter);
 			var maxEllipseRadius = semiMajorAxis;
@@ -29,33 +30,33 @@ namespace OneSmallStep.Utility
 
 		public static Point GetPointAtAngle(Point ellipseCenter, double ellipseAngle, double semiMajorAxis, double semiMinorAxis, double angle)
 		{
-			var sinA = Math.Sin(ellipseAngle);
-			var cosA = Math.Cos(ellipseAngle);
-			var tanTheta = Math.Tan(angle);
+			var sinA = Sin(ellipseAngle);
+			var cosA = Cos(ellipseAngle);
+			var tanTheta = Tan(angle);
 
 			var v1 = cosA + (tanTheta * sinA);
 			var v2 = sinA - (tanTheta * cosA);
 
 			var theta = MathUtility.NormalizeRadians(angle);
-			var sign = (theta < (Math.PI / 2.0)) || (theta > 3.0 * Math.PI / 2.0) ? 1 : -1;
+			var sign = (theta < (PI / 2.0)) || (theta > 3.0 * PI / 2.0) ? 1 : -1;
 
-			var x = sign * semiMajorAxis * semiMinorAxis / Math.Sqrt((semiMinorAxis * semiMinorAxis * v1 * v1) + (semiMajorAxis * semiMajorAxis * v2 * v2));
+			var x = sign * semiMajorAxis * semiMinorAxis / Sqrt((semiMinorAxis * semiMinorAxis * v1 * v1) + (semiMajorAxis * semiMajorAxis * v2 * v2));
 
 			var a = (semiMinorAxis * semiMinorAxis * sinA * sinA) + (semiMajorAxis * semiMajorAxis * cosA * cosA);
 			var b = 2.0 * sinA * cosA * x * ((semiMinorAxis * semiMinorAxis) - (semiMajorAxis * semiMajorAxis));
 			var c = (x * x * ((semiMinorAxis * semiMinorAxis * cosA * cosA) + (semiMajorAxis * semiMajorAxis * sinA * sinA))) - (semiMajorAxis * semiMajorAxis * semiMinorAxis * semiMinorAxis);
 
-			sign = theta > Math.PI ? -1 : 1;
+			sign = theta > PI ? -1 : 1;
 			var discriminant = (b * b) - (4.0 * a * c);
-			var y = (-b + (discriminant >= 0 ? (sign * Math.Sqrt(discriminant)) : 0.0)) / (2.0 * a);
+			var y = (-b + (discriminant >= 0 ? (sign * Sqrt(discriminant)) : 0.0)) / (2.0 * a);
 
 			return new Point(x + ellipseCenter.X, y + ellipseCenter.Y);
 		}
 
 		public static IReadOnlyList<(Point Intersection, double Slope)> FindIntersectionAndSlopeOfLineAndEllipse(Point linePoint1, Point linePoint2, bool isLineSegment, Point ellipseCenter, double majorRadius, double minorRadius, double ellipseRotation)
 		{
-			var sinA = Math.Sin(ellipseRotation);
-			var cosA = Math.Cos(ellipseRotation);
+			var sinA = Sin(ellipseRotation);
+			var cosA = Cos(ellipseRotation);
 			var majorSquared = majorRadius * majorRadius;
 			var minorSquared = minorRadius * minorRadius;
 

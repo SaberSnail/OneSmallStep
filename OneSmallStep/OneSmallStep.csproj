@@ -64,8 +64,10 @@
     </ApplicationDefinition>
     <Compile Include="ECS\ComponentBase.cs" />
     <Compile Include="ECS\ComponentKey.cs" />
+    <Compile Include="ECS\Components\CohortCollection.cs" />
     <Compile Include="ECS\Components\AgeComponent.cs" />
     <Compile Include="ECS\Components\EllipticalOrbitalPositionComponent.cs" />
+    <Compile Include="ECS\Components\ICohort.cs" />
     <Compile Include="ECS\Components\InformationComponent.cs" />
     <Compile Include="ECS\Components\MovementOrderBase.cs" />
     <Compile Include="ECS\Components\MovementOrderUtility.cs" />
@@ -81,7 +83,10 @@
     <Compile Include="ECS\Entity.cs" />
     <Compile Include="ECS\EntityId.cs" />
     <Compile Include="ECS\EntityManager.cs" />
-    <Compile Include="ECS\EntityUtility.cs" />
+    <Compile Include="ECS\Templates\CohortFeatures.cs" />
+    <Compile Include="ECS\Templates\CohortTemplate.cs" />
+    <Compile Include="ECS\Templates\CohortTemplateConfiguration.cs" />
+    <Compile Include="ECS\Utility\EntityUtility.cs" />
     <Compile Include="ECS\GameData.cs" />
     <Compile Include="ECS\GameProcessor.cs" />
     <Compile Include="ECS\GameServices.cs" />
@@ -99,6 +104,9 @@
     <Compile Include="ECS\Systems\PopulationGrowthSystem.cs" />
     <Compile Include="ECS\Systems\ShipyardSystem.cs" />
     <Compile Include="ECS\Systems\StarSystemMovementSystem.cs" />
+    <Compile Include="ECS\Templates\RacialTemplate.cs" />
+    <Compile Include="ECS\Utility\PopulationUtility.cs" />
+    <Compile Include="UI\Controls\CohortsControl.cs" />
     <Compile Include="UI\EllipseTest\EllipseTest.xaml.cs">
       <DependentUpon>EllipseTest.xaml</DependentUpon>
     </Compile>
@@ -111,7 +119,10 @@
     <Compile Include="UI\SystemMap\SystemMapViewModel.cs" />
     <Compile Include="UI\Utility\TokenStringUtility.cs" />
     <Compile Include="UI\Utility\ThemesUtility.cs" />
-    <Compile Include="Utility\EllipseUtility.cs" />
+    <Compile Include="Utility\Math\EllipseUtility.cs" />
+    <Compile Include="Utility\Math\ExponentialDistribution.cs" />
+    <Compile Include="Utility\Math\GompertzMakehamDistribution.cs" />
+    <Compile Include="Utility\Math\ILifetimeDistribution.cs" />
     <Compile Include="Utility\SystemDataFileUtility.cs" />
     <Compile Include="Utility\Time\ICalendar.cs" />
     <Compile Include="Utility\Time\OurResources.Designer.cs">

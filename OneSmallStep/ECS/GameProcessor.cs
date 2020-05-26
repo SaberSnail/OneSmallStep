@@ -76,7 +76,7 @@ namespace OneSmallStep.ECS
 						shouldUpdateEntitiesFromDisplay = false;
 					}
 
-					m_currentDate = m_currentDate + Constants.Tick;
+					m_currentDate = m_currentDate + TimeOffset.OneTick;
 
 					foreach (var system in m_systems)
 						system.ProcessTick(entityLookup, notificationLog, m_currentDate);

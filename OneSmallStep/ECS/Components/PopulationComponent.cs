@@ -1,5 +1,7 @@
-using System;
-using OneSmallStep.Utility;
+using System.Collections.Generic;
+using System.Linq;
+using GoldenAnvil.Utility;
+using OneSmallStep.ECS.Templates;
 
 namespace OneSmallStep.ECS.Components
 {
@@ -7,15 +9,27 @@ namespace OneSmallStep.ECS.Components
 	{
 		public PopulationComponent()
 		{
-			GrowthRate = Math.Pow(1 + c_averageGrowthRate, 1.0 / (Constants.TicksPerDay * 365)) - 1;
+			m_populations = new Dictionary<string, CohortCollection>();
 		}
 
-		public double GrowthRate { get; }
+		public IReadOnlyList<CohortCollection> Populations => m_populations.Values.AsReadOnlyList();
 
-		public long Population
+		public void AddPopulation(RacialTemplate racialTemplate, long count)
 		{
-			get => m_population;
-			set => SetPropertyField(value, ref m_population);
+			using (ScopedPropertyChange())
+			{
+				var cohortCollection = m_populations.GetOrAddValue(racialTemplate.Id, new CohortCollection(racialTemplate));
+				cohortCollection.DistributePopulationAcrossCohorts(count);
+			}
+		}
+
+		public void SetPopulation(RacialTemplate racialTemplate, IEnumerable<long> populations)
+		{
+			using (ScopedPropertyChange())
+			{
+				var cohortCollection = m_populations.GetOrAddValue(racialTemplate.Id, new CohortCollection(racialTemplate));
+				m_populations[racialTemplate.Id] = cohortCollection.CloneWithNewPopulations(populations);
+			}
 		}
 
 		public override ComponentBase Clone()
@@ -26,11 +40,11 @@ namespace OneSmallStep.ECS.Components
 		private PopulationComponent(PopulationComponent that)
 			: base(that)
 		{
-			m_population = that.m_population;
+			m_populations = that.m_populations
+				.Select(x => x.Value.Clone())
+				.ToDictionary(x => x.RacialTemplate.Id);
 		}
 
-		const double c_averageGrowthRate = 0.01;
-
-		long m_population;
+		Dictionary<string, CohortCollection> m_populations;
 	}
 }

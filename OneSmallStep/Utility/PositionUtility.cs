@@ -1,5 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
+using static System.Math;
 
 namespace OneSmallStep.Utility
 {
@@ -7,7 +7,7 @@ namespace OneSmallStep.Utility
 	{
 		public static bool IsWithinOneMeter(this Point point, Point that)
 		{
-			return Math.Abs(point.X - that.X) < 1.0 && Math.Abs(point.Y - that.Y) < 1.0;
+			return Abs(point.X - that.X) < 1.0 && Abs(point.Y - that.Y) < 1.0;
 		}
 	}
 }

@@ -1,10 +1,16 @@
 ﻿using System;
 using GoldenAnvil.Utility;
+using static System.Math;
 
 namespace OneSmallStep.Utility.Time
 {
 	public sealed class StandardCalendar : ICalendar
 	{
+		public static TimeOffset CreateTimeOffsetInYears(int years, double ticksPerDay)
+		{
+			return new TimeOffset((long) (ticksPerDay * GetDaysInYears(years)));
+		}
+
 		public TimePoint CreateTimePoint(int year, int month, int day)
 		{
 			return new TimePoint(CreateTimePoint(year, month, day, m_ticksPerDay).Tick - m_startDay);
@@ -19,7 +25,7 @@ namespace OneSmallStep.Utility.Time
 
 		public string FormatTime(TimePoint point, TimeFormat format)
 		{
-			DaysToDaysMonthsYears((long) Math.Floor(point.Tick / m_ticksPerDay) + m_startDay, out var years, out var months,
+			DaysToDaysMonthsYears((long) Floor(point.Tick / m_ticksPerDay) + m_startDay, out var years, out var months,
 				out var days);
 			var date = new DateTime(years, months, days);
 			return (format == TimeFormat.Long ? "{0:D}" : "{0:d}").FormatCurrentCulture(date);
@@ -27,7 +33,7 @@ namespace OneSmallStep.Utility.Time
 
 		public string FormatOffset(TimeOffset offset, TimeFormat format)
 		{
-			var days = (long) Math.Floor(offset.TickOffset / m_ticksPerDay);
+			var days = (long) Floor(offset.TickOffset / m_ticksPerDay);
 			return OurResources.ResourceManager.Pluralize(format == TimeFormat.Long ? "TimeOffsetDayLong" : "TimeOffsetDayShort", days).FormatCurrentCulture(days);
 		}
 
@@ -36,7 +42,7 @@ namespace OneSmallStep.Utility.Time
 			if (offset.TickOffset < 0)
 				throw new ArgumentException($"{nameof(offset)} must be positive");
 
-			var startTotalDays = (long) Math.Floor(point.Tick / m_ticksPerDay) + m_startDay;
+			var startTotalDays = (long) Floor(point.Tick / m_ticksPerDay) + m_startDay;
 			DaysToDaysMonthsYears(startTotalDays, out var startYears, out var startMonths,
 				out var startDays);
 
@@ -86,6 +92,18 @@ namespace OneSmallStep.Utility.Time
 			if (days < 1 || days > 31)
 				throw new ArgumentException($"{nameof(days)} must be between 1 and 31.");
 
+			var totalDays = GetDaysInYears(years);
+			totalDays += s_daysToStartOfMonth[months - 1];
+			if (IsLeapYear(years) && months > 2)
+				totalDays++;
+
+			totalDays += days;
+
+			return new TimePoint((long) (totalDays * ticksPerDay));
+		}
+
+		private static long GetDaysInYears(int years)
+		{
 			var totalDays = (years / 400) * c_daysIn400Years;
 			var remainingYears = years % 400;
 			totalDays += (remainingYears / 100) * c_daysIn100Years;
@@ -98,14 +116,7 @@ namespace OneSmallStep.Utility.Time
 				remainingYears--;
 			}
 			totalDays += remainingYears * 365;
-
-			totalDays += s_daysToStartOfMonth[months - 1];
-			if (IsLeapYear(years) && months > 2)
-				totalDays++;
-
-			totalDays += days;
-
-			return new TimePoint((long) (totalDays * ticksPerDay));
+			return totalDays;
 		}
 
 		private static void DaysToDaysMonthsYears(long totalDays, out int years, out int months, out int days)

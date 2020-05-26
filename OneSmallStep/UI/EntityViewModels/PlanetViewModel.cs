@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using GoldenAnvil.Utility;
@@ -8,6 +9,7 @@ using OneSmallStep.ECS.Components;
 using OneSmallStep.UI.SystemMap;
 using OneSmallStep.UI.Utility;
 using OneSmallStep.Utility;
+using OneSmallStep.Utility.Math;
 
 namespace OneSmallStep.UI.EntityViewModels
 {
@@ -41,6 +43,19 @@ namespace OneSmallStep.UI.EntityViewModels
 			private set
 			{
 				SetPropertyField(value, ref m_population);
+			}
+		}
+
+		public CohortCollection Cohorts
+		{
+			get
+			{
+				VerifyAccess();
+				return m_cohorts;
+			}
+			private set
+			{
+				SetPropertyField(value, ref m_cohorts);
 			}
 		}
 
@@ -156,7 +171,8 @@ namespace OneSmallStep.UI.EntityViewModels
 			Name = information?.Name;
 
 			var population = entity.GetOptionalComponent<PopulationComponent>();
-			Population = population?.Population ?? 0;
+			Cohorts = population?.Populations.FirstOrDefault();
+			Population = population?.Populations.Sum(x => x.TotalPopulation) ?? 0;
 
 			var position = entity.GetRequiredComponent<EllipticalOrbitalPositionComponent>();
 			var body = entity.GetRequiredComponent<OrbitalBodyCharacteristicsComponent>();
@@ -228,6 +244,7 @@ namespace OneSmallStep.UI.EntityViewModels
 		}
 
 		long m_population;
+		CohortCollection m_cohorts;
 		string m_positionString;
 		Point m_position;
 		Point m_orbitCenterPosition;

@@ -9,6 +9,7 @@ using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Logging;
 using GoldenAnvil.Utility.Windows;
 using OneSmallStep.Utility;
+using OneSmallStep.Utility.Math;
 
 namespace OneSmallStep.UI.EllipseTest
 {

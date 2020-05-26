@@ -10,6 +10,7 @@ namespace OneSmallStep.Utility
 
 		public const double TicksPerDay = 1;
 		public const double SecondsPerTick = 24.0 * 60.0 * 60.0 / TicksPerDay;
-		public static readonly TimeOffset Tick = new TimeOffset(1);
+
+		public const double DaysPerYear = 365.2425;
 	}
 }

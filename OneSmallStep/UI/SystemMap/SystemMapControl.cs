@@ -9,10 +9,11 @@ using GoldenAnvil.Utility;
 using GoldenAnvil.Utility.Logging;
 using GoldenAnvil.Utility.Windows;
 using OneSmallStep.Utility;
+using OneSmallStep.Utility.Math;
 
 namespace OneSmallStep.UI.SystemMap
 {
-	public class SystemMapControl : Canvas
+	public sealed class SystemMapControl : Canvas
 	{
 		public static readonly DependencyProperty CenterProperty = DependencyPropertyUtility<SystemMapControl>.Register(x => x.Center, null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault | FrameworkPropertyMetadataOptions.AffectsRender);
 

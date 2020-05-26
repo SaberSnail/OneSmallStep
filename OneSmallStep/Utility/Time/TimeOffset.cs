@@ -6,6 +6,8 @@ namespace OneSmallStep.Utility.Time
 	[DebuggerDisplay("{TickOffset}")]
 	public struct TimeOffset : IEquatable<TimeOffset>, IComparable<TimeOffset>
 	{
+		public static readonly TimeOffset OneTick = new TimeOffset(1);
+
 		public TimeOffset(long offset)
 		{
 			TickOffset = offset;

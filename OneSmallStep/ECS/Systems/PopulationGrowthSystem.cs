@@ -1,6 +1,6 @@
 ﻿using System;
-using GoldenAnvil.Utility;
 using OneSmallStep.ECS.Components;
+using OneSmallStep.ECS.Utility;
 using OneSmallStep.Utility.Time;
 
 namespace OneSmallStep.ECS.Systems
@@ -9,7 +9,6 @@ namespace OneSmallStep.ECS.Systems
 	{
 		public PopulationGrowthSystem()
 		{
-			m_rng = new Random();
 		}
 
 		public override void ProcessTick(IEntityLookup entityLookup, NotificationLog notificationLog, TimePoint newTime)
@@ -18,13 +17,14 @@ namespace OneSmallStep.ECS.Systems
 
 			foreach (var entity in entitiesList)
 			{
-				PopulationComponent population = entity.GetRequiredComponent<PopulationComponent>();
-				var growthRate = population.GrowthRate;
-				growthRate = growthRate + growthRate * m_rng.NextGauss() * 0.5;
-				population.Population = Math.Max(0, population.Population + (long) (population.Population * growthRate));
+				var component = entity.GetRequiredComponent<PopulationComponent>();
+				var populations = component.Populations;
+				foreach (var population in populations)
+				{
+					var newPops = PopulationUtility.ProcessTick(population, out var _);
+					component.SetPopulation(population.RacialTemplate, newPops);
+				}
 			}
 		}
-
-		readonly Random m_rng;
 	}
 }

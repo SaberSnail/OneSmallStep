@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using OneSmallStep.ECS.Components;
+using OneSmallStep.ECS.Utility;
 using OneSmallStep.Utility;
 using OneSmallStep.Utility.Time;
 

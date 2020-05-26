@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using GoldenAnvil.Utility.Logging;
 using OneSmallStep.ECS;
 using OneSmallStep.ECS.Components;
+using OneSmallStep.ECS.Utility;
 using OneSmallStep.UI.EntityViewModels;
 using OneSmallStep.UI.SystemMap;
 using OneSmallStep.UI.Utility;
@@ -217,7 +218,7 @@ namespace OneSmallStep.UI.MainWindow
 			var entities = SystemDataFileUtility.LoadEntities("Data\\SolSystem.txt", entityLookup, rng);
 			var earthEntity = entities.FirstOrDefault(x => x.GetRequiredComponent<InformationComponent>().Name == "Earth");
 			if (earthEntity != null)
-				EntityUtility.MakeHomeWorld(earthEntity);
+				EntityUtility.MakeHomeWorld(earthEntity, EntityUtility.GetHumanTemplate());
 
 			var planetViewModels = entities.Select(x => new PlanetViewModel(x));
 			m_planets.AddRange(planetViewModels);

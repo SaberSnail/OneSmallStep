@@ -1,7 +1,11 @@
 ﻿using System.Windows;
 using OneSmallStep.ECS.Components;
+using OneSmallStep.ECS.Templates;
+using OneSmallStep.Utility;
+using OneSmallStep.Utility.Math;
+using OneSmallStep.Utility.Time;
 
-namespace OneSmallStep.ECS
+namespace OneSmallStep.ECS.Utility
 {
 	public static class EntityUtility
 	{
@@ -58,13 +62,32 @@ namespace OneSmallStep.ECS
 			return ship;
 		}
 
-		public static void MakeHomeWorld(Entity entity)
+		public static void MakeHomeWorld(Entity entity, RacialTemplate racialTemplate)
 		{
-			var population = new PopulationComponent { Population = 1000000000 };
+			var population = new PopulationComponent();
+			population.AddPopulation(GetHumanTemplate(), 1000000000);
 			entity.AddComponent(population);
 
 			var shipyard = new ShipyardComponent();
 			entity.AddComponent(shipyard);
+		}
+
+		public static readonly ILifetimeDistribution HumanLifetimeDistribution = new GompertzMakehamDistribution(1E-5, 0.085, 5E-3);
+
+		public static RacialTemplate GetHumanTemplate()
+		{
+			var cohortTemplates = CohortTemplate.CreateAll(
+				new CohortTemplateConfiguration
+				{
+					InfantsRequireExtraCare = true,
+					PhysicalMaturation = 3,
+					MentalMaturation = 4,
+					LowFertilityStart = 7,
+					InfertilityStart = 9,
+					LifetimeDistribution = HumanLifetimeDistribution,
+				});
+			var birthRate = 0.1 / Constants.DaysPerYear;
+			return new RacialTemplate("human", "Human", HumanLifetimeDistribution, birthRate, cohortTemplates);
 		}
 	}
 }
