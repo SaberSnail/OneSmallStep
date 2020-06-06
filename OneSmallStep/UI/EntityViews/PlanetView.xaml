@@ -13,8 +13,8 @@
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
 			</Grid.ColumnDefinitions>
 			
 			<TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" />
@@ -34,6 +34,8 @@
 				Orientation="Horizontal"
 				Padding="4"
 				ItemPadding="3"
+				MinItemSize="7"
+				CenterItems="false"
 				ItemPen="{DynamicResource DataValuePanelPen}"
 				ItemBrush="{DynamicResource DataValuePanelBrush}"
 				/>

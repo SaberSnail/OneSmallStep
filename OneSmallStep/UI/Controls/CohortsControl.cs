@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -17,56 +14,64 @@ namespace OneSmallStep.UI.Controls
 
 		public CohortCollection Cohorts
 		{
-			get { return (CohortCollection) GetValue(CohortsProperty); }
-			set { SetValue(CohortsProperty, value); }
+			get => (CohortCollection) GetValue(CohortsProperty);
+			set => SetValue(CohortsProperty, value);
 		}
 
 		public static readonly DependencyProperty PaddingProperty = DependencyPropertyUtility<CohortsControl>.Register(x => x.Padding, null, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure);
 
 		public Thickness Padding
 		{
-			get { return (Thickness) GetValue(PaddingProperty); }
-			set { SetValue(PaddingProperty, value); }
+			get => (Thickness) GetValue(PaddingProperty);
+			set => SetValue(PaddingProperty, value);
 		}
 
 		public static readonly DependencyProperty OrientationProperty = DependencyPropertyUtility<CohortsControl>.Register(x => x.Orientation, null, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure);
 
 		public Orientation Orientation
 		{
-			get { return (Orientation) GetValue(OrientationProperty); }
-			set { SetValue(OrientationProperty, value); }
+			get => (Orientation) GetValue(OrientationProperty);
+			set => SetValue(OrientationProperty, value);
 		}
 
 		public static readonly DependencyProperty ItemPaddingProperty = DependencyPropertyUtility<CohortsControl>.Register(x => x.ItemPadding, null, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure, 3.0);
 
 		public double ItemPadding
 		{
-			get { return (double) GetValue(ItemPaddingProperty); }
-			set { SetValue(ItemPaddingProperty, value); }
+			get => (double) GetValue(ItemPaddingProperty);
+			set => SetValue(ItemPaddingProperty, value);
 		}
 
 		public static readonly DependencyProperty MinItemSizeProperty = DependencyPropertyUtility<CohortsControl>.Register(x => x.MinItemSize, null, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure, 5.0);
 
 		public double MinItemSize
 		{
-			get { return (double) GetValue(MinItemSizeProperty); }
-			set { SetValue(MinItemSizeProperty, value); }
+			get => (double) GetValue(MinItemSizeProperty);
+			set => SetValue(MinItemSizeProperty, value);
 		}
 
 		public static readonly DependencyProperty ItemPenProperty = DependencyPropertyUtility<CohortsControl>.Register(x => x.ItemPen, null, FrameworkPropertyMetadataOptions.AffectsRender);
 
 		public Pen ItemPen
 		{
-			get { return (Pen) GetValue(ItemPenProperty); }
-			set { SetValue(ItemPenProperty, value); }
+			get => (Pen) GetValue(ItemPenProperty);
+			set => SetValue(ItemPenProperty, value);
 		}
 
 		public static readonly DependencyProperty ItemBrushProperty = DependencyPropertyUtility<CohortsControl>.Register(x => x.ItemBrush, null, FrameworkPropertyMetadataOptions.AffectsRender);
 
 		public Brush ItemBrush
 		{
-			get { return (Brush) GetValue(ItemBrushProperty); }
-			set { SetValue(ItemBrushProperty, value); }
+			get => (Brush) GetValue(ItemBrushProperty);
+			set => SetValue(ItemBrushProperty, value);
+		}
+
+		public static readonly DependencyProperty CenterItemsProperty = DependencyPropertyUtility<CohortsControl>.Register(x => x.CenterItems, null, true);
+
+		public bool CenterItems
+		{
+			get => (bool) GetValue(CenterItemsProperty);
+			set => SetValue(CenterItemsProperty, value);
 		}
 
 		protected override Size MeasureOverride(Size constraint)
@@ -113,11 +118,12 @@ namespace OneSmallStep.UI.Controls
 					{
 						var itemHeight = availableHeight / cohorts.Cohorts.Count;
 						var top = viewRect.Top + margin.Top;
+						var centerItems = CenterItems;
 						foreach (var cohort in cohorts.Cohorts.Reverse())
 						{
 							var itemWidth = maxItemWidth * cohort.Population / maxPopulation;
-							var centeredItemLeft = itemLeft + ((maxItemWidth - itemWidth) / 2.0);
-							var itemRect = new Rect(centeredItemLeft, top, itemWidth, itemHeight);
+							var left = centerItems ? itemLeft + ((maxItemWidth - itemWidth) / 2.0) : itemLeft;
+							var itemRect = new Rect(left, top, itemWidth, itemHeight);
 							context.DrawRectangle(itemBrush, itemPen, itemRect);
 
 							top += itemRect.Height + padding;
@@ -133,11 +139,12 @@ namespace OneSmallStep.UI.Controls
 					{
 						var itemWidth = availableWidth / cohorts.Cohorts.Count;
 						var left = viewRect.Left + margin.Left;
+						var centerItems = CenterItems;
 						foreach (var cohort in cohorts.Cohorts)
 						{
 							var itemHeight = maxItemHeight * cohort.Population / maxPopulation;
-							var centeredItemTop = itemTop + ((maxItemHeight - itemHeight) / 2.0);
-							var itemRect = new Rect(left, centeredItemTop, itemWidth, itemHeight);
+							var top = centerItems ? itemTop + ((maxItemHeight - itemHeight) / 2.0) : itemTop + maxItemHeight - itemHeight;
+							var itemRect = new Rect(left, top, itemWidth, itemHeight);
 							context.DrawRectangle(itemBrush, itemPen, itemRect);
 
 							left += itemRect.Width + padding;
